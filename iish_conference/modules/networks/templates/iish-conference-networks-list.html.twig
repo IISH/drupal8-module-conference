@@ -1,0 +1,27 @@
+{{ attach_library('iish_conference_networks/global-styling') }}
+
+{% for network in networks %}
+    <h3>
+        <a href="{{ path('iish_conference_networks.network', {'network': network.id}) }}">
+            {{ network.name|iish_t }}
+        </a>
+    </h3>
+
+    <div class="network">
+        <p>{{ network.comment|text }}</p>
+        <span class="chair-title">{{ 'Chairs'|iish_t ~ ':' }}</span>
+
+        {% for chair in network.chairs %}
+            <div class="chair">
+                <span class="chair-name">{{ chair.fullName }}</span>
+                <span class="chair-location">{{ chair.locationDetails }}</span>
+                <span class="chair-email">
+                    <a href="{{ 'mailto:' ~ chair.email }}">
+                        {{ chair.email }}
+                    </a>
+                </span>
+                <span class="mailto"></span>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}

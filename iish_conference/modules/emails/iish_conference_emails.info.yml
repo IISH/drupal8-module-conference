@@ -1,0 +1,8 @@
+name: Emails sent
+type: module
+package: IISH Conference
+description: 'Allows users to see which emails have been sent to them and which emails have to be resend.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

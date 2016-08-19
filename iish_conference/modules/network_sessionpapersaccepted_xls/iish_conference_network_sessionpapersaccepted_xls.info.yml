@@ -1,0 +1,8 @@
+name: "Network chairs: Networks, sessions and (accepted) participants (xls)"
+type: module
+package: IISH Conference
+description: 'Allows network chairs to download an Excel file with sessions papers.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

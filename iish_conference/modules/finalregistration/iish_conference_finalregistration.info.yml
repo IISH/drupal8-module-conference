@@ -1,0 +1,8 @@
+name: Final registration and payment
+type: module
+package: IISH Conference
+description: 'Allows participants to finalize their registration by performing a payment.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

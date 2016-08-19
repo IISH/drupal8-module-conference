@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implements hook_theme()
+ */
+function iish_conference_networks_theme() {
+  return array(
+    'iish_conference_networks_list' => array(
+      'variables' => array(
+        'networks' => array(),
+      ),
+    ),
+    'iish_conference_networks_item' => array(
+      'variables' => array(
+        'network' => NULL,
+      ),
+    ),
+  );
+}

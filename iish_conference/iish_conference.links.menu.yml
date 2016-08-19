@@ -1,0 +1,5 @@
+iish_conference.config_form:
+  title: 'IISH conference settings'
+  route_name: 'iish_conference.config_form'
+  parent: 'system.admin_config_system'
+  description: 'Change the IISH conference settings.'

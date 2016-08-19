@@ -1,0 +1,27 @@
+{% set prevText = '« ' ~ 'prev'|iish_t %}
+{% set nextText = 'next'|iish_t ~ ' »' %}
+
+<table class="noborder">
+    <tr>
+        <td class="noborder">
+            <strong>
+                {{ prevLink }}
+            </strong>
+        </td>
+        <td align="right" class="noborder">
+            {% if prev %}
+                {{ link(prevText, prev, {'attributes': {'alt': 'previous'|iish_t, 'title': 'previous'|iish_t,}}) }}
+            {% else %}
+                {{ prevText }}
+            {% endif %}
+
+            &nbsp;
+
+            {% if next %}
+                {{ link(nextText, next, {'attributes': {'alt': 'next'|iish_t, 'title': 'next'|iish_t,}}) }}
+            {% else %}
+                {{ nextText }}
+            {% endif %}
+        </td>
+    </tr>
+</table>

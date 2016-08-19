@@ -1,0 +1,57 @@
+<?php
+use Drupal\iish_conference\ConferenceMisc;
+use Drupal\iish_conference\API\CachedConferenceApi;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_cron()
+ */
+function iish_conference_cron() {
+  CachedConferenceApi::updateAll();
+}
+
+/**
+ * Implements hook_theme()
+ */
+function iish_conference_theme() {
+  return array(
+    'iish_conference_container' => array(
+      'variables' => array(
+        'styled' => TRUE,
+        'fields' => array(),
+      ),
+    ),
+    'iish_conference_navigation' => array(
+      'variables' => array(
+        'prevLink' => NULL,
+        'prev' => NULL,
+        'next' => NULL,
+        'curQuery' => array(),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_page()
+ * Makes sure that our global styling library is applied on every page
+ */
+function iish_conference_preprocess_page(&$variables) {
+  $variables['#attached']['library'][] = 'iish_conference/global-styling';
+}
+
+/**
+ * Override of the default t function of Drupal
+ * Will translate the text first using the translations CMS API
+ *
+ * @param string $string A string containing the English string to translate
+ * @param array $args An associative array of replacements to make after translation.
+ *                                      Based on the first character of the key, the value is escaped and/or themed.
+ *                                      See format_string() for details
+ * @param bool $callOriginalTFunction Whether to include a call to the original t function
+ *
+ * @return TranslatableMarkup
+ */
+function iish_t($string, array $args = array(), $callOriginalTFunction = TRUE) {
+  return ConferenceMisc::translate($string, $args, $callOriginalTFunction);
+}

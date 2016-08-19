@@ -1,0 +1,8 @@
+name: Programme
+type: module
+package: IISH Conference
+description: 'Allows users to see the currently planned programme and search the programme.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

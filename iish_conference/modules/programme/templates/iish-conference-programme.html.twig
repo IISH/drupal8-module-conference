@@ -1,0 +1,255 @@
+{{ attach_library('iish_conference_programme/global-styling') }}
+
+<div class="container-inline bottommargin">
+    <form action="" method="get" accept-charset="UTF-8">
+        {% if setting('SHOW_NETWORK', 'bool') %}
+            <div class="form-item form-type-select form-item-network">
+                <label for="edit-network">
+                    {{ 'Browse networks'|iish_t }}
+                </label>
+
+                <select id="edit-network" name="network" size="1" class="form-select">
+                    <option value="0" {{ not networkId ? 'selected="selected"' }}></option>
+
+                    {% for network in networks %}
+                        <option value="{{ network.id }}" {{ network.id == networkId ? 'selected="selected"' }}>
+                            {{ network }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div class="form-item form-type-textfield form-item-textsearch">
+            <label for="edit-textsearch">
+                {% if setting('SHOW_NETWORK', 'bool') %}
+                    {{ 'or search on name'|iish_t }}
+                {% else %}}
+                    {{ 'Search on name'|iish_t }}
+                {% endif %}
+            </label>
+
+            <input type="text" id="edit-textsearch" name="textsearch" value="{{ textsearch }}" size="20" maxlength="50"
+                   class="form-text">
+        </div>
+
+        <input type="submit" id="edit-btnsubmit" value="{{ 'Go'|iish_t }}" class="form-submit">
+    </form>
+</div>
+
+{% if not sessionId %}
+    <div class="programme_day showing">
+        {{ curShowing }}
+    </div>
+
+    {% if eventDate.isLastDate and downloadPaperIsOpen %}
+        <div class="download-icon-info">
+            <span class="download-icon"></span>
+            {{ 'Click on the icon to download the paper'|iish_t }}
+        </div>
+        <div class="clear"></div>
+    {% endif %}
+
+    {% if eventDate.isLastDate and isParticipant %}
+        <div class="favorite-icon-info">
+            <span class="favorite">&#9733;</span>
+            {{ 'Click on the icon to add the session to your favorites list'|iish_t }}
+        </div>
+        <div class="clear"></div>
+    {% endif %}
+{% endif %}
+
+<table class="programme">
+    <tbody>
+    <tr>
+        <td class="programme noprint">
+            {% for day in days %}
+                <a href="?day={{ day.id }}">
+                    {{ day.dayFormatted('D j F') }}
+                </a>
+                <br/>
+
+                {% for timeSlot in dateTimes %}
+                    {% if timeSlot.dayId == day.id %}
+                        <nobr>
+                            &nbsp; &nbsp;
+                            <a href="?day={{ day.id }}&amp;time={{ timeSlot.id }}">
+                                {{ timeSlot.periodExtraSpacing }}
+                            </a>
+                        </nobr>
+                        <br/>
+                    {% endif %}
+                {% endfor %}
+
+                <br/>
+            {% endfor %}
+
+            <a href="?day=0">
+                {{ 'All days'|iish_t }}
+            </a>
+
+            {% if eventDate.isLastDate and isParticipant %}
+                <br/>
+                <a href="?favorites=yes">
+                    {{ 'Favorite sessions'|iish_t }}
+                </a>
+            {% endif %}
+        </td>
+
+        <td class="programme">
+            {% if programme|length == 0 %}
+                <div class="eca_warning">
+                    {{ 'Nothing found. Please modify your search criteria.'|iish_t }}
+                </div>
+            {% else %}
+                {% if sessionId %}
+                    <a href="{{ backUrlQuery }}">
+                        {{ 'Go back'|iish_t }}
+                    </a>
+                    <br/><br/>
+                {% endif %}
+
+                {% for i, session in programme %}
+                    {% if (i == 0) or (session.timeId != programme[i - 1].timeId) %}
+                        <div class="programme_day">
+                            {{ session.day|date('l j F Y') }}
+                            {{ session.period|replace({'-': ' - ', '  ': ' '}) }}
+                        </div>
+                    {% endif %}
+
+                    <strong>
+                        {% if isParticipant and eventDate.isLastDate %}
+                            <span class="{{ session.sessionId in favoriteSessions ? 'favorite on' : 'favorite' }}"
+                                  data-session="{{ session.sessionId }}">&#9733;</span>
+                        {% endif %}
+
+                        <a href="?room={{ session.roomId }}">{{ session.roomNumber }}</a>-{{ session.indexNumber }}
+
+                        {% if setting('SHOW_SESSION_CODES', 'bool') %}
+                            {{ session.sessionCode }}
+                        {% endif %}
+
+                        {% if sessionId %}
+                            {{ session.sessionNameHl|markup }}
+                        {% elseif networkId %}
+                            <a href="?day={{ session.dayId }}&amp;time={{ session.timeId }}&amp;session={{ session.sessionId }}&amp;network={{ session.networkId }}">
+                                {{ session.sessionNameHl|markup }}
+                            </a>
+                        {% elseif textsearch %}
+                            <a href="?day={{ session.dayId }}&amp;time={{ session.timeId }}&amp;session={{ session.sessionId }}&amp;textsearch={{ textsearch }}">
+                                {{ session.sessionNameHl|markup }}
+                            </a>
+                        {% elseif roomId %}
+                            <a href="?day={{ session.dayId }}&amp;time={{ session.timeId }}&amp;session={{ session.sessionId }}&amp;room={{ roomId }}">
+                                {{ session.sessionNameHl|markup }}
+                            </a>
+                        {% else %}
+                            <a href="?day={{ session.dayId }}&amp;time={{ session.timeId }}&amp;session={{ session.sessionId }}">
+                                {{ session.sessionNameHl|markup }}
+                            </a>
+                        {% endif %}
+                    </strong>
+
+                    <br/>
+
+                    <strong>
+                        {{ session.roomName }}
+                    </strong>
+
+                    <br/>
+
+                    <table class="programme">
+                        <tbody>
+                        <tr>
+                            {% set noPlaceForNetwork = 1 %}
+                            {% if setting('SHOW_NETWORK', 'bool') %}
+                                {% set noPlaceForNetwork = 0 %}
+                                <td width="50%" class="programme">
+                                    <span class="programme_key">
+                                        {{ session.networks|length > 1 ? 'Networks'|iish_t : 'Network'|iish_t }}:
+                                    </span>
+
+                                    {% for j, network in session.networks %}
+                                    <a href="?network={{ network.networkId }}">
+                                        {{ network.networkName }}
+                                        </a>{% if not (session.networks|length == (j+1)) %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+
+                            {% for j, type in types %}
+                                {% set participants = session.participantsPerType[type.id] %}
+
+                                <td class="programme">
+                                    {% if participants|length == 0 %}
+                                        {% if not (type.id in setting('HIDE_IF_EMPTY_IN_ONLINE_PROGRAMME', 'list')) %}
+                                            <span class="programme_key">
+                                                {{ type }}s:
+                                            </span>
+                                            -
+                                        {% else %}
+                                            &nbsp;
+                                        {% endif %}
+                                    {% elseif participants|length == 1 %}
+                                        <span class="programme_key">
+                                             {{ type }}:
+                                        </span>
+
+                                        {{ participants[0].participantNameHl|markup }}
+                                    {% else %}
+                                        <span class="programme_key">
+                                             {{ type }}s:
+                                        </span>
+
+                                        {% for p, participant in participants %}
+                                            {{ participant.participantNameHl|markup }}{% if not (participants|length == (p+1)) %}, {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+
+                                {% if (j % 2) == noPlaceForNetwork %}
+                                    {{ '<tr></tr>'|markup }}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    {% for participant in session.participantsWithPaper %}
+                        <span class="programme_key">
+                            {{ participant.participantNameHl|markup }}{% if participant.coAuthors and (participant.coAuthors|length > 0) %}, {{ participant.coAuthorsHl|markup }}{% endif %}
+                            :
+                        </span>
+
+                        {{ participant.paperNameHl|markup }}
+
+                        {% if eventDate.isLastDate and downloadPaperIsOpen %}
+                            {% if participant.hasDownload %}
+                                &nbsp;
+                                <a href="{{ participant.paperDownloadLink }}" title="{{ 'Download paper'|iish_t }}">
+                                    <span class="download-icon"></span>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+
+                        <br/>
+
+                        {% if sessionId %}
+                            <div class="programme_paper_abstract">
+                                {{ participant.paperAbstract|long }}
+                            </div>
+                            <br/>
+                        {% endif %}
+                    {% endfor %}
+
+                    <br/><br/>
+
+                    {% if (((i + 1) < programme|length) and not (session.timeId == programme[i + 1].timeId)) %}
+                        <hr class="programme_hr"/>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,15 @@
+.network {
+    margin-bottom: 25px;
+}
+
+.chair-title {
+    font-weight: bold;
+}
+
+.chair {
+    margin-bottom: 10px;
+}
+
+.chair-name, .chair-location, .chair-email {
+    display: block;
+}

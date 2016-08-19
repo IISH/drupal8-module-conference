@@ -1,0 +1,15 @@
+iish_conference_login_logout.login_form:
+  path: '/conference/user/login'
+  defaults:
+    _form: '\Drupal\iish_conference_login_logout\Form\LoginForm'
+    _title: 'Login'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_login_logout.logout_form:
+  path: '/conference/user/logout'
+  defaults:
+    _form: '\Drupal\iish_conference_login_logout\Form\LogoutForm'
+    _title: 'Logout'
+  requirements:
+    _access: 'TRUE'

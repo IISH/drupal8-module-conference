@@ -1,0 +1,6 @@
+name: IISH Conference
+type: module
+package: IISH Conference
+description: 'Defines common functionality for all IISH conference modules.'
+core: 8.x
+version: 8.x-1.0.0

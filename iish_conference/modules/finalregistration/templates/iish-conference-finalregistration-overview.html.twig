@@ -1,0 +1,85 @@
+{{ attach_library('iish_conference_finalregistration/global-styling') }}
+
+<div id="final-registration-overview">
+	<span class="final-registration-overview-header">
+		{{ 'Order description:'|iish_t }}
+	</span>
+
+    <ul>
+        <li>{{ feeAmountDescription }}</li>
+
+        {% for extra in extras %}
+            <li>{{ extra }}</li>
+        {% endfor %}
+
+        {% if setting('SHOW_ACCOMPANYING_PERSONS', 'bool') %}
+            {% for accompanyingPerson in accompanyingPersons %}
+                <li>
+                    {{ accompanyingPerson ~ feeAmountAccompanyingPersonDescription }}
+                </li>
+            {% endfor %}
+        {% endif %}
+
+        <li>
+			<span class="final-registration-overview-total">
+                {{ 'Total amount'|iish_t ~ ': ' ~ totalAmount }}
+
+                {% if paymentOnSiteOpen %}
+                    {{ '(' ~ 'If payed on site'|iish_t ~ ': ' ~ totalAmountPayOnSite ~ ')' }}
+                {% endif %}
+			</span>
+        </li>
+    </ul>
+
+    {% if setting('SHOW_DAYS', 'bool') %}
+        <span class="final-registration-overview-header">
+            {{ 'You have indicated to be present on the following days:'|iish_t }}
+		</span>
+
+        <ul>
+            {% for day in days %}
+                <li>{{ day }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if invitationLetter %}
+        <span class="final-registration-overview-header">
+			'In addition, you also indicated that an invitation letter should be send to:'|iish_t
+		</span>
+
+        <ul>
+            <li><{{ address|markup }}</li>
+        </ul>
+    {% endif %}
+
+    {% if setting('GENERAL_TERMS_CONDITIONS_LINK')|length > 0 %}
+        {{ form.terms_and_conditions }}
+    {% endif %}
+</div>
+
+{{ form['back'] }}
+
+{% if totalAmount == 0 %}
+    {{ form|without('payway', 'bank_transfer', 'on_site') }}
+{% else %}
+    {% form = form|without('confirm') %}
+
+    <div id="payment-buttons">
+        {% if setting('BANK_TRANSFER_ALLOWED', 'bool') and not bankTransferOpen %}
+            {% form = form|without('bank_transfer') %}
+
+            <div class="eca_warning">
+                {{ 'It is no longer possible to pay via bank transfer, please make an online payment.'|iish_t }}
+            </div>
+        {% endif %}
+
+        {% if not paymentOnSiteOpen %}
+            {% form = form|without('on_site') %}
+        {% endif %}
+
+        {{ form }}
+    </div>
+{% endif %}
+
+{{ infoBlock }}

@@ -1,0 +1,15 @@
+iish_conference_changeuser.form:
+  path: '/conference/admin/change-user'
+  defaults:
+    _form: '\Drupal\iish_conference_changeuser\Form\ChangeUserForm'
+    _title: 'Change user'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_changeuser.user:
+  path: '/conference/admin/change-user/{id}'
+  defaults:
+    _form: '\Drupal\iish_conference_changeuser\Form\ChangeUserForm'
+    _title: 'Change user'
+  requirements:
+    _access: 'TRUE'

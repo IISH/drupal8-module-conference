@@ -1,0 +1,67 @@
+table.programme {
+    width: 100%;
+    padding: 20;
+    border-collapse: collapse;
+}
+
+td.programme {
+    vertical-align: top;
+    border: 1px solid white;
+}
+
+.programme_day {
+    font-weight: bold;
+    margin-bottom: 25px;
+    font-size: 125%;
+}
+
+.programme_day.showing {
+    display: inline;
+}
+
+.programme_hr {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    background-color: #E61A3C;
+    border-color: #E61A3C;
+    height: 1px;
+}
+
+.programme_key {
+    font-weight: bold;
+}
+
+.programme_paper_abstract {
+    margin-top: 10px;
+    margin-left: 10px;
+    font-style: italic;
+}
+
+.download-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: url('../img/download_paper.png') left top;
+}
+
+.favorite {
+    color: grey;
+    font-size: 120%;
+    font-style: normal;
+    margin-right: 5px;
+}
+
+.favorite.on {
+    color: orange;
+}
+
+.programme .favorite {
+    cursor: pointer;
+}
+
+.download-icon-info, .favorite-icon-info {
+    display: inline-block;
+    float: right;
+    font-size: 80%;
+    font-style: italic;
+}

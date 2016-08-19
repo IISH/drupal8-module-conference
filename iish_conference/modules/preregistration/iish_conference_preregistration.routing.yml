@@ -1,0 +1,15 @@
+iish_conference_preregistration.form:
+  path: '/conference/user/pre-registration'
+  defaults:
+    _form: '\Drupal\iish_conference_preregistration\Form\PreRegistrationForm'
+    _title_callback: '\Drupal\iish_conference_preregistration\Controller\PreRegistrationController::getTitle'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_preregistration.completed:
+  path: '/conference/user/pre-registration/completed'
+  defaults:
+    _controller: '\Drupal\iish_conference_preregistration\Controller\PreRegistrationController::completed'
+    _title: 'Your pre-registration is finished!'
+  requirements:
+    _access: 'TRUE'

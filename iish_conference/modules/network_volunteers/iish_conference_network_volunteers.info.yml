@@ -1,0 +1,8 @@
+name: "Network chairs: Networks and their volunteers"
+type: module
+package: IISH Conference
+description: 'Allows network chairs to see which participants would like to volunteer.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

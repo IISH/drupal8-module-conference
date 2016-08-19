@@ -1,0 +1,8 @@
+name: "Network chairs: Networks, sessions and participants"
+type: module
+package: IISH Conference
+description: 'Allows network chairs to gain an overview of the networks, sessions and participants.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

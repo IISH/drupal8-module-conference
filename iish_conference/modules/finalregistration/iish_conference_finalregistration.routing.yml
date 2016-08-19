@@ -1,0 +1,34 @@
+iish_conference_finalregistration.form:
+  path: '/conference/user/final-registration'
+  defaults:
+    _form: '\Drupal\iish_conference_finalregistration\Form\FinalRegistrationForm'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_finalregistration.bank-transfer:
+  path: '/conference/user/final-registration/bank-transfer'
+  defaults:
+    _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::bankTransfer'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_finalregistration.accept:
+  path: '/conference/user/final-registration/accept'
+  defaults:
+    _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::acceptPayment'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_finalregistration.decline:
+  path: '/conference/user/final-registration/decline'
+  defaults:
+    _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::declinePayment'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_finalregistration.exception:
+  path: '/conference/user/final-registration/exception'
+  defaults:
+    _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::exceptionPayment'
+  requirements:
+    _access: 'TRUE'

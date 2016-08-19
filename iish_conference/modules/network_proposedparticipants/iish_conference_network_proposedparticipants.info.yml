@@ -1,0 +1,8 @@
+name: "Network chairs: Participants and their individual paper proposals"
+type: module
+package: IISH Conference
+description: 'Allows network chairs to see participants and their individual paper proposals.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

@@ -1,0 +1,47 @@
+{{ attach_library('iish_conference_finalregistration/global-styling') }}
+
+{% if setting('SHOW_DAYS_SESSION_PLANNED', 'bool') and (sessionDays|length > 0) %}
+    <div id="session-days-hint">
+        <span class="hint-message">
+            {{ 'Please note that you are scheduled for sessions on the following days:'|iish_t }}
+        </span>
+
+        <table class="hint-days">
+            {% for day in sessionDays %}
+                {% if (loop.index % 2) == 1 %}
+                    {{ '<tr>'|markup }}
+                {% endif %}
+
+                <td>{{ day }}</td>
+
+                {% if (loop.index % 2) == 0 %}
+                    {{ '</tr>'|markup }}
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}
+
+<div id="final-registration-welcome">
+    <div class="bottommargin">
+        {{ 'Welcome @name'|iish_t({'@name': user}) }}
+    </div>
+
+    <div class="bottommargin">
+        {{ 'This is the first page of the \'Final Registration and Payment\' procedure.
+        Please enter which days you will be present and the total conference fee will be computed automatically.
+        You can pay with your CreditCard/iDeal or via bank transfer. If the process is completely finished,
+        (including payment) you will receive a confirmation email
+        from our payment provider and a confirmation email.'|iish_t }}
+    </div>
+
+    {% if not setting('SHOW_DAYS', 'bool') %}
+        <div class="heavy bottommargin">
+            {{ feeAmountDescription }}
+		</div>
+    {% endif %}
+</div>
+
+{{ form }}
+
+{{ infoBlock }}

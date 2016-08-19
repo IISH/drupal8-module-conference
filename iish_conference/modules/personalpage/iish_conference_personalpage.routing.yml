@@ -1,0 +1,19 @@
+iish_conference_personalpage.index:
+  path: '/conference/user/personalpage'
+  defaults:
+    _controller: '\Drupal\iish_conference_personalpage\Controller\PersonalPageController::index'
+    _title: 'Personal Page'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_personalpage.upload_paper:
+  path: '/conference/user/personalpage/upload-paper/{paper}'
+  defaults:
+    _controller: '\Drupal\iish_conference_personalpage\Controller\PersonalPageController::uploadPaper'
+    _title: 'Upload paper'
+  options:
+    parameters:
+      paper:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'

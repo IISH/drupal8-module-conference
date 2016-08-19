@@ -1,0 +1,7 @@
+iish_conference.config_form:
+  path: '/admin/config/iish_conference'
+  defaults:
+    _form: '\Drupal\iish_conference\Form\ConfigForm'
+    _title: 'IISH conference settings'
+  requirements:
+    _permission: 'access administration pages'

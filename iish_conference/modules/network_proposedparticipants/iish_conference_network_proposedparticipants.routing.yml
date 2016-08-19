@@ -1,0 +1,19 @@
+iish_conference_network_proposedparticipants.index:
+  path: '/conference/network/proposed_participants'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_proposedparticipants\Controller\ProposedParticipantsController::listNetworks'
+    _title: 'Participants and their individual paper proposals'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_proposedparticipants.network:
+  path: '/conference/network/proposed_participants/{network}'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_proposedparticipants\Controller\ProposedParticipantsController::network'
+    _title: 'Participants and their individual paper proposals'
+  options:
+    parameters:
+      network:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'

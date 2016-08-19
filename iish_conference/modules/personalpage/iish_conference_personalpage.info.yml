@@ -1,0 +1,8 @@
+name: Personal Page
+type: module
+package: IISH Conference
+description: 'Starting page of participants and allows participants to see all of their data on one single page.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

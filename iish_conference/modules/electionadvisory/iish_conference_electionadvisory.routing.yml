@@ -1,0 +1,7 @@
+iish_conference_electionadvisory.form:
+  path: '/conference/network/election-advisory-board'
+  defaults:
+    _form: '\Drupal\iish_conference_electionadvisory\Form\ElectionAdvisoryForm'
+    _title: "Election 'Advisory board'"
+  requirements:
+    _access: 'TRUE'

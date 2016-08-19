@@ -1,0 +1,19 @@
+iish_conference_emails.index:
+  path: '/conference/user/emails'
+  defaults:
+    _controller: '\Drupal\iish_conference_emails\Controller\EmailsController::listEmails'
+    _title: 'Emails'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_emails.email:
+  path: '/conference/user/emails/{sent_email}'
+  defaults:
+     _controller: '\Drupal\iish_conference_emails\Controller\EmailsController::email'
+     _title: 'Email'
+  options:
+    parameters:
+      sent_email:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'

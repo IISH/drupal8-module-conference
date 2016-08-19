@@ -1,0 +1,8 @@
+name: User block
+type: module
+package: IISH Conference
+description: 'A block that allows users to see whether they are logged in or not.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

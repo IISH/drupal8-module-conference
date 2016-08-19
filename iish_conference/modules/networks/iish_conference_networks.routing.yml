@@ -1,0 +1,19 @@
+iish_conference_networks.index:
+  path: '/conference/networks'
+  defaults:
+    _controller: '\Drupal\iish_conference_networks\Controller\NetworksController::listNetworks'
+    _title_callback: '\Drupal\iish_conference_networks\Controller\NetworksController::getNetworksTitle'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_networks.network:
+  path: '/conference/networks/{network}'
+  defaults:
+    _controller: '\Drupal\iish_conference_networks\Controller\NetworksController::network'
+    _title_callback: '\Drupal\iish_conference_networks\Controller\NetworksController::getNetworkTitle'
+  options:
+    parameters:
+      network:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'

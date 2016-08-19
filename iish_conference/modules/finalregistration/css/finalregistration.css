@@ -1,0 +1,31 @@
+#final-registration-overview {
+    margin-bottom: 10px;
+}
+
+.final-registration-overview-header {
+    margin: 10px 0;
+    display: block;
+    font-weight: bold;
+}
+
+.final-registration-overview-total {
+    font-weight: bold;
+}
+
+#payment-buttons {
+    display: inline-block;
+    margin-left: 50px;
+}
+
+#edit-back {
+    vertical-align: top;
+}
+
+#payment-buttons input {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#accompanying-persons-wrapper {
+    margin-bottom: 2em;
+}

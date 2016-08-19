@@ -1,0 +1,53 @@
+{% set class = (styled) ? 'iishconference_container styled' : 'iishconference_container' %}
+<div class="{{ class }}">
+    {% for field in fields %}
+
+        {% if field.header %}
+            <span class="iishconference_container_header">
+                {{ field.header }}
+            </span>
+        {% endif %}
+
+        {% if field.value is defined %}
+            {% if field.newLine %}
+                <div class="iishconference_container_inline">
+                    <span class="iishconference_container_label">
+                        {{ field.label|trim|iish_t }}
+                    </span>
+                </div>
+
+                <div class="iishconference_container_inline">
+                    <span class="iishconference_container_value">
+                        {% if field.value is iterable %}
+                            {{ field.value }}
+                        {% elseif field.html %}
+                            {{ field.value|markup }}
+                        {% else %}
+                            {{ field.value|text }}
+                        {% endif %}
+                    </span>
+                </div>
+            {% else %}
+                <div class="iishconference_container_inline">
+                    <span class="iishconference_container_label">
+                        {{ field.label|trim|iish_t }}
+                    </span>
+
+                    <span class="iishconference_container_value">
+                        {% if field.value is iterable %}
+                            {{ field.value }}
+                        {% elseif field.html %}
+                            {{ field.value|markup }}
+                        {% else %}
+                            {{ field.value|text }}
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if not field.header and not field.value is defined %}
+            {{ field }}
+        {% endif %}
+    {% endfor %}
+</div>

@@ -1,0 +1,65 @@
+iish_conference_network_forchairs.index:
+  path: '/conference/network/for_chairs'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::listNetworks'
+    _title: 'Participants and their papers'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_forchairs.network:
+  path: '/conference/network/for_chairs/{network}'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::network'
+    _title_callback: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::getNetworkTitle'
+  options:
+    parameters:
+      network:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_forchairs.network_search:
+  path: '/conference/network/for_chairs/-1'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::network'
+    _title_callback: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::getNetworkTitle'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_forchairs.session:
+  path: '/conference/network/for_chairs/{network}/{session}'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::session'
+    _title_callback: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::getSessionTitle'
+  options:
+    parameters:
+      network:
+        type: 'iish_conference_param_converter'
+      session:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_forchairs.session_search:
+  path: '/conference/network/for_chairs/-1/{session}'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::session'
+    _title_callback: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::getSessionTitle'
+  options:
+    parameters:
+      session:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_forchairs.session_individual:
+  path: '/conference/network/for_chairs/{network}/-1'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::session'
+    _title_callback: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::getSessionTitle'
+  options:
+    parameters:
+      network:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'

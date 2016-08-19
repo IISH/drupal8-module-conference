@@ -1,0 +1,19 @@
+iish_conference_network_participants_xls.index:
+  path: '/conference/network/participants'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_participants_xls\Controller\ParticipantsController::listNetworks'
+    _title: 'Participant names and e-mail addresses'
+  requirements:
+    _access: 'TRUE'
+
+iish_conference_network_participants_xls.network:
+  path: '/conference/network/participants/{network}'
+  defaults:
+    _controller: '\Drupal\iish_conference_network_participants_xls\Controller\ParticipantsController::network'
+    _title: 'Participant names and e-mail addresses'
+  options:
+    parameters:
+      network:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'

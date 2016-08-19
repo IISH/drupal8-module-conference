@@ -1,0 +1,10 @@
+services:
+  iish_conference.twig_extension:
+    class: Drupal\iish_conference\TwigExtension
+    tags:
+      - { name: twig.extension }
+
+  iish_conference_param_converter:
+    class: Drupal\iish_conference\ParamConverter\ConferenceParamConverter
+    tags:
+      - { name: paramconverter }

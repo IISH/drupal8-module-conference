@@ -1,0 +1,47 @@
+<div class="iishconference_container">
+    <span class="iishconference_container_header">
+        {{ paper.title }}
+    </span>
+
+    <div>
+        <span class="iishconference_container_label">
+            {{ 'Uploaded paper'|iish_t }}
+        </span>
+
+        {% if not paper.fileSize or paper.fileSize == 0 %}
+            {{ 'No paper uploaded yet'|iish_t }}
+        {% else %}
+            {{ paperDownloadLink }}
+            {{ '(' ~ paper.readableFileSize ~ ')' }}
+        {% endif %}
+    </div>
+
+    <form class="iishconference_inline" enctype="multipart/form-data" action="{{ actionUrl }}" method="post" id="upload-paper" accept-charset="UTF-8">
+        <div class="form-item form-type-managed-file form-item-upload-paper">
+            <label for="upload-paper">
+                {{ 'Upload paper'|iish_t }}
+            </label>
+
+            <div id="upload-paper" class="form-managed-file">
+                <input type="file" id="paper-file" name="paper-file" size="22" class="form-file">
+            </div>
+
+            <div class="description">
+                {% trans %}
+                    The file can't be larger than {{ maxSize }}. Only files with the following extensions are allowed: {{ extensions }}.
+                {% endtrans %}
+            </div>
+        </div>
+
+        <input type="hidden" id="paper-id" name="paper-id" value="{{ paper.id }}"/>
+        <input type="hidden" id="back-url" name="back-url" value="{{ backUrl }}"/>
+
+        <input type="submit" id="upload-paper" name="upload-paper" value="{{ 'Upload new/replace paper'|iish_t }}" class="button form-submit"/>
+    </form>
+
+    {{ deleteForm }}
+
+    <div class="topmargin">
+        {{ backLink }}
+    </div>
+</div>
