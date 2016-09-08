@@ -187,10 +187,14 @@ class PersonalPageController extends ControllerBase {
       'label' => 'Organisation',
       'value' => $userDetails->getOrganisation()
     );
-    $fields[] = array(
-      'label' => 'Department',
-      'value' => $userDetails->getDepartment()
-    );
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+      $fields[] = array(
+        'label' => 'Department',
+        'value' => $userDetails->getDepartment()
+      );
+    }
+    
     $fields[] = array(
       'label' => 'E-mail',
       'value' => $userDetails->getEmail()

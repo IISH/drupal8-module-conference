@@ -98,14 +98,16 @@ class PersonalInfoPage extends PreRegistrationPage {
       '#default_value' => $user->getOrganisation(),
     );
 
-    $form['personal_info']['department'] = array(
-      '#type' => 'textfield',
-      '#title' => iish_t('Department'),
-      '#size' => 40,
-      '#maxlength' => 255,
-      '#required' => TRUE,
-      '#default_value' => $user->getDepartment(),
-    );
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+      $form['personal_info']['department'] = array(
+        '#type' => 'textfield',
+        '#title' => iish_t('Department'),
+        '#size' => 40,
+        '#maxlength' => 255,
+        '#required' => TRUE,
+        '#default_value' => $user->getDepartment(),
+      );
+    }
 
     $form['personal_info']['email'] = array(
       '#type' => 'textfield',
@@ -399,11 +401,14 @@ class PersonalInfoPage extends PreRegistrationPage {
     $user->setLastName($form_state->getValue('lastname'));
     $user->setGender($form_state->getValue('gender'));
     $user->setOrganisation($form_state->getValue('organisation'));
-    $user->setDepartment($form_state->getValue('department'));
     $user->setCity($form_state->getValue('city'));
     $user->setCountry($form_state->getValue('country'));
     $user->setPhone($form_state->getValue('phone'));
     $user->setMobile($form_state->getValue('mobile'));
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+      $user->setDepartment($form_state->getValue('department'));
+    }
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
       $user->setCv($form_state->getValue('cv'));

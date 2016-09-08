@@ -47,6 +47,7 @@ class SettingsApi {
   const SHOW_CV = 'show_cv';
   const SHOW_DAYS = 'show_days';
   const SHOW_DAYS_SESSION_PLANNED = 'show_days_session_planned';
+  const SHOW_DEPARTMENT = 'show_department';
   const SHOW_EQUIPMENT = 'show_equipment';
   const SHOW_FINISH_LATER_BUTTON = 'show_finish_later_button';
   const SHOW_GENERAL_COMMENTS = 'show_general_comments';

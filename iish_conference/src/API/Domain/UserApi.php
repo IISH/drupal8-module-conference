@@ -6,6 +6,7 @@ use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\MailNewPasswordApi;
 use Drupal\iish_conference\API\CachedConferenceApi;
 use Drupal\iish_conference\API\LoggedInUserDetails;
+use Drupal\iish_conference\API\SettingsApi;
 
 /**
  * Holds a user obtained from the API
@@ -276,7 +277,8 @@ class UserApi extends CRUDApiClient {
    */
   public function getLocationDetails() {
     $locations = array();
-    if (($this->getDepartment() !== NULL) && (strlen($this->getDepartment()) > 0)) {
+    if ((SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) &&
+      ($this->getDepartment() !== NULL) && (strlen($this->getDepartment()) > 0)) {
       $locations[] = $this->getDepartment();
     }
     if (($this->getOrganisation() !== NULL) && (strlen($this->getOrganisation()) > 0)) {

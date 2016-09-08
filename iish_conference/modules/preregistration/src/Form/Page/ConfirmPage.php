@@ -74,10 +74,14 @@ class ConfirmPage extends PreRegistrationPage {
       'label' => 'Organisation',
       'value' => $user->getOrganisation()
     );
-    $personalInfoContent[] = array(
-      'label' => 'Department',
-      'value' => $user->getDepartment()
-    );
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+      $personalInfoContent[] = array(
+        'label' => 'Department',
+        'value' => $user->getDepartment()
+      );
+    }
+
     $personalInfoContent[] = array(
       'label' => 'E-mail',
       'value' => $user->getEmail()
