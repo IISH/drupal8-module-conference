@@ -13,11 +13,13 @@ class SessionApi extends CRUDApiClient {
   protected $name;
   protected $abstr;
   protected $state_id;
+  protected $type_id;
   protected $papers_id;
   protected $networks_id;
   protected $addedBy_id;
 
   private $sessionState;
+  private $sessionType;
   private $networks;
   private $addedBy;
   private $sessionParticipants;
@@ -147,6 +149,35 @@ class SessionApi extends CRUDApiClient {
   }
 
   /**
+   * Returns the id of this sessions type
+   *
+   * @return int The session type id
+   */
+  public function getTypeId() {
+    return $this->type_id;
+  }
+
+  /**
+   * Returns this sessions type
+   *
+   * @return SessionTypeApi The session type
+   */
+  public function getType() {
+    if (!$this->sessionType && is_int($this->getTypeId())) {
+      $sessionTypes = CachedConferenceApi::getSessionTypes();
+
+      foreach ($sessionTypes as $sessionType) {
+        if ($sessionType->getId() == $this->type_id) {
+          $this->sessionType = $sessionType;
+          break;
+        }
+      }
+    }
+
+    return $this->sessionType;
+  }
+
+  /**
    * Returns all the networks to which this session belongs
    *
    * @return NetworkApi[] All networks to which this session belongs
@@ -248,6 +279,21 @@ class SessionApi extends CRUDApiClient {
     $this->sessionState = NULL;
     $this->state_id = $state;
     $this->toSave['state.id'] = $state;
+  }
+
+  /**
+   * Set the type of this session
+   *
+   * @param int|SessionTypeApi $type The session type (id)
+   */
+  public function setType($type) {
+    if ($type instanceof SessionTypeApi) {
+      $type = $type->getId();
+    }
+
+    $this->sessionType = NULL;
+    $this->type_id = $type;
+    $this->toSave['type.id'] = $type;
   }
 
   /**

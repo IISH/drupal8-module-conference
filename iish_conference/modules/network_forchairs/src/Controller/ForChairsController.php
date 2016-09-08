@@ -13,7 +13,6 @@ use Drupal\iish_conference\ConferenceTrait;
 use Drupal\iish_conference\API\EmptyApi;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\ApiCriteriaBuilder;
-use Drupal\iish_conference\API\CachedConferenceApi;
 
 use Drupal\iish_conference\API\Domain\NetworkApi;
 use Drupal\iish_conference\API\Domain\SessionApi;

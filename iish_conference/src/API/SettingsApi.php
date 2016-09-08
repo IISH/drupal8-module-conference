@@ -18,11 +18,14 @@ class SettingsApi {
   const DOWNLOAD_PAPER_LASTDATE = 'download_paper_lastdate';
   const EMAIL_MAX_NUM_TRIES = 'email_max_num_tries';
   const FINAL_REGISTRATION_LASTDATE = 'final_registration_lastdate';
+  const GENERAL_TERMS_CONDITIONS_LINK = 'general_terms_conditions_link';
   const MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session';
   const MAX_UPLOAD_SIZE_PAPER = 'max_upload_size_paper';
   const NETWORK_NAME_PLURAL = 'network_name_plural';
   const NETWORK_NAME_SINGULAR = 'network_name_singular';
   const NUM_CANDIDATE_VOTES_ADVISORY_BOARD = 'num_candidate_votes_advisory_board';
+  const ONLINE_PROGRAM_HEADER = 'online_program_header';
+  const ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction';
   const ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate';
   const PATH_FOR_ADMIN_MENU = 'path_for_admin_menu';
   const PATH_FOR_MENU = 'path_for_menu';
@@ -32,11 +35,9 @@ class SettingsApi {
   const PREREGISTRATION_SESSIONS = 'preregistration_sessions';
   const SESSION_NAME_PLURAL = 'session_name_plural';
   const SESSION_NAME_SINGULAR = 'session_name_singular';
-  const GENERAL_TERMS_CONDITIONS_LINK = 'general_terms_conditions_link';
-  const ONLINE_PROGRAM_HEADER = 'online_program_header';
-  const ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction';
 
   // Show / hide
+  const ALLOW_NETWORK_CHAIRS_TO_SEE_ALL_NETWORKS = 'allow_network_chairs_to_see_all_networks';
   const HIDE_ALWAYS_IN_ONLINE_PROGRAMME = 'hide_always_in_online_programme';
   const HIDE_IF_EMPTY_IN_ONLINE_PROGRAMME = 'hide_if_empty_in_online_programme';
   const SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons';
@@ -51,15 +52,15 @@ class SettingsApi {
   const SHOW_GENERAL_COMMENTS = 'show_general_comments';
   const SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil';
   const SHOW_NETWORK = 'show_network';
+  const SHOW_NETWORK_CHAIRS = 'show_network_chairs';
+  const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
   const SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration';
   const SHOW_PROGRAMME_ONLINE = 'show_programme_online';
   const SHOW_SESSION_CODES = 'show_session_codes';
-  const SHOW_STUDENT = 'show_student';
-  const SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration';
-  const SHOW_NETWORK_CHAIRS = 'show_network_chairs';
-  const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
-  const ALLOW_NETWORK_CHAIRS_TO_SEE_ALL_NETWORKS = 'allow_network_chairs_to_see_all_networks';
   const SHOW_SESSION_ENDTIME_IN_PP = 'show_session_endtime_in_pp';
+  const SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration';
+  const SHOW_SESSION_TYPES = 'show_session_types';
+  const SHOW_STUDENT = 'show_student';
 
   // Required fields
   const REQUIRED_CV = 'required_cv';

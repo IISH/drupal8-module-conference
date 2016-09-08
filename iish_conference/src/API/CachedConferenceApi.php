@@ -14,6 +14,7 @@ use Drupal\iish_conference\API\Domain\SessionApi;
 use Drupal\iish_conference\API\Domain\EventDateApi;
 use Drupal\iish_conference\API\Domain\SessionDateTimeApi;
 use Drupal\iish_conference\API\Domain\SessionStateApi;
+use Drupal\iish_conference\API\Domain\SessionTypeApi;
 use Drupal\iish_conference\API\Domain\VolunteeringApi;
 
 /**
@@ -29,6 +30,7 @@ class CachedConferenceApi {
   private static $nameParticipantTypesCache = 'iishconference_participant_types';
   private static $nameParticipantStatesCache = 'iishconference_participant_states';
   private static $nameSessionStatesCache = 'iishconference_session_states';
+  private static $nameSessionTypesCache = 'iishconference_session_types';
   private static $namePaperStatesCache = 'iishconference_paper_states';
   private static $nameEquipmentCache = 'iishconference_equipment';
   private static $nameRoomsCache = 'iishconference_rooms';
@@ -52,6 +54,7 @@ class CachedConferenceApi {
       self::setParticipantTypes();
       self::setParticipantStates();
       self::setSessionStates();
+      self::setSessionTypes();
       self::setPaperStates();
       self::setEquipment();
       self::setRooms();
@@ -129,8 +132,7 @@ class CachedConferenceApi {
    *
    * @return DayApi[]
    */
-  public
-  static function setDays() {
+  public static function setDays() {
     return self::set(self::$nameDaysCache, DayApi::class);
   }
 
@@ -148,8 +150,7 @@ class CachedConferenceApi {
    *
    * @return ParticipantTypeApi[]
    */
-  public
-  static function setParticipantTypes() {
+  public static function setParticipantTypes() {
     return self::set(self::$nameParticipantTypesCache, ParticipantTypeApi::class);
   }
 
@@ -167,9 +168,17 @@ class CachedConferenceApi {
    *
    * @return SessionStateApi[]
    */
-  public
-  static function setSessionStates() {
+  public static function setSessionStates() {
     return self::set(self::$nameSessionStatesCache, SessionStateApi::class);
+  }
+
+  /**
+   * Cache the session types.
+   *
+   * @return SessionTypeApi[]
+   */
+  public static function setSessionTypes() {
+    return self::set(self::$nameSessionTypesCache, SessionTypeApi::class);
   }
 
   /**
@@ -381,6 +390,15 @@ class CachedConferenceApi {
    */
   public static function getSessionStates() {
     return self::get(self::$nameSessionStatesCache, SessionStateApi::class);
+  }
+
+  /**
+   * Get the cached session types.
+   *
+   * @return SessionTypeApi[]
+   */
+  public static function getSessionTypes() {
+    return self::get(self::$nameSessionTypesCache, SessionTypeApi::class);
   }
 
   /**

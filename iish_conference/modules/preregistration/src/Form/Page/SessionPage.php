@@ -9,6 +9,7 @@ use Drupal\iish_conference\EasyProtection;
 use Drupal\iish_conference_preregistration\Form\PreRegistrationState;
 use Drupal\iish_conference_preregistration\Form\PreRegistrationUtils;
 
+use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\CRUDApiMisc;
 use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\ApiCriteriaBuilder;
@@ -47,8 +48,7 @@ class SessionPage extends PreRegistrationPage {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $state = new PreRegistrationState($form_state);
-    $multiPageData = $state->getMultiPageData();
-    $session = $multiPageData['session'];
+    $session = $this->getSession($state);
     $data = array();
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
@@ -68,6 +68,17 @@ class SessionPage extends PreRegistrationPage {
         '#maxlength' => 255,
         '#default_value' => $session->getName(),
       );
+
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+        $form['session']['sessiontype'] = array(
+          '#title' => iish_t('Session type'),
+          '#type' => 'select',
+          '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getSessionTypes()),
+          '#required' => TRUE,
+          '#size' => 3,
+          '#default_value' => $session->getTypeId(),
+        );
+      }
 
       $form['session']['sessionabstract'] = array(
         '#type' => 'textarea',
@@ -97,6 +108,13 @@ class SessionPage extends PreRegistrationPage {
         'label' => 'Session name',
         'value' => $session->getName(),
       );
+
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+        $fields[] = array(
+          'label' => 'Session type',
+          'value' => $session->getType(),
+        );
+      }
 
       $fields[] = array(
         'label' => 'Abstract',
@@ -210,8 +228,7 @@ class SessionPage extends PreRegistrationPage {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!PreRegistrationUtils::useSessions()) {
       $state = new PreRegistrationState($form_state);
-      $multiPageData = $state->getMultiPageData();
-      $session = $multiPageData['session'];
+      $session = $this->getSession($state);
 
       $props = new ApiCriteriaBuilder();
       $props
@@ -241,14 +258,16 @@ class SessionPage extends PreRegistrationPage {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $state = new PreRegistrationState($form_state);
     $user = $state->getUser();
-
-    $multiPageData = $state->getMultiPageData();
-    $session = $multiPageData['session'];
+    $session = $this->getSession($state);
 
     if (!PreRegistrationUtils::useSessions()) {
       // Save session information
       $session->setName($form_state->getValue('sessionname'));
       $session->setAbstr($form_state->getValue('sessionabstract'));
+
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+        $session->setType($form_state->getValue('sessiontype'));
+      }
 
       $networkId = EasyProtection::easyIntegerProtection($form_state->getValue('sessioninnetwork'));
       $session->setNetworks(array($networkId));
@@ -325,6 +344,16 @@ class SessionPage extends PreRegistrationPage {
     }
 
     $this->nextPageName = PreRegistrationPage::TYPE_OF_REGISTRATION;
+  }
+
+  /**
+   * Obtain the session from the state.
+   * @param PreRegistrationState $state The state of the pre registration.
+   * @return SessionApi The session.
+   */
+  private function getSession($state) {
+    $multiPageData = $state->getMultiPageData();
+    return $multiPageData['session'];
   }
 
   /**

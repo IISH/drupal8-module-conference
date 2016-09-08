@@ -440,7 +440,7 @@ class PersonalPageController extends ControllerBase {
   }
 
   /**
-   * Adds session info to a session ccntent holder
+   * Adds session info to a session content holder
    *
    * @param array $renderArray The render array
    * @param UserApi $userDetails The user in this session
@@ -472,6 +472,13 @@ class PersonalPageController extends ControllerBase {
       'value' => $sessionName,
       'html' => TRUE
     );
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+      $renderArray[] = array(
+        'label' => 'Session type',
+        'value' => $session->getType()
+      );
+    }
 
     $planned = CRUDApiMisc::getFirstWherePropertyEquals(new SessionRoomDateTimeApi(), 'session_id', $session->getId());
     if ($planned !== NULL) {
