@@ -13,16 +13,18 @@ use Drupal\iish_conference\API\LoggedInUserDetails;
 use Drupal\iish_conference\API\CachedConferenceApi;
 
 use Drupal\iish_conference\Markup\ConferenceHTML;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- *
+ * Trait for conference controllers and forms.
  */
 trait ConferenceTrait {
 
   /**
-   * @return bool|RedirectResponse
+   * Check if a conference user is logged in. If not, redirect to the login page (if enabled).
+   * @return bool|RedirectResponse Returns a redirect response on a redirect, FALSE otherwise.
    */
   public function redirectIfNotLoggedIn() {
     if (!LoggedInUserDetails::isLoggedIn()) {
@@ -42,7 +44,10 @@ trait ConferenceTrait {
   }
 
   /**
-   * @return bool|RedirectResponse|array
+   * Check if a conference user is logged in and an admin. If not logged in, redirect to the login page (if enabled).
+   * If logged in, but not an admin, show 'access denied' message.
+   * @return bool|RedirectResponse|array Returns a redirect response on a redirect,
+   * a render array on access denied, FALSE otherwise.
    */
   public function checkAdmin() {
     if ($response = self::redirectIfNotLoggedIn() !== FALSE) {
@@ -81,7 +86,10 @@ trait ConferenceTrait {
   }
 
   /**
-   * @return bool|RedirectResponse|array
+   * Check if a conference user is logged in and a network chair. If not logged in,
+   * redirect to the login page (if enabled). If logged in, but not a network chair, show 'access denied' message.
+   * @return bool|RedirectResponse|array Returns a redirect response on a redirect,
+   * a render array on access denied, FALSE otherwise.
    */
   public function checkNetworkChair() {
     if ($response = self::redirectIfNotLoggedIn() !== FALSE) {
@@ -98,7 +106,8 @@ trait ConferenceTrait {
   }
 
   /**
-   * @return RedirectResponse
+   * Redirects to the personal page if enabled, otherwise the homepage.
+   * @return RedirectResponse Redirect response.
    */
   public function redirectToPersonalPage() {
     if (\Drupal::moduleHandler()->moduleExists('iish_conference_personalpage')) {
@@ -109,7 +118,8 @@ trait ConferenceTrait {
   }
 
   /**
-   * @param FormStateInterface $form_state
+   * Redirects to the personal page if enabled, otherwise the homepage from a form submit state.
+   * @param FormStateInterface $form_state The form state.
    */
   public function formRedirectToPersonalPage(FormStateInterface $form_state) {
     if (\Drupal::moduleHandler()->moduleExists('iish_conference_personalpage')) {
@@ -121,8 +131,9 @@ trait ConferenceTrait {
   }
 
   /**
-   * @param string $fragment
-   * @return array
+   * Create a render array that will render a link back to the personal page.
+   * @param string $fragment The fragment on the personal page to link back to.
+   * @return array The render array.
    */
   public function backToPersonalPageLink($fragment = 'links') {
     if (\Drupal::moduleHandler()->moduleExists('iish_conference_personalpage')) {
@@ -140,7 +151,8 @@ trait ConferenceTrait {
   }
 
   /**
-   * @return NetworkApi[]
+   * Returns a list of all networks that this conference user is allowed to see.
+   * @return NetworkApi[] A list of networks.
    */
   public function getAllowedNetworks() {
     $networks = CachedConferenceApi::getNetworks();
@@ -153,13 +165,14 @@ trait ConferenceTrait {
   }
 
   /**
-   * @param mixed $title
-   * @param string $class
-   * @param CRUDApiClient[] $entities
-   * @param string $suffix
-   * @param string $route
-   * @param string $paramName
-   * @return array
+   * Create a render array that will render a list of links.
+   * @param string $title The title of the list.
+   * @param string $class A class name to add to the HTML.
+   * @param CRUDApiClient[] $entities The list of entities to transform into links.
+   * @param string $suffix A suffix to add to each of the links in the list.
+   * @param string $route The route to render the links.
+   * @param string $paramName The name of the parameter to include the entity id with.
+   * @return array The render array.
    */
   public function getLinks($title, $class, $entities, $suffix, $route, $paramName) {
     $links = array();
@@ -182,13 +195,14 @@ trait ConferenceTrait {
   }
 
   /**
-   * @param CRUDApiClient[] $list
-   * @param CRUDApiClient $cur
-   * @param string $backText
-   * @param Url $backUrl
-   * @param Url $prevNextUrl
-   * @param string $paramName
-   * @return array
+   * Create a render array that will render a navigation menu.
+   * @param CRUDApiClient[] $list The list of entities to navigate through.
+   * @param CRUDApiClient $cur The current entity from the list.
+   * @param string $backText The text to use on the link back to the parent page.
+   * @param Url $backUrl The base URL for the parent page.
+   * @param Url $prevNextUrl The base URL for the prev/next page.
+   * @param string $paramName The name of the parameter to include the entity id with.
+   * @return array The render array.
    */
   public function getNavigation($list, $cur, $backText, $backUrl, $prevNextUrl, $paramName) {
     $renderArray = array(
@@ -214,9 +228,10 @@ trait ConferenceTrait {
   }
 
   /**
-   * @param mixed $excelData
-   * @param string $fileName
-   * @return Response
+   * Renders an Excel download response.
+   * @param string $excelData The Excel file.
+   * @param string $fileName The name of the downloaded file.
+   * @return Response The download response.
    */
   public function getExcelResponse($excelData, $fileName) {
     return new Response(
