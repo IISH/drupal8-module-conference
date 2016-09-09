@@ -113,6 +113,7 @@ class PreRegistrationForm extends FormBase {
       return $form;
     }
 
+    // Now obtain the current page an build the form for that page
     $state = new PreRegistrationState($form_state);
     $page = $state->getCurrentPage();
     $form = $page->buildForm($form, $form_state);
@@ -146,25 +147,29 @@ class PreRegistrationForm extends FormBase {
     $state = new PreRegistrationState($form_state);
     $page = $state->getCurrentPage();
 
-    $userPressedPrevButton = strpos($form_state->getTriggeringElement()['#name'], 'submit_back') === 0;
-    $userPressedRemoveButton = strpos($form_state->getTriggeringElement()['#name'], 'submit_remove') === 0;
-
-    // Call the next method
-    if ($userPressedPrevButton) {
-      $page->backForm($form, $form_state);
-    }
-    else {
-      if ($userPressedRemoveButton) {
-        $page->deleteForm($form, $form_state);
+    // Make sure the triggering element was REALLY triggered
+    // On a re-POST when there is no trigger (form page was cached), Drupal picks the first submit button found
+    $trigger = $form_state->getTriggeringElement();
+    if (isset($form_state->getUserInput()[$trigger['#name']])) {
+      // Call the next method
+      $nav = isset($trigger['#nav']) ? $trigger['#nav'] : 'next';
+      if ($nav == 'back') {
+        $page->backForm($form, $form_state);
+      } else {
+        if ($nav == 'remove') {
+          $page->deleteForm($form, $form_state);
+        } else {
+          $page->submitForm($form, $form_state);
+        }
       }
-      else {
-        $page->submitForm($form, $form_state);
+
+      $nextPageName = $page->getNextPageName();
+      if ($nextPageName != NULL) {
+        $state->setNextPageName($nextPageName);
       }
     }
 
-    $nextPageName = $page->getNextPageName();
-    if ($nextPageName != NULL) {
-      $state->setNextPageName($nextPageName);
-    }
+    $form_state->setRebuild();
+    $form_state->addRebuildInfo('copy', array('#build_id' => TRUE));
   }
 }

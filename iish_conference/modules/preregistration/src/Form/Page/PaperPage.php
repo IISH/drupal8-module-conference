@@ -127,13 +127,13 @@ class PaperPage extends PreRegistrationPage {
     }
 
     if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD) == 1) && $participant->getStudent()) {
-      $awardLink = Link::fromTextAndUrl(iish_t('more about the award'), 
+      $awardLink = Link::fromTextAndUrl(iish_t('more about the award'),
         Url::fromUri('award', array('attributes' => array('target' => '_blank'))));
-      
+
       $form['paper']['award'] = array(
         '#type' => 'checkbox',
-        '#title' => iish_t('Would you like to participate in the "@awardName"?', 
-            array('@awardName' => SettingsApi::getSetting(SettingsApi::AWARD_NAME))) . 
+        '#title' => iish_t('Would you like to participate in the "@awardName"?',
+            array('@awardName' => SettingsApi::getSetting(SettingsApi::AWARD_NAME))) .
           '&nbsp; <em>(' . $awardLink->toString() . ')</em>',
         '#default_value' => $participant->getAward(),
       );
@@ -172,33 +172,13 @@ class PaperPage extends PreRegistrationPage {
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back'),
-      '#limit_validation_errors' => array(),
-    );
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Save paper'),
-    );
+    $this->buildPrevButton($form, 'paper_back', iish_t('Back'));
+    $this->buildNextButton($form, 'paper_next', iish_t('Save paper'));
 
     // We can only remove a paper if it has been persisted
     if ($paper->isUpdate()) {
-      $form['submit_remove'] = array(
-        '#type' => 'submit',
-        '#name' => 'submit_remove',
-        '#value' => iish_t('Remove paper'),
-        '#limit_validation_errors' => array(),
-        '#attributes' => array(
-          'onclick' =>
-            'if (!confirm("' .
-            iish_t('Are you sure you want to remove this paper?') .
-            '")) { return false; }'
-        ),
-      );
+      $this->buildRemoveButton($form, 'paper_remove', iish_t('Remove paper'),
+        iish_t('Are you sure you want to remove this paper?'));
     }
 
     return $form;
@@ -361,13 +341,13 @@ class PaperPage extends PreRegistrationPage {
 
   /**
    * Returns the stored paper from the pre registration state.
-   * 
+   *
    * @param PreRegistrationState $state The pre registration state.
-   * 
+   *
    * @return PaperApi The paper.
    */
   private static function getPaper($state) {
     $data = $state->getMultiPageData();
-    return $data['paper']; 
+    return $data['paper'];
   }
 }

@@ -220,34 +220,14 @@ class SessionParticipantPage extends PreRegistrationPage {
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back'),
-      '#limit_validation_errors' => array(),
-    );
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Save participant'),
-    );
+    $this->buildPrevButton($form, 'sessionparticipant_back', iish_t('Back'));
+    $this->buildNextButton($form, 'sessionparticipant_next', iish_t('Save participant'));
 
     // We can only remove a participant from a session if he/she has already been added to session
     if (isset($sessionParticipants[0])) {
-      $form['submit_remove'] = array(
-        '#type' => 'submit',
-        '#name' => 'submit_remove',
-        '#value' => iish_t('Remove participant from session'),
-        '#limit_validation_errors' => array(),
-        '#attributes' => array(
-          'onclick' =>
-            'if (!confirm("' .
-            iish_t('Are you sure you want to remove this participant? ' .
-              '(The participant will only be removed from this session).') .
-            '")) { return false; }'
-        ),
-      );
+      $this->buildRemoveButton($form, 'sessionparticipant_remove', iish_t('Remove participant from session'),
+        iish_t('Are you sure you want to remove this participant? ' .
+          '(The participant will only be removed from this session).'));
     }
 
     return $form;

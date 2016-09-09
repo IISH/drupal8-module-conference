@@ -66,11 +66,7 @@ class PasswordPage extends PreRegistrationPage {
       '#maxlength' => 50,
     );
 
-    $form['login_with_password']['login'] = array(
-      '#type' => 'submit',
-      '#name' => 'login',
-      '#value' => iish_t('Next'),
-    );
+    $this->buildNextButton($form['login_with_password'], 'password_next');
 
     if (\Drupal::moduleHandler()->moduleExists('iish_conference_lostpassword')) {
       $lostPasswordLink = Link::fromTextAndUrl(iish_t('Lost password'),

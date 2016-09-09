@@ -67,18 +67,8 @@ class SessionParticipantTypesPage extends PreRegistrationPage {
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back'),
-      '#limit_validation_errors' => array(),
-    );
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Save'),
-    );
+    $this->buildPrevButton($form, 'sessionparticipanttypes_back', iish_t('Back'));
+    $this->buildNextButton($form, 'sessionparticipanttypes_next', iish_t('Save'));
 
     return $form;
   }

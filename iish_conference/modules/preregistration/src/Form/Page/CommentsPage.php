@@ -56,18 +56,8 @@ class CommentsPage extends PreRegistrationPage {
       '#default_value' => $participant->getExtraInfo(),
     );
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back to previous step'),
-      '#limit_validation_errors' => array(),
-    );
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Next to confirmation page'),
-    );
+    $this->buildPrevButton($form, 'comments_back');
+    $this->buildNextButton($form, 'comments_next', iish_t('Next to confirmation page'));
 
     return $form;
   }

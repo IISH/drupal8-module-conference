@@ -17,17 +17,11 @@ class PreRegistrationState {
   private $formState;
 
   /**
-   * @var \Drupal\user\PrivateTempStore
-   */
-  //private $tempStore;
-
-  /**
    * Creates the pre registration state for the given form state.
    * @param FormStateInterface $formState The form state.
    */
   public function __construct(FormStateInterface $formState) {
     $this->formState = $formState;
-    //$this->tempStore = \Drupal::service('user.private_tempstore')->get('pre_registration');
   }
 
   /**
@@ -38,7 +32,6 @@ class PreRegistrationState {
   public function setNextPageName($page) {
     $this->formState->set('pre_registration_page', $page);
     $this->formState->set('pre_registration_data', NULL);
-    $this->formState->setRebuild();
   }
 
   /**

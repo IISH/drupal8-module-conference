@@ -340,11 +340,7 @@ class PersonalInfoPage extends PreRegistrationPage {
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Next'),
-    );
+    $this->buildNextButton($form, 'personalinfo_next');
 
     return $form;
   }

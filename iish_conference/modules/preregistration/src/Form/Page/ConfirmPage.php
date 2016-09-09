@@ -16,6 +16,7 @@ use Drupal\iish_conference\API\Domain\SessionParticipantApi;
 use Drupal\iish_conference\API\Domain\ParticipantVolunteeringApi;
 
 use Drupal\iish_conference\ConferenceMisc;
+use Drupal\iish_conference\ConferenceTrait;
 use Drupal\iish_conference_preregistration\Form\PreRegistrationState;
 use Drupal\iish_conference_preregistration\Form\PreRegistrationUtils;
 
@@ -23,6 +24,7 @@ use Drupal\iish_conference_preregistration\Form\PreRegistrationUtils;
  * The confirm page.
  */
 class ConfirmPage extends PreRegistrationPage {
+  use ConferenceTrait;
 
   /**
    * Returns a unique string identifying the form.
@@ -511,27 +513,11 @@ class ConfirmPage extends PreRegistrationPage {
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back to previous step'),
-      '#limit_validation_errors' => array(),
-    );
-
+    $this->buildPrevButton($form, 'confirm_back');
     if (SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON) == 1) {
-      $form['submit_back_personalpage'] = array(
-        '#type' => 'submit',
-        '#name' => 'submit_back_personalpage',
-        '#value' => iish_t('Save and finish pre-registration later'),
-        '#limit_validation_errors' => array(),
-      );
+      $this->buildPrevButton($form, 'confirm_back_personal_page', iish_t('Save and finish pre-registration later'));
     }
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Confirm and finish pre-registration'),
-    );
+    $this->buildNextButton($form, 'confirm_next', iish_t('Confirm and finish pre-registration'));
 
     return $form;
   }
@@ -583,8 +569,9 @@ class ConfirmPage extends PreRegistrationPage {
     // Now find out if to which step we have to go to
     $submitName = $form_state->getTriggeringElement()['#name'];
 
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON) == 1) && ($submitName === 'submit_back_personalpage')) {
-      $form_state->setRedirect('iish_conference_personalpage.index');
+    if ((SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON) == 1)
+      && ($submitName === 'confirm_back_personal_page')) {
+      $this->formRedirectToPersonalPage($form_state);
     }
     else {
       $typeOfRegistrationPage = new TypeOfRegistrationPage();

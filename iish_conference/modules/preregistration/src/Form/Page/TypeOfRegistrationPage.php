@@ -78,29 +78,18 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
         $data['canSubmitNewPaper'] = $canSubmitNewPaper;
 
         if ($canSubmitNewPaper) {
-          $form['author']['submit_paper'] = array(
-            '#type' => 'submit',
-            '#name' => 'submit_paper',
-            '#value' => iish_t('Add a new paper'),
-            '#suffix' => '<br /><br />',
-          );
+          $this->buildNextButton($form['author'], 'typeofregistration_paper', iish_t('Add a new paper'));
+          $form['author']['suffix']['#markup'] = '<br /><br />';
         }
 
         $printOr = TRUE;
         foreach ($papers as $paper) {
-          $prefix = '';
           if ($printOr && $canSubmitNewPaper) {
-            $prefix = ' &nbsp;' . iish_t('or') . '<br /><br />';
+            $form['author']['prefix']['#markup'] = ' &nbsp;' . iish_t('or') . '<br /><br />';
             $printOr = FALSE;
           }
-
-          $form['author']['submit_paper_' . $paper->getId()] = array(
-            '#name' => 'submit_paper_' . $paper->getId(),
-            '#type' => 'submit',
-            '#value' => iish_t('Edit paper'),
-            '#prefix' => $prefix,
-            '#suffix' => ' ' . $paper->getTitle() . '<br /><br />',
-          );
+          $this->buildNextButton($form['author'], 'typeofregistration_paper_' . $paper->getId(), iish_t('Edit paper'));
+          $form['author']['suffix']['#markup'] = ' ' . $paper->getTitle() . '<br /><br />';
         }
       }
       else {
@@ -131,20 +120,12 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
             '#empty_option' => '- ' . iish_t('Select a session') . ' -',
           );
 
-          $form['organizer']['submit_existing_session'] = array(
-            '#type' => 'submit',
-            '#name' => 'submit_existing_session',
-            '#value' => iish_t('Organize session'),
-            '#suffix' => '<br /><br />',
-          );
+          $this->buildNextButton($form['organizer'], 'typeofregistration_existing_session', iish_t('Organize session'));
+          $form['organizer']['suffix']['#markup'] = '<br /><br />';
         }
         else {
-          $form['organizer']['submit_session'] = array(
-            '#type' => 'submit',
-            '#name' => 'submit_session',
-            '#value' => iish_t('Add a new session'),
-            '#suffix' => '<br /><br />',
-          );
+          $this->buildNextButton($form['organizer'], 'typeofregistration_session', iish_t('Add a new session'));
+          $form['organizer']['suffix']['#markup'] = '<br /><br />';
         }
 
         $sessionParticipants = PreRegistrationUtils::getSessionParticipantsAddedByUser($state);
@@ -152,19 +133,12 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
 
         $printOr = TRUE;
         foreach (array_unique($sessions) as $session) {
-          $prefix = '';
           if ($printOr) {
-            $prefix = ' &nbsp;' . iish_t('or') . '<br /><br />';
+            $form['organizer']['prefix']['#markup'] = ' &nbsp;' . iish_t('or') . '<br /><br />';
             $printOr = FALSE;
           }
-
-          $form['organizer']['submit_session_' . $session->getId()] = array(
-            '#name' => 'submit_session_' . $session->getId(),
-            '#type' => 'submit',
-            '#value' => iish_t('Edit session'),
-            '#prefix' => $prefix,
-            '#suffix' => ' ' . $session->getName() . '<br /><br />',
-          );
+          $this->buildNextButton($form['organizer'], 'typeofregistration_session_' . $session->getId(), iish_t('Edit session'));
+          $form['organizer']['suffix']['#markup'] = ' ' . $session->getName() . '<br /><br />';
         }
       }
       else {
@@ -190,12 +164,9 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
       );
 
       if (PreRegistrationUtils::isAuthorRegistrationOpen()) {
-        $form['sessionparticipanttypes']['submit_sessionparticipanttypes'] = array(
-          '#type' => 'submit',
-          '#name' => 'submit_sessionparticipanttypes',
-          '#value' => iish_t('Register as a @types', array('@types' => $typesOr)),
-          '#suffix' => '<br /><br />',
-        );
+        $this->buildNextButton($form['sessionparticipanttypes'], 'typeofregistration_sessionparticipanttypes',
+          iish_t('Register as a @types', array('@types' => $typesOr)));
+        $form['sessionparticipanttypes']['suffix']['#markup'] = '<br /><br />';
 
         foreach ($participantTypes as $participantType) {
           $sessionParticipants =
@@ -245,18 +216,8 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
       $valueNextPage = iish_t('Next to general comments page');
     }
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back to personal info'),
-      '#limit_validation_errors' => array(),
-    );
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => $valueNextPage,
-    );
+    $this->buildPrevButton($form, 'typeofregistration_prev', iish_t('Back to personal info'));
+    $this->buildNextButton($form, 'typeofregistration_next', $valueNextPage);
 
     $state->setFormData($data);
 
@@ -276,7 +237,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     $data = $state->getFormData();
     $submitName = $form_state->getTriggeringElement()['#name'];
 
-    if ($submitName === 'submit') {
+    if ($submitName === 'typeofregistration_next') {
       $commentsPage = new CommentsPage();
 
       if ($commentsPage->isOpen()) {
@@ -289,13 +250,13 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     }
 
     if (PreRegistrationUtils::isAuthorRegistrationOpen()) {
-      if (($submitName === 'submit_paper') && $data['canSubmitNewPaper']) {
+      if (($submitName === 'typeofregistration_paper') && $data['canSubmitNewPaper']) {
         $this->setPaper($state, NULL);
         return;
       }
 
-      if (strpos($submitName, 'submit_paper_') === 0) {
-        $id = EasyProtection::easyIntegerProtection(str_replace('submit_paper_', '', $submitName));
+      if (strpos($submitName, 'typeofregistration_paper_') === 0) {
+        $id = EasyProtection::easyIntegerProtection(str_replace('typeofregistration_paper_', '', $submitName));
 
         $this->setPaper($state, $id);
         return;
@@ -303,19 +264,19 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     }
 
     if (PreRegistrationUtils::isOrganizerRegistrationOpen()) {
-      if ($submitName === 'submit_session') {
+      if ($submitName === 'typeofregistration_session') {
         $this->setSession($state, NULL);
         return;
       }
 
-      if (strpos($submitName, 'submit_session_') === 0) {
-        $id = EasyProtection::easyIntegerProtection(str_replace('submit_session_', '', $submitName));
+      if (strpos($submitName, 'typeofregistration_session_') === 0) {
+        $id = EasyProtection::easyIntegerProtection(str_replace('typeofregistration_session_', '', $submitName));
 
         $this->setSession($state, $id);
         return;
       }
 
-      if ($submitName === 'submit_existing_session') {
+      if ($submitName === 'typeofregistration_existing_session') {
         $id = EasyProtection::easyIntegerProtection($form_state->getValue('session-inline'));
 
         $this->setSession($state, $id, TRUE);
@@ -323,7 +284,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
       }
     }
 
-    if (PreRegistrationUtils::isAuthorRegistrationOpen() && ($submitName === 'submit_sessionparticipanttypes')) {
+    if (PreRegistrationUtils::isAuthorRegistrationOpen() && ($submitName === 'typeofregistration_sessionparticipanttypes')) {
       $this->nextPageName = PreRegistrationPage::SESSION_PARTICIPANT_TYPES;
       return;
     }

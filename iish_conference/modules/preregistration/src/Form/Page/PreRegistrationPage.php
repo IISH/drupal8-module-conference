@@ -3,6 +3,7 @@ namespace Drupal\iish_conference_preregistration\Form\Page;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * The base class for all pages of the pre registration process.
@@ -61,5 +62,60 @@ abstract class PreRegistrationPage extends FormBase {
    */
   public function deleteForm(array &$form, FormStateInterface $form_state) {
     // Delete is optional.
+  }
+
+  /**
+   * Builds a submit button that triggers a next page action.
+   * @param array $form An associative array containing the structure of the form.
+   * @param string $name The name of the submit button.
+   * @param string|TranslatableMarkup $value The value of the submit button.
+   */
+  protected function buildNextButton(array &$form, $name, $value = NULL) {
+    $this->buildSubmitButton($form, $name, $value ?: iish_t('Next'));
+  }
+
+  /**
+   * Builds a submit button that triggers a previous page action.
+   * @param array $form An associative array containing the structure of the form.
+   * @param string $name The name of the submit button.
+   * @param string|TranslatableMarkup $value The value of the submit button.
+   */
+  protected function buildPrevButton(array &$form, $name, $value = NULL) {
+    $this->buildSubmitButton($form, $name, $value ?: iish_t('Back to previous step'));
+    $form[$name]['#limit_validation_errors'] = array();
+    $form[$name]['#nav'] = 'back';
+  }
+
+  /**
+   * Builds a submit button that triggers a removal action.
+   * @param array $form An associative array containing the structure of the form.
+   * @param string $name The name of the submit button.
+   * @param string|TranslatableMarkup $value The value of the submit button.
+   * @param string|TranslatableMarkup $confirm The text of the confirm dialog to show when the button is clicked.
+   */
+  protected function buildRemoveButton(array &$form, $name, $value = NULL, $confirm = NULL) {
+    $this->buildSubmitButton($form, $name, $value ?: iish_t('Remove'));
+    $form[$name]['#limit_validation_errors'] = array();
+    $form[$name]['#nav'] = 'remove';
+
+    if ($confirm) {
+      $form[$name]['#attributes'] = array(
+        'onclick' => 'if (!confirm("' . $confirm .  '")) { return false; }'
+      );
+    }
+  }
+
+  /**
+   * Builds a simple submit button.
+   * @param array $form An associative array containing the structure of the form.
+   * @param string $name The name of the submit button.
+   * @param string|TranslatableMarkup $value The value of the submit button.
+   */
+  private function buildSubmitButton(array &$form, $name, $value) {
+    $form[$name] = array(
+      '#type' => 'submit',
+      '#name' => $name,
+      '#value' => $value
+    );
   }
 }

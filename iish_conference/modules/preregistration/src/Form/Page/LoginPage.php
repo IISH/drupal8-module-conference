@@ -50,11 +50,7 @@ class LoginPage extends PreRegistrationPage {
       '#maxlength' => 100,
     );
 
-    $form['login']['submit'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit',
-      '#value' => iish_t('Next'),
-    );
+    $this->buildNextButton($form, 'login_next');
 
     $form['info_block'] = array(
       '#markup' => ConferenceMisc::getInfoBlock(),

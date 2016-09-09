@@ -148,18 +148,13 @@ class SessionPage extends PreRegistrationPage {
       '#title' => iish_t('Participants'),
     );
 
-    $form['session_participants']['submit_participant'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_participant',
-      '#value' => iish_t('New participant'),
-      '#suffix' => '<br /><br />',
-    );
+    $this->buildNextButton($form['session_participants'], 'session_participant', iish_t('New participant'));
+    $form['session_participants']['suffix']['#markup'] = '<br /><br />';
 
     $printOr = TRUE;
     foreach ($users as $user) {
-      $prefix = '';
       if ($printOr) {
-        $prefix = ' &nbsp;' . iish_t('or') . '<br /><br />';
+        $form['session_participants']['prefix']['#markup'] = ' &nbsp;' . iish_t('or') . '<br /><br />';
         $printOr = FALSE;
       }
 
@@ -169,47 +164,23 @@ class SessionPage extends PreRegistrationPage {
         $session->getId()
       );
 
-      $form['session_participants']['submit_participant_' . $user->getId()] = array(
-        '#name' => 'submit_participant_' . $user->getId(),
-        '#type' => 'submit',
-        '#value' => 'Edit',
-        '#prefix' => $prefix,
-        '#suffix' => ' ' . $user->getFullName() . ' &nbsp;&nbsp; <em>(' .
-          ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />',
-      );
+      $this->buildNextButton($form['session_participants'], 'session_participant_' . $user->getId(), iish_t('Edit'));
+      $form['session_participants']['suffix']['#markup'] = ' ' . $user->getFullName() . ' &nbsp;&nbsp; <em>(' .
+        ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />';
     }
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    $form['submit_back'] = array(
-      '#type' => 'submit',
-      '#name' => 'submit_back',
-      '#value' => iish_t('Back'),
-      '#limit_validation_errors' => array(),
-    );
+    $this->buildPrevButton($form, 'session_prev', iish_t('Back'));
 
     if (!PreRegistrationUtils::useSessions()) {
-      $form['submit'] = array(
-        '#type' => 'submit',
-        '#name' => 'submit',
-        '#value' => iish_t('Save session'),
-      );
+      $this->buildNextButton($form, 'session_next', iish_t('Save session'));
     }
 
     // We can only remove a session if it has been persisted
     if (!PreRegistrationUtils::useSessions() && $session->isUpdate()) {
-      $form['submit_remove'] = array(
-        '#type' => 'submit',
-        '#name' => 'submit_remove',
-        '#value' => iish_t('Remove session'),
-        '#limit_validation_errors' => array(),
-        '#attributes' => array(
-          'onclick' =>
-            'if (!confirm("' .
-            iish_t('Are you sure you want to remove this session?') .
-            '")) { return false; }'
-        ),
-      );
+      $this->buildRemoveButton($form, 'session_remove', iish_t('Remove session'),
+        iish_t('Are you sure you want to remove this session?'));
     }
 
     $state->setFormData($data);
@@ -293,18 +264,18 @@ class SessionPage extends PreRegistrationPage {
     $submitName = $form_state->getTriggeringElement()['#name'];
 
     // Move back to the 'type of registration' page, clean cached data
-    if ($submitName === 'submit') {
+    if ($submitName === 'session_next') {
       $state->setMultiPageData(array());
       $this->nextPageName = PreRegistrationPage::TYPE_OF_REGISTRATION;
     }
 
-    if ($submitName === 'submit_participant') {
+    if ($submitName === 'session_participant') {
       $this->setSessionParticipant($state, $session, NULL);
       return;
     }
 
-    if (strpos($submitName, 'submit_participant_') === 0) {
-      $id = EasyProtection::easyIntegerProtection(str_replace('submit_participant_', '', $submitName));
+    if (strpos($submitName, 'session_participant_') === 0) {
+      $id = EasyProtection::easyIntegerProtection(str_replace('session_participant_', '', $submitName));
       $this->setSessionParticipant($state, $session, $id);
       return;
     }
