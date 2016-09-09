@@ -42,7 +42,7 @@ trait ConferenceTrait {
   }
 
   /**
-   * @return bool|RedirectResponse|arr
+   * @return bool|RedirectResponse|array
    */
   public function checkAdmin() {
     if ($response = self::redirectIfNotLoggedIn() !== FALSE) {

@@ -25,6 +25,7 @@ class UserApi extends CRUDApiClient {
   protected $mobile;
   protected $organisation;
   protected $department;
+  protected $education;
   protected $cv;
   protected $extraInfo;
   protected $papers_id;
@@ -313,6 +314,27 @@ class UserApi extends CRUDApiClient {
   }
 
   /**
+   * Returns the education of this user
+   *
+   * @return string|null The education
+   */
+  public function getEducation() {
+    return $this->education;
+  }
+
+  /**
+   * Set the education of this user
+   *
+   * @param string|null $education The education
+   */
+  public function setEducation($education) {
+    $education = (($education !== NULL) && strlen(trim($education)) > 0) ? trim($education) : NULL;
+
+    $this->education = $education;
+    $this->toSave['education'] = $education;
+  }
+
+  /**
    * Returns the organisation of this user
    *
    * @return string|null The organisation of this user
@@ -581,11 +603,11 @@ class UserApi extends CRUDApiClient {
 
   /**
    * Returns the participant details for the current event date of this user.
-   *  
+   *
    * @return ParticipantDateApi The participant.
    */
   public function getParticipantDate() {
     return CRUDApiMisc::getFirstWherePropertyEquals(
       new ParticipantDateApi(), 'user_id', $this->getId());
   }
-} 
+}

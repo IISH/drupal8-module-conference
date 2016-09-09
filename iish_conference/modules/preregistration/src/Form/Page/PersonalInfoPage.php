@@ -109,6 +109,17 @@ class PersonalInfoPage extends PreRegistrationPage {
       );
     }
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+      $form['personal_info']['education'] = array(
+        '#type' => 'textfield',
+        '#title' => iish_t('Education'),
+        '#size' => 40,
+        '#maxlength' => 255,
+        '#required' => TRUE,
+        '#default_value' => $user->getEducation(),
+      );
+    }
+
     $form['personal_info']['email'] = array(
       '#type' => 'textfield',
       '#title' => iish_t('E-mail'),

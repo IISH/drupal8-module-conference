@@ -194,7 +194,14 @@ class PersonalPageController extends ControllerBase {
         'value' => $userDetails->getDepartment()
       );
     }
-    
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+      $fields[] = array(
+        'label' => 'Education',
+        'value' => $userDetails->getEducation()
+      );
+    }
+
     $fields[] = array(
       'label' => 'E-mail',
       'value' => $userDetails->getEmail()

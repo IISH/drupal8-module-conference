@@ -82,6 +82,13 @@ class ConfirmPage extends PreRegistrationPage {
       );
     }
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+      $personalInfoContent[] = array(
+        'label' => 'Education',
+        'value' => $user->getEducation()
+      );
+    }
+
     $personalInfoContent[] = array(
       'label' => 'E-mail',
       'value' => $user->getEmail()
