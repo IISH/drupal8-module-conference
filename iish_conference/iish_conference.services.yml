@@ -4,7 +4,12 @@ services:
     tags:
       - { name: twig.extension }
 
-  iish_conference_param_converter:
+  iish_conference.param_converter:
     class: Drupal\iish_conference\ParamConverter\ConferenceParamConverter
     tags:
       - { name: paramconverter }
+
+  iish_conference.api_exception_subscriber:
+    class: Drupal\iish_conference\API\ConferenceApiExceptionSubscriber
+    tags:
+      - { name: event_subscriber }

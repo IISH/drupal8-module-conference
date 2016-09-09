@@ -22,6 +22,7 @@ use Drupal\iish_conference\Highlighter;
 use Drupal\iish_conference\EasyProtection;
 use Drupal\iish_conference\ConferenceMisc;
 
+use Drupal\iish_conference\OAuth2\Exception;
 use Drupal\iish_conference_programme\API\ProgrammeApi;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -302,7 +303,12 @@ class ProgrammeController extends ControllerBase {
    * @return string The title.
    */
   public function getProgrammeTitle() {
-    return SettingsApi::getSetting(SettingsApi::ONLINE_PROGRAM_HEADER);
+    try {
+      return SettingsApi::getSetting(SettingsApi::ONLINE_PROGRAM_HEADER);
+    }
+    catch (\Exception $exception) {
+      return t('Online programme');
+    }
   }
 
   /**

@@ -4,8 +4,6 @@ namespace Drupal\iish_conference\API;
 use Drupal\iish_conference\OAuth2\Client;
 use Drupal\iish_conference\OAuth2\GrantType\ClientCredentials;
 
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-
 /**
  * Client that allows communication with the Conference Management System API
  */
@@ -24,14 +22,6 @@ class ConferenceApiClient {
     $this->requestCache = SimpleApiCache::getInstance();
 
     $this->oAuthClient->setAccessTokenType(Client::ACCESS_TOKEN_BEARER);
-    if ($cachedToken = \Drupal::cache()
-      ->get('conference_access_token_' . $clientId)
-    ) {
-      $this->oAuthClient->setAccessToken($cachedToken->data);
-    }
-    else {
-      $this->requestNewToken();
-    }
   }
 
   /**
@@ -117,7 +107,7 @@ class ConferenceApiClient {
    *
    * @return mixed The response message if found, else null is returned
    *
-   * @throws ServiceUnavailableHttpException In case of connection problems
+   * @throws ConferenceApiException In case of connection problems
    */
   private function call($apiName, $parameters, $http_method = Client::HTTP_METHOD_GET) {
     // See if this request was made before
@@ -127,11 +117,14 @@ class ConferenceApiClient {
       $url = self::getUrl() . $apiName;
 
       try {
+        // Always use the token from cache first
+        $this->requestToken(TRUE);
+
         $response = $this->oAuthClient->fetch($url, $parameters, $http_method);
 
         // Authorization error, request a new token and try again
         if (in_array($response['code'], array(302, 401, 403))) {
-          $this->requestNewToken();
+          $this->requestToken();
           $response = $this->oAuthClient->fetch($url, $parameters, $http_method);
         }
 
@@ -144,8 +137,8 @@ class ConferenceApiClient {
         }
       } catch (\Exception $exception) {
         \Drupal::logger('iish_conference')->error($exception->getMessage());
-        throw new ServiceUnavailableHttpException(3, t('There are currently problems obtaining the necessary data. ' .
-          'Please try again later. We are sorry for the inconvenience.'));
+        throw new ConferenceApiException(t('There are currently problems obtaining the necessary data. ' .
+          'Please try again later. We are sorry for the inconvenience.'), $exception);
       }
     }
 
@@ -153,23 +146,26 @@ class ConferenceApiClient {
   }
 
   /**
-   * Request a new token to access the API
+   * Request a token to access the API.
+   * @param bool $checkCache Check if we have a token in cache, if so, use that one. Otherwise request a new one.
    */
-  private function requestNewToken() {
-    $response = $this->oAuthClient->getAccessToken(
-      self::getTokenUrl(), ClientCredentials::GRANT_TYPE, array(
-      'scope' => 'event' // Request requires a scope, but that may be anything
-    ));
+  private function requestToken($checkCache = FALSE) {
+    $cacheKey = 'conference_access_token_' . $this->oAuthClient->getClientId();
 
-    if ($response['code'] === 200) {
-      $token = $response['result']['access_token'];
-      $this->oAuthClient->setAccessToken($token);
-      \Drupal::cache()
-        ->set(
-          'conference_access_token_' . $this->oAuthClient->getClientId(),
-          $token,
-          time() + 60 * 60 * 12
-        );
+    if ($checkCache && ($cachedToken = \Drupal::cache()->get($cacheKey))) {
+      $this->oAuthClient->setAccessToken($cachedToken->data);
+    }
+    else {
+      $response = $this->oAuthClient->getAccessToken(
+        self::getTokenUrl(), ClientCredentials::GRANT_TYPE, array(
+        'scope' => 'event' // Request requires a scope, but that may be anything
+      ));
+
+      if ($response['code'] === 200) {
+        $token = $response['result']['access_token'];
+        $this->oAuthClient->setAccessToken($token);
+        \Drupal::cache()->set($cacheKey, $token, time() + 60 * 60 * 12);
+      }
     }
   }
 

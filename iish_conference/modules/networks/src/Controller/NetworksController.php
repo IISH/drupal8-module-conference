@@ -46,7 +46,12 @@ class NetworksController extends ControllerBase {
    * @return string The networks title.
    */
   public function getNetworksTitle() {
-    return iish_t('Networks');
+    try {
+      return iish_t('Networks');
+    }
+    catch (\Exception $exception) {
+      return '';
+    }
   }
 
   /**
@@ -55,6 +60,11 @@ class NetworksController extends ControllerBase {
    * @return string The network title.
    */
   public function getNetworkTitle($network) {
-    return $network->getName();
+    try {
+      return $network->getName();
+    }
+    catch (\Exception $exception) {
+      return '';
+    }
   }
 }

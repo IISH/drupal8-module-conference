@@ -416,9 +416,14 @@ class ForChairsController extends ControllerBase {
    * @return string The network title.
    */
   public function getNetworkTitle($network = NULL) {
-    return ($network !== NULL)
-      ? $network->getName()
-      : iish_t('Sessions: \'@search\'', array('@search' => $this->getSearch()));
+    try {
+      return ($network !== NULL)
+        ? $network->getName()
+        : iish_t('Sessions: \'@search\'', array('@search' => $this->getSearch()));
+    }
+    catch (\Exception $exception) {
+      return '';
+    }
   }
 
   /**
@@ -427,9 +432,14 @@ class ForChairsController extends ControllerBase {
    * @return string The session title.
    */
   public function getSessionTitle($session = NULL) {
-    return ($session !== NULL)
-      ? $session->getName()
-      : iish_t('Individual paper proposals');
+    try {
+      return ($session !== NULL)
+        ? $session->getName()
+        : iish_t('Individual paper proposals');
+    }
+    catch (\Exception $exception) {
+      return '';
+    }
   }
 
   /**

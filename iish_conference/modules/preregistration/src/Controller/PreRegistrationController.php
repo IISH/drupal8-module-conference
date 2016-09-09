@@ -78,7 +78,12 @@ class PreRegistrationController extends ControllerBase {
    * @return string The title.
    */
   public function getTitle() {
-    return iish_t('Pre-registration for the') . ' ' . CachedConferenceApi::getEventDate()
-      ->getLongNameAndYear();
+    try {
+      return iish_t('Pre-registration for the') . ' ' . CachedConferenceApi::getEventDate()
+        ->getLongNameAndYear();
+    }
+    catch (\Exception $exception) {
+      return t('Pre-registration');
+    }
   }
 }
