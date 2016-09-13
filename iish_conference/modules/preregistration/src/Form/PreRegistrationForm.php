@@ -146,6 +146,7 @@ class PreRegistrationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $state = new PreRegistrationState($form_state);
     $page = $state->getCurrentPage();
+    $performRebuild = TRUE;
 
     // Make sure the triggering element was REALLY triggered
     // On a re-POST when there is no trigger (form page was cached), Drupal picks the first submit button found
@@ -167,9 +168,14 @@ class PreRegistrationForm extends FormBase {
       if ($nextPageName != NULL) {
         $state->setNextPageName($nextPageName);
       }
+      else {
+        $performRebuild = FALSE;
+      }
     }
 
-    $form_state->setRebuild();
-    $form_state->addRebuildInfo('copy', array('#build_id' => TRUE));
+    if ($performRebuild) {
+      $form_state->setRebuild();
+      $form_state->addRebuildInfo('copy', array('#build_id' => TRUE));
+    }
   }
 }

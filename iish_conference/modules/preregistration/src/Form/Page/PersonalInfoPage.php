@@ -132,6 +132,16 @@ class PersonalInfoPage extends PreRegistrationPage {
       ),
     );
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+      $form['personal_info']['age_range'] = array(
+        '#type' => 'select',
+        '#title' => iish_t('Age'),
+        '#required' => TRUE,
+        '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getAgeRanges()),
+        '#default_value' => $participant->getAgeRangeId(),
+      );
+    }
+
     if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
       $form['personal_info']['student'] = array(
         '#type' => 'checkbox',
@@ -428,6 +438,10 @@ class PersonalInfoPage extends PreRegistrationPage {
       $participant->setStudent($form_state->getValue('student'));
     }
     $participant->setUser($user);
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+      $participant->setAgeRange($form_state->getValue('age_range'));
+    }
 
     // Don't forget the extras for this participant
     $extras = array();

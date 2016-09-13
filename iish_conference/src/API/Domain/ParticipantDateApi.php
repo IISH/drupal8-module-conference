@@ -16,6 +16,7 @@ class ParticipantDateApi extends CRUDApiClient {
   protected $state_id;
   protected $feeState_id;
   protected $paymentId;
+  protected $ageRange_id;
   protected $invitationLetter;
   protected $lowerFeeRequested;
   protected $lowerFeeText;
@@ -29,6 +30,7 @@ class ParticipantDateApi extends CRUDApiClient {
 
   private $user;
   private $state;
+  private $ageRange;
   private $extras;
   private $addedBy;
   private $feeState;
@@ -113,6 +115,48 @@ class ParticipantDateApi extends CRUDApiClient {
     }
 
     $this->toSave['favoriteSessions.id'] = implode(';', $this->favoriteSessions_id);
+  }
+
+  /**
+   * Returns the age range id of this participant
+   *
+   * @return int The age range id
+   */
+  public function getAgeRangeId() {
+    return $this->ageRange_id;
+  }
+
+  /**
+   * Returns the age range of this participant
+   *
+   * @return AgeRangeApi The age range
+   */
+  public function getAgeRange() {
+    if (!$this->ageRange) {
+      foreach (CachedConferenceApi::getAgeRanges() as $ageRange) {
+        if ($ageRange->getId() == $this->ageRange_id) {
+          $this->ageRange = $ageRange;
+          break;
+        }
+      }
+    }
+
+    return $this->ageRange;
+  }
+
+  /**
+   * Changes the age range of this participant
+   *
+   * @param int|AgeRangeApi $ageRange The new age range (id)
+   */
+  public function setAgeRange($ageRange) {
+    if ($ageRange instanceof AgeRangeApi) {
+      $ageRange = $ageRange->getId();
+    }
+
+    $this->ageRange = NULL;
+    $this->ageRange_id = $ageRange;
+    $this->toSave['ageRange.id'] = $ageRange;
   }
 
   /**

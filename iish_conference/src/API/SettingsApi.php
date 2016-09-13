@@ -41,6 +41,7 @@ class SettingsApi {
   const HIDE_ALWAYS_IN_ONLINE_PROGRAMME = 'hide_always_in_online_programme';
   const HIDE_IF_EMPTY_IN_ONLINE_PROGRAMME = 'hide_if_empty_in_online_programme';
   const SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons';
+  const SHOW_AGE_RANGE = 'show_age_range';
   const SHOW_AUTHOR_REGISTRATION = 'show_author_registration';
   const SHOW_AWARD = 'show_award';
   const SHOW_CHAIR_DISCUSSANT_POOL = 'show_chair_discussant_pool';

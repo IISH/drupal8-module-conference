@@ -96,6 +96,13 @@ class ConfirmPage extends PreRegistrationPage {
       'value' => $user->getEmail()
     );
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+      $personalInfoContent[] = array(
+        'label' => 'Age',
+        'value' => $participant->getAgeRange()
+      );
+    }
+
     if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
       $personalInfoContent[] = array(
         'label' => '(PhD) Student?',

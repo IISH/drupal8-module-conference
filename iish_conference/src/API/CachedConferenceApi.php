@@ -1,6 +1,7 @@
 <?php
 namespace Drupal\iish_conference\API;
 
+use Drupal\iish_conference\API\Domain\AgeRangeApi;
 use Drupal\iish_conference\API\Domain\CountryApi;
 use Drupal\iish_conference\API\Domain\DayApi;
 use Drupal\iish_conference\API\Domain\EquipmentApi;
@@ -25,6 +26,7 @@ class CachedConferenceApi {
   private static $nameEventDatesCache = 'iishconference_eventdates';
   private static $nameNetworksCache = 'iishconference_networks';
   private static $nameCountriesCache = 'iishconference_countries';
+  private static $nameAgeRangesCache = 'iishconference_age_ranges';
   private static $nameDaysCache = 'iishconference_days';
   private static $nameSessionDateTimesCache = 'iishconference_session_date_times';
   private static $nameParticipantTypesCache = 'iishconference_participant_types';
@@ -49,6 +51,7 @@ class CachedConferenceApi {
       self::setEventDates();
       self::setNetworks();
       self::setCountries();
+      self::setAgeRanges();
       self::setDays();
       self::setSessionDateTimes();
       self::setParticipantTypes();
@@ -125,6 +128,15 @@ class CachedConferenceApi {
    */
   public static function setCountries() {
     return self::set(self::$nameCountriesCache, CountryApi::class);
+  }
+
+  /**
+   * Cache the age ranges.
+   *
+   * @return AgeRangeApi[]
+   */
+  public static function setAgeRanges() {
+    return self::set(self::$nameAgeRangesCache, AgeRangeApi::class);
   }
 
   /**
@@ -336,6 +348,15 @@ class CachedConferenceApi {
    */
   public static function getCountries() {
     return self::get(self::$nameCountriesCache, CountryApi::class);
+  }
+
+  /**
+   * Get the cached age ranges.
+   *
+   * @return AgeRangeApi[]
+   */
+  public static function getAgeRanges() {
+    return self::get(self::$nameAgeRangesCache, AgeRangeApi::class);
   }
 
   /**
