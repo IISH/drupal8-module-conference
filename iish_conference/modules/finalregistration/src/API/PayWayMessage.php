@@ -32,6 +32,8 @@ class PayWayMessage {
     foreach ($message as $parameter => $value) {
       $this->add($parameter, $value);
     }
+
+    return $this;
   }
 
   /**
@@ -89,18 +91,23 @@ class PayWayMessage {
       $this->redirectToPayWay();
     }
     else {
-      $client = \Drupal::httpClient();
+      try {
+        $client = \Drupal::httpClient();
 
-      $request = $client->createRequest('POST', SettingsApi::getSetting(SettingsApi::PAYWAY_ADDRESS) . $apiName);
-      $request->addHeader('Content-Type', 'text/json');
-      $request->setBody(Json::encode($this->message));
+        $response = $client->post(SettingsApi::getSetting(SettingsApi::PAYWAY_ADDRESS) . $apiName, array(
+          'headers' => array('Content-Type' => 'text/json'),
+          'body' => Json::encode($this->message),
+        ));
 
-      $response = $request->send();
-      if ($response->getStatusCode() === 200) {
-        $message = new PayWayMessage(Json::decode($response->getBody()));
-        if ($message->isSignValid()) {
-          return $message;
+        if ($response->getStatusCode() === 200) {
+          $message = new PayWayMessage(Json::decode($response->getBody()));
+          if ($message->isSignValid()) {
+            return $message;
+          }
         }
+      }
+      catch (\Exception $exception) {
+        return FALSE;
       }
     }
 
@@ -195,4 +202,4 @@ class PayWayMessage {
       http_build_query($this->message, NULL, '&'));
     die();
   }
-} 
+}

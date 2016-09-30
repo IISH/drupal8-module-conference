@@ -5,13 +5,14 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Controller\ControllerBase;
 
-use Drupal\iish_conference\Markup\ConferenceHTML;
 use Drupal\iish_conference\ConferenceMisc;
+use Drupal\iish_conference\Markup\ConferenceHTML;
 
 use Drupal\iish_conference\API\CRUDApiMisc;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\SendEmailApi;
 use Drupal\iish_conference\API\LoggedInUserDetails;
+use Drupal\iish_conference\API\CachedConferenceApi;
 
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
@@ -19,6 +20,7 @@ use Drupal\iish_conference\API\Domain\ParticipantStateApi;
 use Drupal\iish_conference\ConferenceTrait;
 use Drupal\iish_conference_finalregistration\API\PayWayMessage;
 use Drupal\iish_conference_finalregistration\API\RefreshOrderApi;
+
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -89,7 +91,7 @@ class FinalRegistrationController extends ControllerBase {
   /**
    * Called when a payment was accepted.
    *
-   * @return string The message.
+   * @return array The message.
    */
   public function acceptPayment() {
     $paymentResponse = new PayWayMessage(\Drupal::request()->query->all());
@@ -118,33 +120,47 @@ class FinalRegistrationController extends ControllerBase {
       $sendEmailApi->sendPaymentAcceptedEmail($userId, $orderId);
     }
 
-    return iish_t('Thank you. The procedure has been completed successfully! ' .
+    return array('#markup' => iish_t('Thank you. The procedure has been completed successfully! ' .
       'Within a few minutes you will receive an email from us confirming your \'final registration and payment\' ' .
-      'and you will receive a second email from the payment provider confirming your payment.');
+      'and you will receive a second email from the payment provider confirming your payment.'));
   }
 
   /**
    * Called when a payment was declined.
    *
-   ** @return string The message.
+   ** @return array The message.
    */
   public function declinePayment() {
-    return iish_t('Unfortunately, your payment has been declined. Please try to finish your final registration ' .
-      'at a later moment or try a different payment method.');
+    return array('#markup' => iish_t('Unfortunately, your payment has been declined. Please try to finish your final registration ' .
+      'at a later moment or try a different payment method.'));
   }
 
   /**
    * Called when a payment result is uncertain.
    *
-   * @return string The message.
+   * @return array The message.
    */
   public function exceptionPayment() {
-    return iish_t('Unfortunately, your payment result is uncertain at the moment.') . '<br />' .
+    return array('#markup' => iish_t('Unfortunately, your payment result is uncertain at the moment.') . '<br />' .
     iish_t('Please contact @email to request information on your payment transaction.',
       array(
         '@email' => ConferenceMisc::encryptEmailAddress(
           SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
-      ));
+      )));
+  }
+
+  /**
+   * The title.
+   * @return string The title.
+   */
+  public function getTitle() {
+    try {
+      return iish_t('Final registration and payment for the') .
+      ' ' . CachedConferenceApi::getEventDate();
+    }
+    catch (\Exception $exception) {
+      return t('Final registration and payment');
+    }
   }
 
   /**

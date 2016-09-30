@@ -1,5 +1,9 @@
 /* IISH CONFERENCE THEMES */
 
+.iishconference_navigation {
+    margin-bottom: 10px;
+}
+
 .iishconference_container.styled, .iishconference_form fieldset.form-wrapper {
     border: 1px solid;
     border-radius: 5px;
@@ -24,6 +28,11 @@
 
 .iishconference_container_label {
     font-weight: bold;
+}
+
+span.iishconference-userblock {
+    float: right;
+    margin: 20px 0;
 }
 
 /* MARGINS */

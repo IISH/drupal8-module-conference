@@ -2,6 +2,7 @@ iish_conference_finalregistration.form:
   path: '/conference/user/final-registration'
   defaults:
     _form: '\Drupal\iish_conference_finalregistration\Form\FinalRegistrationForm'
+    _title_callback: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::getTitle'
   requirements:
     _access: 'TRUE'
 
@@ -9,6 +10,7 @@ iish_conference_finalregistration.bank-transfer:
   path: '/conference/user/final-registration/bank-transfer'
   defaults:
     _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::bankTransfer'
+    _title: 'Bank transfer information'
   requirements:
     _access: 'TRUE'
 
@@ -16,6 +18,7 @@ iish_conference_finalregistration.accept:
   path: '/conference/user/final-registration/accept'
   defaults:
     _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::acceptPayment'
+    _title: 'Thank you for finishing your registration'
   requirements:
     _access: 'TRUE'
 
@@ -23,6 +26,7 @@ iish_conference_finalregistration.decline:
   path: '/conference/user/final-registration/decline'
   defaults:
     _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::declinePayment'
+    _title: 'Your payment was declined'
   requirements:
     _access: 'TRUE'
 
@@ -30,5 +34,6 @@ iish_conference_finalregistration.exception:
   path: '/conference/user/final-registration/exception'
   defaults:
     _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::exceptionPayment'
+    _title: 'Something went wrong with your payment'
   requirements:
     _access: 'TRUE'

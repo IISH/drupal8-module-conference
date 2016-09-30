@@ -12,14 +12,18 @@ use Drupal\iish_conference\API\CachedConferenceApi;
 use Drupal\iish_conference\API\Domain\FeeStateApi;
 
 use Drupal\iish_conference\ConferenceMisc;
+use Drupal\iish_conference\ConferenceTrait;
 use Drupal\iish_conference_finalregistration\API\PayWayMessage;
 use Drupal\iish_conference_finalregistration\Form\Page\MainPage;
 use Drupal\iish_conference_finalregistration\Form\Page\OverviewPage;
+
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The final registration form.
  */
 class FinalRegistrationForm extends FormBase {
+  use ConferenceTrait;
 
   /**
    * Returns a unique string identifying the form.
@@ -49,6 +53,13 @@ class FinalRegistrationForm extends FormBase {
     }
 
     // redirect to login page
+    if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
+      if ($response instanceof Response) {
+        $form_state->setResponse($response);
+      }
+      return array();
+    }
+
     if (!LoggedInUserDetails::isLoggedIn()) {
       $form_state->setRedirect(Url::fromRoute('iish_conference_login_logout.login_form',
         array(), array('query' => \Drupal::destination()->getAsArray())));
@@ -56,7 +67,7 @@ class FinalRegistrationForm extends FormBase {
     }
 
     // TODO Should we only allow payments of finished pre-registrations?
-//	if (!LoggedInUserDetails::isAParticipant()) {
+    // if (!LoggedInUserDetails::isAParticipant()) {
     if (!LoggedInUserDetails::isAParticipant() && !LoggedInUserDetails::isAParticipantWithoutConfirmation()) {
       $preRegistrationLink = Link::fromTextAndUrl(iish_t('pre-registration form'),
         Url::fromRoute('iish_conference_preregistration.form'));
@@ -160,7 +171,8 @@ class FinalRegistrationForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->get('page') === 'overview') {
-      if ($form_state->getTriggeringElement()['#name'] !== 'back') {
+      $trigger = $this->getTriggeringElement($form_state);
+      if (($trigger !== NULL) && ($trigger['#name'] !== 'back')) {
         $page = new OverviewPage();
         $page->validateForm($form, $form_state);
       }
@@ -180,23 +192,28 @@ class FinalRegistrationForm extends FormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->get('page') === 'overview') {
-      if ($form_state->getTriggeringElement()['#name'] == 'back') {
-        $form_state->set('page', 'main');
-        $form_state->setRebuild();
+    $trigger = $this->getTriggeringElement($form_state);
+    if ($trigger !== NULL) {
+      if ($form_state->get('page') === 'overview') {
+        if ($trigger['#name'] == 'back') {
+          $form_state->set('page', 'main');
+          $form_state->setRebuild();
+          $form_state->addRebuildInfo('copy', array('#build_id' => TRUE));
+        }
+        else {
+          $page = new OverviewPage();
+          $page->submitForm($form, $form_state);
+        }
       }
       else {
-        $page = new OverviewPage();
-        $page->submitForm($form, $form_state);
-      }
-    }
-    else {
-      if ($form_state->getTriggeringElement()['#name'] == 'next') {
-        $page = new MainPage();
-        $page->submitForm($form, $form_state);
+        if ($trigger['#name'] == 'next') {
+          $page = new MainPage();
+          $page->submitForm($form, $form_state);
 
-        $form_state->set('page', 'overview');
-        $form_state->setRebuild();
+          $form_state->set('page', 'overview');
+          $form_state->setRebuild();
+          $form_state->addRebuildInfo('copy', array('#build_id' => TRUE));
+        }
       }
     }
   }
@@ -225,5 +242,24 @@ class FinalRegistrationForm extends FormBase {
     }
 
     return $page->buildForm($form, $form_state);
+  }
+
+  /**
+   * Gets the REAL form element that triggered submission.
+   * Make sure the triggering element was REALLY triggered.
+   * On a re-POST when there is no trigger (form page was cached),
+   * Drupal picks the first submit button found
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *    An associative array containing the structure of the form.
+   * @return array|null
+   *    The form element that triggered submission, of NULL if there is none.
+   */
+  private function getTriggeringElement(FormStateInterface $form_state) {
+    $trigger = $form_state->getTriggeringElement();
+    if (isset($form_state->getUserInput()[$trigger['#name']])) {
+      return $trigger;
+    }
+    return null;
   }
 }

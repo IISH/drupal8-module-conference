@@ -116,8 +116,8 @@ class MainPage extends FormBase {
       $accompanyingPersonFees = $accompanyingPersonFeeState->getFeeAmounts();
 
       // Always show add least one text field for participants to enter an accompanying person
-      if (!isset($form_state['num_persons'])) {
-        $form_state['num_persons'] = max(1, count($accompanyingPersons));
+      if ($form_state->get('num_persons') === NULL) {
+        $form_state->set('num_persons', max(1, count($accompanyingPersons)));
       }
 
       $form['accompanying_persons'] = array(
@@ -134,26 +134,26 @@ class MainPage extends FormBase {
 
       // Display all accompanying persons previously stored, unless the user deliberately removed some
       foreach ($accompanyingPersons as $i => $accompanyingPerson) {
-        if ($i <= ($form_state['num_persons'] - 1)) {
+        if ($i <= ($form_state->get('num_persons') - 1)) {
           $form['accompanying_persons']['person'][$i] = array(
             '#type' => 'textfield',
             '#size' => 40,
             '#maxlength' => 100,
             '#default_value' => $accompanyingPerson,
             '#title' => ($i === 0) ? $title : NULL,
-            '#description' => ($i === ($form_state['num_persons'] - 1)) ? trim($description) : NULL,
+            '#description' => ($i === ($form_state->get('num_persons') - 1)) ? trim($description) : NULL,
           );
         }
       }
 
       // Now display all additional empty text fields to enter accompanying persons, as many as requested by the user
-      for ($i = count($accompanyingPersons); $i < $form_state['num_persons']; $i++) {
+      for ($i = count($accompanyingPersons); $i < $form_state->get('num_persons'); $i++) {
         $form['accompanying_persons']['person'][$i] = array(
           '#type' => 'textfield',
           '#size' => 40,
           '#maxlength' => 100,
           '#title' => ($i === 0) ? $title : NULL,
-          '#description' => ($i === ($form_state['num_persons'] - 1)) ? trim($description) : NULL,
+          '#description' => ($i === ($form_state->get('num_persons') - 1)) ? trim($description) : NULL,
         );
       }
 
@@ -174,7 +174,7 @@ class MainPage extends FormBase {
       );
 
       // Always display add least one text field to enter accompanying persons
-      if ($form_state['num_persons'] > 1) {
+      if ($form_state->get('num_persons') > 1) {
         $form['accompanying_persons']['remove_person'] = array(
           '#type' => 'submit',
           '#name' => 'remove_person',
@@ -278,7 +278,7 @@ class MainPage extends FormBase {
       $participant->setAccompanyingPersons($accompanyingPersons);
 
       // Reset the number of additional persons in form state
-      unset($form_state['num_persons']);
+      $form_state->set('num_persons', NULL);
     }
 
     $user->save();

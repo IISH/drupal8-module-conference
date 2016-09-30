@@ -130,9 +130,11 @@ class PreRegistrationForm extends FormBase {
    *   The current state of the form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $state = new PreRegistrationState($form_state);
-    $page = $state->getCurrentPage();
-    $page->validateForm($form, $form_state);
+    if ($this->getTriggeringElement($form_state) !== NULL) {
+      $state = new PreRegistrationState($form_state);
+      $page = $state->getCurrentPage();
+      $page->validateForm($form, $form_state);
+    }
   }
 
   /**
@@ -148,10 +150,8 @@ class PreRegistrationForm extends FormBase {
     $page = $state->getCurrentPage();
     $performRebuild = TRUE;
 
-    // Make sure the triggering element was REALLY triggered
-    // On a re-POST when there is no trigger (form page was cached), Drupal picks the first submit button found
-    $trigger = $form_state->getTriggeringElement();
-    if (isset($form_state->getUserInput()[$trigger['#name']])) {
+    $trigger = $this->getTriggeringElement($form_state);
+    if ($trigger !== NULL) {
       // Call the next method
       $nav = isset($trigger['#nav']) ? $trigger['#nav'] : 'next';
       if ($nav == 'back') {
@@ -177,5 +177,24 @@ class PreRegistrationForm extends FormBase {
       $form_state->setRebuild();
       $form_state->addRebuildInfo('copy', array('#build_id' => TRUE));
     }
+  }
+
+  /**
+   * Gets the REAL form element that triggered submission.
+   * Make sure the triggering element was REALLY triggered.
+   * On a re-POST when there is no trigger (form page was cached),
+   * Drupal picks the first submit button found
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *    An associative array containing the structure of the form.
+   * @return array|null
+   *    The form element that triggered submission, of NULL if there is none.
+   */
+  private function getTriggeringElement(FormStateInterface $form_state) {
+    $trigger = $form_state->getTriggeringElement();
+    if (isset($form_state->getUserInput()[$trigger['#name']])) {
+      return $trigger;
+    }
+    return null;
   }
 }
