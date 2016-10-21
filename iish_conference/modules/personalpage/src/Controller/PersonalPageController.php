@@ -207,7 +207,7 @@ class PersonalPageController extends ControllerBase {
       'value' => $userDetails->getEmail()
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+    if (LoggedInUserDetails::isAParticipant() && (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1)) {
       $fields[] = array(
         'label' => 'Age',
         'value' => $participantDateDetails->getAgeRange()
