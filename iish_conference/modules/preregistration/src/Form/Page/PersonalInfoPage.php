@@ -427,6 +427,10 @@ class PersonalInfoPage extends PreRegistrationPage {
       $user->setDepartment($form_state->getValue('department'));
     }
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+      $user->setEducation($form_state->getValue('education'));
+    }
+
     if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
       $user->setCv($form_state->getValue('cv'));
     }

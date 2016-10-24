@@ -115,7 +115,8 @@ abstract class PreRegistrationPage extends FormBase {
     $form[$name] = array(
       '#type' => 'submit',
       '#name' => $name,
-      '#value' => $value
+      '#value' => $value,
+      '#submit' => array()
     );
   }
 }

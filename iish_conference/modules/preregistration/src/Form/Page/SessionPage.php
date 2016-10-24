@@ -149,7 +149,7 @@ class SessionPage extends PreRegistrationPage {
     );
 
     $this->buildNextButton($form['session_participants'], 'session_participant', iish_t('New participant'));
-    $form['session_participants']['suffix']['#markup'] = '<br /><br />';
+    $form['session_participants']['session_participant']['suffix']['#markup'] = '<br /><br />';
 
     $printOr = TRUE;
     foreach ($users as $user) {
@@ -165,7 +165,7 @@ class SessionPage extends PreRegistrationPage {
       );
 
       $this->buildNextButton($form['session_participants'], 'session_participant_' . $user->getId(), iish_t('Edit'));
-      $form['session_participants']['suffix']['#markup'] = ' ' . $user->getFullName() . ' &nbsp;&nbsp; <em>(' .
+      $form['session_participants']['session_participant_' . $user->getId()]['suffix']['#markup'] = ' ' . $user->getFullName() . ' &nbsp;&nbsp; <em>(' .
         ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />';
     }
 

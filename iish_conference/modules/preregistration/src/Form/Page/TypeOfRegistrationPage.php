@@ -79,7 +79,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
 
         if ($canSubmitNewPaper) {
           $this->buildNextButton($form['author'], 'typeofregistration_paper', iish_t('Add a new paper'));
-          $form['author']['suffix']['#markup'] = '<br /><br />';
+          $form['author']['typeofregistration_paper']['suffix']['#markup'] = '<br /><br />';
         }
 
         $printOr = TRUE;
@@ -89,7 +89,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
             $printOr = FALSE;
           }
           $this->buildNextButton($form['author'], 'typeofregistration_paper_' . $paper->getId(), iish_t('Edit paper'));
-          $form['author']['suffix']['#markup'] = ' ' . $paper->getTitle() . '<br /><br />';
+          $form['author']['typeofregistration_paper_' . $paper->getId()]['suffix']['#markup'] = ' ' . $paper->getTitle() . '<br /><br />';
         }
       }
       else {
@@ -121,11 +121,11 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
           );
 
           $this->buildNextButton($form['organizer'], 'typeofregistration_existing_session', iish_t('Organize session'));
-          $form['organizer']['suffix']['#markup'] = '<br /><br />';
+          $form['organizer']['typeofregistration_existing_session']['suffix']['#markup'] = '<br /><br />';
         }
         else {
           $this->buildNextButton($form['organizer'], 'typeofregistration_session', iish_t('Add a new session'));
-          $form['organizer']['suffix']['#markup'] = '<br /><br />';
+          $form['organizer']['typeofregistration_session']['suffix']['#markup'] = '<br /><br />';
         }
 
         $sessionParticipants = PreRegistrationUtils::getSessionParticipantsAddedByUser($state);
@@ -138,7 +138,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
             $printOr = FALSE;
           }
           $this->buildNextButton($form['organizer'], 'typeofregistration_session_' . $session->getId(), iish_t('Edit session'));
-          $form['organizer']['suffix']['#markup'] = ' ' . $session->getName() . '<br /><br />';
+          $form['organizer']['typeofregistration_session_' . $session->getId()]['suffix']['#markup'] = ' ' . $session->getName() . '<br /><br />';
         }
       }
       else {
