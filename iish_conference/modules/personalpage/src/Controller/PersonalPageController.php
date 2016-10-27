@@ -227,7 +227,7 @@ class PersonalPageController extends ControllerBase {
     );
     $fields[] = array(
       'label' => 'Country',
-      'value' => $userDetails->getCountry()->getNameEnglish()
+      'value' => $userDetails->getCountry()->__toString()
     );
     $fields[] = array(
       'label' => 'Phone number',
@@ -262,6 +262,8 @@ class PersonalPageController extends ControllerBase {
    */
   private function setRegistrationInfo(array &$renderArray, $userDetails, $participantDateDetails) {
     if (LoggedInUserDetails::isAParticipant()) {
+      $isFinalRegistrationOpen = $this->moduleHandler()->moduleExists('iish_conference_finalregistration');
+
       $fields = array();
 
       $renderArray[] = array(
@@ -273,10 +275,12 @@ class PersonalPageController extends ControllerBase {
 
       $this->setPaymentStatus($renderArray, $participantDateDetails);
 
-      $fields[] = array(
-        'label' => 'Currently selected fee',
-        'value' => $participantDateDetails->getFeeState()
-      );
+      if ($isFinalRegistrationOpen) {
+        $fields[] = array(
+          'label' => 'Currently selected fee',
+          'value' => $participantDateDetails->getFeeState()
+        );
+      }
 
       $days = $userDetails->getDaysPresent();
       if ((count($days) > 0) && (SettingsApi::getSetting(SettingsApi::SHOW_DAYS) == 1)) {
@@ -290,11 +294,13 @@ class PersonalPageController extends ControllerBase {
 
       $extrasIds = $participantDateDetails->getExtrasId();
       foreach (CachedConferenceApi::getExtras() as $extra) {
-        $userHasRegistered = (array_search($extra->getId(), $extrasIds) !== FALSE);
-        $fields[] = array(
-          'label' => $extra->getTitle(),
-          'value' => ConferenceMisc::getYesOrNo($userHasRegistered)
-        );
+        if (!$extra->isFinalRegistration() || $isFinalRegistrationOpen) {
+          $userHasRegistered = (array_search($extra->getId(), $extrasIds) !== FALSE);
+          $fields[] = array(
+            'label' => $extra->getTitle(),
+            'value' => ConferenceMisc::getYesOrNo($userHasRegistered)
+          );
+        }
       }
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
@@ -484,7 +490,7 @@ class PersonalPageController extends ControllerBase {
       }
     }
 
-    $sessionName = $session->getName() . ' <em>(' . $session->getState()->getDescription() . ')</em>';
+    $sessionName = $session->getName() . ' <em>(' . iish_t($session->getState()->getDescription()) . ')</em>';
     $renderArray[] = array(
       'label' => 'Session name',
       'value' => $sessionName,

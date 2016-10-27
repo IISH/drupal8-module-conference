@@ -286,7 +286,7 @@ class UserApi extends CRUDApiClient {
       $locations[] = $this->getOrganisation();
     }
     if ($this->getCountry() !== NULL) {
-      $locations[] = $this->getCountry()->getNameEnglish();
+      $locations[] = $this->getCountry()->__toString();
     }
 
     return implode(', ', $locations);

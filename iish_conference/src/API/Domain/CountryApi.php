@@ -79,6 +79,8 @@ class CountryApi extends CRUDApiClient {
   }
 
   public function __toString() {
+    if (\Drupal::languageManager()->getCurrentLanguage()->getId() === 'nl')
+      return $this->getNameDutch();
     return $this->getNameEnglish();
   }
 } 

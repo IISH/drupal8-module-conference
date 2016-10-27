@@ -129,7 +129,7 @@ class ConfirmPage extends PreRegistrationPage {
     );
     $addressContent[] = array(
       'label' => 'Country',
-      'value' => $user->getCountry()->getNameEnglish()
+      'value' => $user->getCountry()->__toString()
     );
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
@@ -391,7 +391,7 @@ class ConfirmPage extends PreRegistrationPage {
 
         $sessionContent[] = array(
           'label' => 'Country',
-          'value' => $user->getCountry()->getNameEnglish()
+          'value' => $user->getCountry()->__toString()
         );
         $sessionContent[] = array(
           'label' => 'Type(s)',
