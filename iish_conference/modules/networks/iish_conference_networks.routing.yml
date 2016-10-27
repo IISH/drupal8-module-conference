@@ -5,6 +5,8 @@ iish_conference_networks.index:
     _title_callback: '\Drupal\iish_conference_networks\Controller\NetworksController::getNetworksTitle'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_networks.network:
   path: '/conference/networks/{network}'
@@ -17,3 +19,5 @@ iish_conference_networks.network:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

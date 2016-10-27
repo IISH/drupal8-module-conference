@@ -5,6 +5,8 @@ iish_conference_network_volunteers.index:
     _title: 'Volunteers (Chair/Discussant)'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_volunteers.network:
   path: '/conference/network/volunteers/{network}'
@@ -17,3 +19,5 @@ iish_conference_network_volunteers.network:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

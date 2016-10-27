@@ -5,6 +5,8 @@ iish_conference_programme.index:
     _title_callback: '\Drupal\iish_conference_programme\Controller\ProgrammeController::getProgrammeTitle'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_programme.add_session:
   path: '/conference/programme/add-session/{session}'
@@ -16,6 +18,8 @@ iish_conference_programme.add_session:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_programme.remove_session:
   path: '/conference/programme/remove-session/{session}'
@@ -27,3 +31,5 @@ iish_conference_programme.remove_session:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

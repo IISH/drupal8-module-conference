@@ -5,6 +5,8 @@ iish_conference_network_participants_xls.index:
     _title: 'Participant names and e-mail addresses'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_participants_xls.network:
   path: '/conference/network/participants/{network}'
@@ -17,3 +19,5 @@ iish_conference_network_participants_xls.network:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

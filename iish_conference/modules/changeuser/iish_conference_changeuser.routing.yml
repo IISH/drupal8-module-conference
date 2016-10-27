@@ -5,6 +5,8 @@ iish_conference_changeuser.form:
     _title: 'Change user'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_changeuser.user:
   path: '/conference/admin/change-user/{id}'
@@ -13,3 +15,5 @@ iish_conference_changeuser.user:
     _title: 'Change user'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

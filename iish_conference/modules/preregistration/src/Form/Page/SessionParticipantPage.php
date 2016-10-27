@@ -11,6 +11,7 @@ use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\CachedConferenceApi;
 
 use Drupal\iish_conference\API\Domain\UserApi;
+use Drupal\iish_conference\API\Domain\CountryApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantTypeApi;
 use Drupal\iish_conference\API\Domain\SessionParticipantApi;
@@ -145,7 +146,10 @@ class SessionParticipantPage extends PreRegistrationPage {
       );
     }
 
-    $userCountryId = $user->getCountryId();
+    $userCountryId = ($user->getCountryId() !== null)
+      ? $user->getCountryId()
+      : CountryApi::getCountryOfEvent()->getId();
+
     $form['participant']['addparticipantcountry'] = array(
       '#type' => 'select',
       '#title' => iish_t('Country'),

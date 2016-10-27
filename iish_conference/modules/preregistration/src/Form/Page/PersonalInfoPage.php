@@ -13,6 +13,7 @@ use Drupal\iish_conference\API\CachedConferenceApi;
 use Drupal\iish_conference\API\LoggedInUserDetails;
 
 use Drupal\iish_conference\API\Domain\ExtraApi;
+use Drupal\iish_conference\API\Domain\CountryApi;
 use Drupal\iish_conference\API\Domain\VolunteeringApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantVolunteeringApi;
@@ -183,7 +184,9 @@ class PersonalInfoPage extends PreRegistrationPage {
       '#title' => iish_t('Country'),
       '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getCountries()),
       '#required' => TRUE,
-      '#default_value' => $user->getCountryId(),
+      '#default_value' => ($user->getCountryId() !== null)
+        ? $user->getCountryId()
+        : CountryApi::getCountryOfEvent()->getId(),
     );
 
     // + + + + + + + + + + + + + + + + + + + + + + + +

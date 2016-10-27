@@ -5,6 +5,8 @@ iish_conference_network_forchairs.index:
     _title: 'Participants and their papers'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.network:
   path: '/conference/network/for_chairs/{network}'
@@ -17,6 +19,8 @@ iish_conference_network_forchairs.network:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.network_search:
   path: '/conference/network/for_chairs/-1'
@@ -25,6 +29,8 @@ iish_conference_network_forchairs.network_search:
     _title_callback: '\Drupal\iish_conference_network_forchairs\Controller\ForChairsController::getNetworkTitle'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.session:
   path: '/conference/network/for_chairs/{network}/{session}'
@@ -39,6 +45,8 @@ iish_conference_network_forchairs.session:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.session_search:
   path: '/conference/network/for_chairs/-1/{session}'
@@ -51,6 +59,8 @@ iish_conference_network_forchairs.session_search:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.session_individual:
   path: '/conference/network/for_chairs/{network}/-1'
@@ -63,3 +73,5 @@ iish_conference_network_forchairs.session_individual:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

@@ -5,6 +5,8 @@ iish_conference_network_sessionpapersaccepted_xls.index:
     _title: 'Participants and their session paper proposals (only accepted participants)'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_sessionpapersaccepted_xls.network:
   path: '/conference/network/session_papers_accepted/{network}'
@@ -17,3 +19,5 @@ iish_conference_network_sessionpapersaccepted_xls.network:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

@@ -45,7 +45,7 @@ class SessionParticipantTypesPage extends PreRegistrationPage {
       $form['type_' . $participantType->getId()] = array(
         '#type' => 'fieldset',
         '#title' => iish_t('I would like to be a @type in the sessions',
-          array('@type' => strtolower($participantType))),
+          array('@type' => strtolower(iish_t($participantType)))),
       );
 
       $storedSessionTypes = PreRegistrationUtils::getSessionParticipantsOfUserWithType($state, $participantType);

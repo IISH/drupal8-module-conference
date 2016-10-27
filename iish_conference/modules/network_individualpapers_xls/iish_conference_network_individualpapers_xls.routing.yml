@@ -5,6 +5,8 @@ iish_conference_network_individualpapers_xls.index:
     _title: 'Participants and their individual paper proposals'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 iish_conference_network_individualpapers_xls.network:
   path: '/conference/network/individual_papers/{network}'
@@ -17,3 +19,5 @@ iish_conference_network_individualpapers_xls.network:
         type: 'iish_conference_param_converter'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

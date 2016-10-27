@@ -5,3 +5,5 @@ iish_conference_electionadvisory.form:
     _title: "Election 'Advisory board'"
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
