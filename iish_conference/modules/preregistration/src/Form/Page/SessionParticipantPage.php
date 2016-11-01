@@ -121,6 +121,16 @@ class SessionParticipantPage extends PreRegistrationPage {
       '#attributes' => $readOnlyUser,
     );
 
+    $form['participant']['addparticipantorganisation'] = array(
+      '#type' => 'textfield',
+      '#title' => iish_t('Organisation'),
+      '#size' => 40,
+      '#maxlength' => 255,
+      '#required' => TRUE,
+      '#default_value' => $user->getOrganisation(),
+      '#attributes' => $readOnlyUser,
+    );
+
     if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
       $form['participant']['addparticipantstudent'] = array(
         '#type' => 'checkbox',
@@ -332,6 +342,7 @@ class SessionParticipantPage extends PreRegistrationPage {
       $user->setEmail($form_state->getValue('addparticipantemail'));
       $user->setFirstName($form_state->getValue('addparticipantfirstname'));
       $user->setLastName($form_state->getValue('addparticipantlastname'));
+      $user->setOrganisation($form_state->getValue('addparticipantorganisation'));
       $user->setCountry($form_state->getValue('addparticipantcountry'));
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
