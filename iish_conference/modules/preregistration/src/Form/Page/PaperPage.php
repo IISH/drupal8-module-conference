@@ -81,6 +81,17 @@ class PaperPage extends PreRegistrationPage {
       '#default_value' => $paper->getCoAuthors(),
     );
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+      $form['paper']['typeofcontribution'] = array(
+        '#type' => 'textfield',
+        '#title' => iish_t('Type of contribution'),
+        '#required' => TRUE,
+        '#size' => 40,
+        '#maxlength' => 100,
+        '#default_value' => $paper->getTypeOfContribution(),
+      );
+    }
+
     if (PreRegistrationUtils::useSessions()) {
       $form['paper']['session'] = array(
         '#type' => 'select',
@@ -103,27 +114,29 @@ class PaperPage extends PreRegistrationPage {
 
       PreRegistrationUtils::hideAndSetDefaultNetwork($form['paper']['proposednetwork']);
 
-      $form['paper']['partofexistingsession'] = array(
-        '#type' => 'checkbox',
-        '#title' => iish_t('Is this part of an existing session?'),
-        '#default_value' => (
-          ($paper->getSessionProposal() !== NULL) &&
-          (strlen(trim($paper->getSessionProposal())) > 0)
-        ),
-      );
-
-      $form['paper']['proposedsession'] = array(
-        '#type' => 'textfield',
-        '#title' => iish_t('Proposed session'),
-        '#size' => 40,
-        '#maxlength' => 255,
-        '#default_value' => $paper->getSessionProposal(),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="partofexistingsession"]' => array('checked' => TRUE),
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL) == 1) {
+        $form['paper']['partofexistingsession'] = array(
+          '#type' => 'checkbox',
+          '#title' => iish_t('Is this part of an existing session?'),
+          '#default_value' => (
+            ($paper->getSessionProposal() !== NULL) &&
+            (strlen(trim($paper->getSessionProposal())) > 0)
           ),
-        ),
-      );
+        );
+
+        $form['paper']['proposedsession'] = array(
+          '#type' => 'textfield',
+          '#title' => iish_t('Proposed session'),
+          '#size' => 40,
+          '#maxlength' => 255,
+          '#default_value' => $paper->getSessionProposal(),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="partofexistingsession"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
+      }
     }
 
     if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD) == 1) && $participant->getStudent()) {
@@ -193,10 +206,12 @@ class PaperPage extends PreRegistrationPage {
    *   The current state of the form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!PreRegistrationUtils::useSessions() && $form_state->getValue('partofexistingsession')) {
-      if (strlen(trim($form_state->getValue('proposedsession'))) === 0) {
-        $form_state->setErrorByName('proposedsession',
-          iish_t('Proposed session field is required if you check \'Is part of an existing session?\'.'));
+    if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL) == 1) {
+      if (!PreRegistrationUtils::useSessions() && $form_state->getValue('partofexistingsession')) {
+        if (strlen(trim($form_state->getValue('proposedsession'))) === 0) {
+          $form_state->setErrorByName('proposedsession',
+            iish_t('Proposed session field is required if you check \'Is part of an existing session?\'.'));
+        }
       }
     }
   }
@@ -221,14 +236,20 @@ class PaperPage extends PreRegistrationPage {
     $paper->setAbstr($form_state->getValue('paperabstract'));
     $paper->setCoAuthors($form_state->getValue('coauthors'));
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+      $paper->setTypeOfContribution($form_state->getValue('typeofcontribution'));
+    }
+
     // Either save a session or save a network proposal
     $firstSessionId = $paper->getSessionId();
     if (PreRegistrationUtils::useSessions()) {
       $paper->setSession($form_state->getValue('session'));
     }
     else {
-      $paper->setNetworkProposal($form_state->getValue('proposednetwork')); // TODO: QUESTION MARK ???
-      $paper->setSessionProposal($form_state->getValue('proposedsession'));
+      $paper->setNetworkProposal($form_state->getValue('proposednetwork'));
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL) == 1) {
+        $paper->setSessionProposal($form_state->getValue('proposedsession'));
+      }
     }
 
     // Save equipment

@@ -588,6 +588,13 @@ class PersonalPageController extends ControllerBase {
       'newLine' => TRUE
     );
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+      $renderArray[] = array(
+        'label' => 'Type of contribution',
+        'value' => $paper->getTypeOfContribution()
+      );
+    }
+
     $renderArray[] = array(
       'label' => 'Co-author(s)',
       'value' => $paper->getCoAuthors()

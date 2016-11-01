@@ -27,6 +27,7 @@ class SettingsApi {
   const ONLINE_PROGRAM_HEADER = 'online_program_header';
   const ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction';
   const ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate';
+  const PARTICIPANT_TYPES_COMBINATION_INFO = 'participant_types_combination_info';
   const PATH_FOR_ADMIN_MENU = 'path_for_admin_menu';
   const PATH_FOR_MENU = 'path_for_menu';
   const PAYMENT_ON_SITE_STARTDATE = 'payment_on_site_startdate';
@@ -58,10 +59,12 @@ class SettingsApi {
   const SHOW_NETWORK_CHAIRS = 'show_network_chairs';
   const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
   const SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration';
+  const SHOW_PAPER_TYPE_OF_CONTRIBUTION = 'show_paper_type_of_contribution';
   const SHOW_PROGRAMME_ONLINE = 'show_programme_online';
   const SHOW_SESSION_CODES = 'show_session_codes';
   const SHOW_SESSION_ENDTIME_IN_PP = 'show_session_endtime_in_pp';
   const SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration';
+  const SHOW_SESSION_PROPOSAL = 'show_session_proposal';
   const SHOW_SESSION_TYPES = 'show_session_types';
   const SHOW_STUDENT = 'show_student';
 

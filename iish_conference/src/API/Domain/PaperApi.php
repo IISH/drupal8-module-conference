@@ -16,6 +16,7 @@ class PaperApi extends CRUDApiClient {
   protected $title;
   protected $coAuthors;
   protected $abstr;
+  protected $typeOfContribution;
   protected $networkProposal_id;
   protected $sessionProposal;
   protected $proposalDescription;
@@ -218,6 +219,27 @@ class PaperApi extends CRUDApiClient {
 
     $this->abstr = $abstr;
     $this->toSave['abstr'] = $abstr;
+  }
+
+  /**
+   * Returns the type of contribution of this paper
+   *
+   * @return string|null The type of contribution of this paper
+   */
+  public function getTypeOfContribution() {
+    return $this->typeOfContribution;
+  }
+
+  /**
+   * Set the type of contribution of this paper
+   *
+   * @param string|null $typeOfContribution The type of contribution of this paper
+   */
+  public function setTypeOfContribution($typeOfContribution) {
+    $typeOfContribution = (($typeOfContribution !== NULL) && strlen(trim($typeOfContribution)) > 0) ? trim($typeOfContribution) : NULL;
+
+    $this->typeOfContribution = $typeOfContribution;
+    $this->toSave['typeOfContribution'] = $typeOfContribution;
   }
 
   /**

@@ -3,6 +3,7 @@ namespace Drupal\iish_conference\API\Domain;
 
 use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\CachedConferenceApi;
+use Drupal\iish_conference\API\SettingsApi;
 
 /**
  * Holds a participant type obtained from the API
@@ -56,6 +57,11 @@ class ParticipantTypeApi extends CRUDApiClient {
    * @return string Describes the combinations of participant types that are not allowed in a single session
    */
   public static function getCombinationsNotAllowedText() {
+    $defaultText = SettingsApi::getSetting(SettingsApi::PARTICIPANT_TYPES_COMBINATION_INFO);
+    if (($defaultText !== NULL) && (strlen(trim($defaultText)) > 0)) {
+      return trim($defaultText);
+    }
+
     $text = array();
     foreach (CachedConferenceApi::getParticipantTypes() as $type) {
       if (count($type->getNotInCombinationWith()) > 0) {

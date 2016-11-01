@@ -267,6 +267,13 @@ class ConfirmPage extends PreRegistrationPage {
         'newLine' => TRUE
       );
 
+      if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+        $paperContent[] = array(
+          'label' => 'Type of contribution',
+          'value' => $paper->getTypeOfContribution()
+        );
+      }
+
       $paperContent[] = array(
         'label' => 'Co-author(s)',
         'value' => $paper->getCoAuthors()
