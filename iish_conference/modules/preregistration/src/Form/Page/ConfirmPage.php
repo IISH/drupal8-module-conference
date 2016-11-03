@@ -339,7 +339,7 @@ class ConfirmPage extends PreRegistrationPage {
       if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
         $sessionContent[] = array(
           'label' => 'Session type',
-          'value' => $session->getType()
+          'value' => ($session->getType() !== NULL) ? $session->getType() : $session->getDifferentType(),
         );
       }
 

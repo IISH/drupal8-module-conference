@@ -74,9 +74,20 @@ class SessionPage extends PreRegistrationPage {
           '#title' => iish_t('Session type'),
           '#type' => 'select',
           '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getSessionTypes()),
-          '#required' => TRUE,
-          '#size' => 3,
+          '#empty_option' => 'Something else',
           '#default_value' => $session->getTypeId(),
+        );
+
+        $form['session']['sessiondifferenttype'] = array(
+          '#type' => 'textfield',
+          '#size' => 25,
+          '#maxlength' => 50,
+          '#default_value' => $session->getDifferentType(),
+          '#states' => array(
+            'visible' => array(
+              'select[name="sessiontype"]' => array('value' => ''),
+            ),
+          ),
         );
       }
 
@@ -215,6 +226,11 @@ class SessionPage extends PreRegistrationPage {
       if ($sessions->getTotalSize() > 0) {
         $form_state->setErrorByName('sessionname', iish_t('You already created a session with the same name.'));
       }
+
+      if (($form_state->getValue('sessiontype') == '') &&
+        (strlen(trim($form_state->getValue('sessiondifferenttype'))) === 0))  {
+        $form_state->setErrorByName('sessiontype', iish_t('Please enter a session type.'));
+      }
     }
   }
 
@@ -238,6 +254,10 @@ class SessionPage extends PreRegistrationPage {
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
         $session->setType($form_state->getValue('sessiontype'));
+
+        $differentType = ($form_state->getValue('sessiontype') == '')
+          ? $form_state->getValue('sessiondifferenttype') : NULL;
+        $session->setDifferentType($differentType);
       }
 
       $networkId = EasyProtection::easyIntegerProtection($form_state->getValue('sessioninnetwork'));

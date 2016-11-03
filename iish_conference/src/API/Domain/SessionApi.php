@@ -14,6 +14,7 @@ class SessionApi extends CRUDApiClient {
   protected $abstr;
   protected $state_id;
   protected $type_id;
+  protected $differentType;
   protected $papers_id;
   protected $networks_id;
   protected $addedBy_id;
@@ -175,6 +176,27 @@ class SessionApi extends CRUDApiClient {
     }
 
     return $this->sessionType;
+  }
+
+  /**
+   * Returns this sessions different session type
+   *
+   * @return string|null This sessions different session type
+   */
+  public function getDifferentType() {
+    return $this->differentType;
+  }
+
+  /**
+   * Sets this sessions different session type
+   *
+   * @param string|null $differentType This sessions different session type
+   */
+  public function setDifferentType($differentType) {
+    $differentType = (($differentType !== NULL) && strlen(trim($differentType)) > 0) ? trim($differentType) : NULL;
+
+    $this->differentType = $differentType;
+    $this->toSave['differentType'] = $differentType;
   }
 
   /**

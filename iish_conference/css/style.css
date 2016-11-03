@@ -122,3 +122,9 @@ td.noborder {
         display: none !important;
     }
 }
+
+/* ON SPECIFIC FIELDS */
+
+.form-item-sessiontype, .form-item-sessiondifferenttype {
+    display: inline;
+}
