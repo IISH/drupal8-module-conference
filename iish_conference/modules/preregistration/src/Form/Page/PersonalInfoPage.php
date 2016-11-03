@@ -114,6 +114,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       $form['personal_info']['education'] = array(
         '#type' => 'textfield',
         '#title' => iish_t('Education'),
+        '#description' => iish_t('Please enter both the education and the university.'),
         '#size' => 40,
         '#maxlength' => 255,
         '#required' => TRUE,

@@ -74,7 +74,7 @@ class SessionPage extends PreRegistrationPage {
           '#title' => iish_t('Session type'),
           '#type' => 'select',
           '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getSessionTypes()),
-          '#empty_option' => 'Something else',
+          '#empty_option' => iish_t('Something else'),
           '#default_value' => $session->getTypeId(),
         );
 
