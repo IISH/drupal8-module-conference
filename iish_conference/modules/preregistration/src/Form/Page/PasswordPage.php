@@ -98,7 +98,7 @@ class PasswordPage extends PreRegistrationPage {
       case LoggedInUserDetails::USER_STATUS_EXISTS:
       case LoggedInUserDetails::USER_STATUS_EMAIL_DISCONTINUED:
         $this->nextPageName = PreRegistrationPage::PERSONAL_INFO;
-        break;
+        return;
       case LoggedInUserDetails::USER_STATUS_DISABLED:
       case LoggedInUserDetails::USER_STATUS_DELETED:
         drupal_set_message(iish_t('The account with the given email address is disabled.'), 'error');
