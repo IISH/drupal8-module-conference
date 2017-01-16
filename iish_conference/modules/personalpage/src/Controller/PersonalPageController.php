@@ -935,7 +935,7 @@ class PersonalPageController extends ControllerBase {
       // Names and email addresses
       if ($this->moduleHandler()->moduleExists('iish_conference_network_participants_xls')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Participant names and e-mail addresses'),
+          '#markup' => '1. ' . Link::fromTextAndUrl(iish_t('Participant names and e-mail addresses'),
               Url::fromRoute('iish_conference_network_participants_xls.index'))->toString()
             . ' (xls) <br />'
         );
@@ -944,7 +944,7 @@ class PersonalPageController extends ControllerBase {
       // Session paper proposals
       if ($this->moduleHandler()->moduleExists('iish_conference_network_forchairs')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Participant and their papers'),
+          '#markup' => '2. ' . Link::fromTextAndUrl(iish_t('Participant and their papers'),
               Url::fromRoute('iish_conference_network_forchairs.index'))->toString()
             . '<br />'
         );
@@ -953,7 +953,7 @@ class PersonalPageController extends ControllerBase {
       // Session paper proposals xls (new and accepted participants)
       if ($this->moduleHandler()->moduleExists('iish_conference_network_sessionpapers_xls')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Participants and their session paper proposals (new and accepted participants)'),
+          '#markup' => '3. ' . Link::fromTextAndUrl(iish_t('Participants and their session paper proposals (new and accepted participants)'),
               Url::fromRoute('iish_conference_network_sessionpapers_xls.index'))->toString()
             . ' (xls) <br />'
         );
@@ -962,7 +962,7 @@ class PersonalPageController extends ControllerBase {
       // Session paper proposals xls (only accepted participants)
       if ($this->moduleHandler()->moduleExists('iish_conference_network_sessionpapersaccepted_xls')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Participants and their session paper proposals (only accepted participants)'),
+          '#markup' => '4. ' . Link::fromTextAndUrl(iish_t('Participants and their session paper proposals (only accepted participants)'),
               Url::fromRoute('iish_conference_network_sessionpapersaccepted_xls.index'))->toString()
             . ' (xls) <br />'
         );
@@ -972,7 +972,7 @@ class PersonalPageController extends ControllerBase {
       // Individual paper proposals
       if ($this->moduleHandler()->moduleExists('iish_conference_network_proposedparticipants')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Participants and their individual paper proposals)'),
+          '#markup' => '5. ' . Link::fromTextAndUrl(iish_t('Participants and their individual paper proposals)'),
               Url::fromRoute('iish_conference_network_proposedparticipants.index'))->toString()
             . '<br />'
         );
@@ -981,7 +981,7 @@ class PersonalPageController extends ControllerBase {
       // Individual paper proposals xls
       if ($this->moduleHandler()->moduleExists('iish_conference_network_individualpapers_xls')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Participants and their individual paper proposals)'),
+          '#markup' => '6. ' . Link::fromTextAndUrl(iish_t('Participants and their individual paper proposals)'),
               Url::fromRoute('iish_conference_network_individualpapers_xls.index'))->toString()
             . ' (xls) <br />'
         );
@@ -990,7 +990,7 @@ class PersonalPageController extends ControllerBase {
       // Volunteers
       if ($this->moduleHandler()->moduleExists('iish_conference_network_volunteers')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Volunteers (Chair/Discussant)'),
+          '#markup' => '7. ' . Link::fromTextAndUrl(iish_t('Volunteers (Chair/Discussant)'),
               Url::fromRoute('iish_conference_network_volunteers.index'))->toString()
             . '<br />'
         );
@@ -999,7 +999,7 @@ class PersonalPageController extends ControllerBase {
       // Election advisory
       if ($this->moduleHandler()->moduleExists('iish_conference_electionadvisory')) {
         $fields[] = array(
-          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Election \'Advisory board\''),
+          '#markup' => '8. ' . Link::fromTextAndUrl(iish_t('Election \'Advisory board\''),
               Url::fromRoute('iish_conference_electionadvisory.form'))->toString()
             . '<br />'
         );
