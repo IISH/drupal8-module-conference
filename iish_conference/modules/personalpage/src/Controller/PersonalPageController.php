@@ -359,6 +359,7 @@ class PersonalPageController extends ControllerBase {
     $paymentMethod = iish_t('Payment: none');
     $paymentStatus = iish_t('(Final registration and payment has not started yet)');
     $extraMessage = '';
+    $amount = '';
 
     if ($this->moduleHandler()->moduleExists('iish_conference_finalregistration')) {
       $finalRegistrationLink = Link::fromTextAndUrl(iish_t('Final registration and payment'),
@@ -414,6 +415,9 @@ class PersonalPageController extends ControllerBase {
               $extraMessage = '<br/>' . iish_t('If you have completed your payment please contact the conference secretariat.') .
                 '<br/>'. iish_t('Otherwise please try again @link', array('@link' => $finalRegistrationLink->toString()));
           }
+
+          $amount = '<br/>'. iish_t('Amount') . ': ' . number_format($order->get('amount') / 100) . ' EUR';
+          $amount .= '<br/>'. iish_t('Order id') . ': ' . $order->get('orderid');
         }
         else {
           $paymentMethod = iish_t('Payment information is currently unavailable');
@@ -424,7 +428,7 @@ class PersonalPageController extends ControllerBase {
 
     $renderArray[] = array(
       '#markup' => '<div class="bottommargin">' .
-        trim($paymentMethod . ' ' . $paymentStatus) . $extraMessage .
+        trim($paymentMethod . ' ' . $paymentStatus) . $amount . $extraMessage .
         '</div>'
     );
   }
