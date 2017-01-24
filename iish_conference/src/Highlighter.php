@@ -57,14 +57,14 @@ class Highlighter {
 
     if (is_array($needles)) {
       foreach ($needles as $needle) {
-        if (strlen(trim($needle)) > 0) {
-          $this->needles[] = self::normalize(strtolower(trim($needle)));
+        if (mb_strlen(trim($needle)) > 0) {
+          $this->needles[] = self::normalize(mb_strtolower(trim($needle)));
         }
       }
     }
     else {
-      if (strlen(trim($needles)) > 0) {
-        $this->needles[] = self::normalize(strtolower(trim($needles)));
+      if (mb_strlen(trim($needles)) > 0) {
+        $this->needles[] = self::normalize(mb_strtolower(trim($needles)));
       }
     }
   }
@@ -113,14 +113,14 @@ class Highlighter {
    * @return string The haystack, but now with highlighting
    */
   public function highlight($haystack) {
-    $lwHaystack = self::normalize(strtolower($haystack));
+    $lwHaystack = self::normalize(mb_strtolower($haystack));
     $positions = array();
 
     // Look up all the needle positions
     foreach ($this->needles as $needle) {
       $offset = 0;
-      while (($position = strpos($lwHaystack, $needle, $offset)) !== FALSE) {
-        $end = $position + strlen($needle);
+      while (($position = mb_strpos($lwHaystack, $needle, $offset)) !== FALSE) {
+        $end = $position + mb_strlen($needle);
         $positions[] = array('start' => $position, 'end' => $end);
         $offset = $position + 1;
       }
@@ -144,11 +144,11 @@ class Highlighter {
         else {
           if ($position['start'] > $end) {
             // New area found, highlight the previous area and continue with new one
-            $haystack = substr_replace($haystack, $this->openingTag, $start + $extraLength, 0);
-            $extraLength += strlen($this->openingTag);
+            $haystack = mb_substr($haystack, 0, $start + $extraLength) . $this->openingTag . mb_substr($haystack, $start + $extraLength);
+            $extraLength += mb_strlen($this->openingTag);
 
-            $haystack = substr_replace($haystack, $this->closingTag, $end + $extraLength, 0);
-            $extraLength += strlen($this->closingTag);
+            $haystack = mb_substr($haystack, 0, $end + $extraLength) . $this->closingTag . mb_substr($haystack, $end + $extraLength);
+            $extraLength += mb_strlen($this->closingTag);
 
             $start = $position['start'];
             $end = $position['end'];
@@ -159,9 +159,9 @@ class Highlighter {
 
     // Highlight the latest found area
     if (($start !== NULL) && ($end !== NULL)) {
-      $haystack = substr_replace($haystack, $this->openingTag, $start + $extraLength, 0);
-      $extraLength += strlen($this->openingTag);
-      $haystack = substr_replace($haystack, $this->closingTag, $end + $extraLength, 0);
+      $haystack = mb_substr($haystack, 0, $start + $extraLength) . $this->openingTag . mb_substr($haystack, $start + $extraLength);
+      $extraLength += mb_strlen($this->openingTag);
+      $haystack = mb_substr($haystack, 0, $end + $extraLength) . $this->closingTag . mb_substr($haystack, $end + $extraLength);
     }
 
     return $haystack;
@@ -177,4 +177,4 @@ class Highlighter {
   private static function normalize($text) {
     return strtr($text, self::$normalizeTable);
   }
-} 
+}
