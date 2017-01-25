@@ -7,6 +7,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\ConferenceTrait;
 use Drupal\iish_conference\ConferenceMisc;
 
@@ -141,10 +142,21 @@ class LoginForm extends FormBase {
 
       switch ($user_status) {
         case LoggedInUserDetails::USER_STATUS_DISABLED:
+        case LoggedInUserDetails::USER_STATUS_EMAIL_DISCONTINUED:
           drupal_set_message(iish_t('Account is disabled.'), 'error');
           break;
         case LoggedInUserDetails::USER_STATUS_DELETED:
           drupal_set_message(iish_t('Account is deleted'), 'error');
+          break;
+        case LoggedInUserDetails::USER_STATUS_PARTICIPANT_CANCELLED:
+          drupal_set_message(iish_t('Account has been cancelled.'), 'error');
+          break;
+        case LoggedInUserDetails::USER_STATUS_PARTICIPANT_DOUBLE_ENTRY:
+          drupal_set_message(iish_t('Your account is disabled. ' .
+                '(Probably due to a double registration, please login with your other registration) ' .
+                'Please contact @email', array('@email' =>
+            ConferenceMisc::encryptEmailAddress(
+              SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL)))), 'error');
           break;
         default:
           drupal_set_message(iish_t('Incorrect email / password combination.'), 'error');
