@@ -1,3 +1,7 @@
+#conference_programme_network_form, #conference_programme_text_form {
+    display: inline;
+}
+
 table.programme {
     width: 100%;
     padding: 20;

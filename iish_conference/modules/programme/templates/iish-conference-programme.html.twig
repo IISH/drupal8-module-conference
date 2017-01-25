@@ -1,8 +1,8 @@
 {{ attach_library('iish_conference_programme/global-styling') }}
 
 <div class="container-inline bottommargin">
-    <form action="" method="get" accept-charset="UTF-8">
-        {% if setting('SHOW_NETWORK', 'bool') %}
+    {% if setting('SHOW_NETWORK', 'bool') %}
+        <form action="" method="get" accept-charset="UTF-8" id="conference_programme_network_form">
             <div class="form-item form-type-select form-item-network">
                 <label for="edit-network">
                     {{ 'Browse networks'|iish_t }}
@@ -18,8 +18,12 @@
                     {% endfor %}
                 </select>
             </div>
-        {% endif %}
 
+            <input type="submit" id="edit-network-submit" value="{{ 'Go'|iish_t }}" class="form-submit">
+        </form>
+    {% endif %}
+
+    <form action="" method="get" accept-charset="UTF-8" id="conference_programme_text_form">
         <div class="form-item form-type-textfield form-item-textsearch">
             <label for="edit-textsearch">
                 {% if setting('SHOW_NETWORK', 'bool') %}
@@ -33,7 +37,7 @@
                    class="form-text">
         </div>
 
-        <input type="submit" id="edit-btnsubmit" value="{{ 'Go'|iish_t }}" class="form-submit">
+        <input type="submit" id="edit-text-submit" value="{{ 'Go'|iish_t }}" class="form-submit">
     </form>
 </div>
 
