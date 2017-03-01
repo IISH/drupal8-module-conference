@@ -92,12 +92,16 @@ class PayWayMessage {
     }
     else {
       try {
-        $client = \Drupal::httpClient();
+        #$client = \Drupal::httpClient();
+	    $clientFactory = \Drupal::service('http_client_factory');
+	    $client = $clientFactory->fromOptions(['verify' => FALSE]);
 
         $response = $client->post(SettingsApi::getSetting(SettingsApi::PAYWAY_ADDRESS) . $apiName, array(
           'headers' => array('Content-Type' => 'text/json'),
           'body' => Json::encode($this->message),
         ));
+
+        #drupal_set_message( var_export($response, true) );
 
         if ($response->getStatusCode() === 200) {
           $message = new PayWayMessage(Json::decode($response->getBody()));
@@ -107,6 +111,7 @@ class PayWayMessage {
         }
       }
       catch (\Exception $exception) {
+	    #drupal_set_message( $exception->getMessage() );
         return FALSE;
       }
     }

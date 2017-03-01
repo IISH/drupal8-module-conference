@@ -147,6 +147,7 @@ class OverviewPage extends FormBase {
       'userid' => LoggedInUserDetails::getId(),
     ));
     $order = $createOrder->send('createOrder');
+    #drupal_set_message(var_export($order, true));
 
     // If creating a new order is successful, redirect to PayWay or to bank transfer information or just succeed?
     if (!empty($order) && $order->get('success')) {
