@@ -3,6 +3,7 @@ namespace Drupal\iish_conference_finalregistration\Form;
 
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\Core\Render;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -54,6 +55,8 @@ class FinalRegistrationForm extends FormBase {
 
     // redirect to login page
     if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
+	    // TODO REDIRECT WERKT NIET
+	    drupal_set_message(var_export($response->getContent('targetUrl'))); // QUICK SOLUTION
       if ($response instanceof Response) {
         $form_state->setResponse($response);
       }
@@ -122,14 +125,21 @@ class FinalRegistrationForm extends FormBase {
 
       if (!empty($order)) {
         if ($order->get('payed') == 1) {
-          drupal_set_message(iish_t('You already finished the final registration for the @conference.') .
-            '<br />' .
-            iish_t('If you have questions please contact the secretariat at @email .',
-              array(
-                '@conference' => CachedConferenceApi::getEventDate()->getLongNameAndYear(),
-                '@email' => ConferenceMisc::encryptEmailAddress(
-                  SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
-              )));
+
+	        $rendered_message = \Drupal\Core\Render\Markup::create(
+	            iish_t('You already finished the final registration for the @conference.', array(
+			        '@conference' => CachedConferenceApi::getEventDate()->getLongNameAndYear()
+		        ))
+	            . ' ' .
+	            iish_t('(See your personal page.)')
+		        . '<br />' .
+		        iish_t('If you have questions please contact the secretariat at @email .',
+			        array(
+				        '@email' => ConferenceMisc::encryptEmailAddress(SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
+			        ))
+			);
+
+          drupal_set_message($rendered_message);
 
           return $form;
         }
