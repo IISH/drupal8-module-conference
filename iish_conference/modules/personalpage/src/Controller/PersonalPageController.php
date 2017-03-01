@@ -361,6 +361,11 @@ class PersonalPageController extends ControllerBase {
     $extraMessage = '';
     $amount = '';
 
+	  $fields = array(
+		  array('#markup' => '<a name="payment"></a>'),
+		  array('header' => iish_t('Payment')),
+	  );
+
     if ($this->moduleHandler()->moduleExists('iish_conference_finalregistration')) {
       $finalRegistrationLink = Link::fromTextAndUrl(iish_t('Final registration and payment'),
         Url::fromRoute('iish_conference_finalregistration.form'));
@@ -416,7 +421,12 @@ class PersonalPageController extends ControllerBase {
                 '<br/>'. iish_t('Otherwise please try again @link', array('@link' => $finalRegistrationLink->toString()));
           }
 
-          $amount = '<br/>'. iish_t('Amount') . ': ' . number_format($order->get('amount') / 100) . ' EUR';
+          // if amount contains cents, show decimals
+          $decimals = 0;
+          if ( $order->get('amount') / 100 != 0 ) {
+            $decimals = 2;
+          }
+          $amount = '<br/>'. iish_t('Amount') . ': ' . number_format($order->get('amount') / 100, $decimals) . ' EUR';
           $amount .= '<br/>'. iish_t('Order id') . ': ' . $order->get('orderid');
         }
         else {
@@ -426,11 +436,18 @@ class PersonalPageController extends ControllerBase {
       }
     }
 
-    $renderArray[] = array(
+	#$renderArray[] = array(
+	$fields[] = array(
       '#markup' => '<div class="bottommargin">' .
         trim($paymentMethod . ' ' . $paymentStatus) . $amount . $extraMessage .
         '</div>'
     );
+
+    $renderArray[] = array(
+		  '#theme' => 'iish_conference_container',
+		  '#fields' => $fields
+	);
+
   }
 
   /**
