@@ -35,9 +35,7 @@ class ForChairsController extends ControllerBase {
    * @return array|string|Response Render array or a redirect response.
    */
   public function listNetworks() {
-    if (($response = $this->checkNetworkChair()) !== FALSE) {
-      return $response;
-    }
+    $this->checkNetworkChair();
 
     $search = $this->getSearch();
     if ($search !== NULL) {
@@ -86,9 +84,7 @@ class ForChairsController extends ControllerBase {
    * @return array|string|Response The render array or redirect response.
    */
   public function network($network = NULL) {
-    if (($response = $this->checkNetworkChair()) !== FALSE) {
-      return $response;
-    }
+    $this->checkNetworkChair();
 
     $fields = array();
     $search = $this->getSearch();
@@ -217,9 +213,7 @@ class ForChairsController extends ControllerBase {
    * @return array|string|Response The render array or redirect response.
    */
   public function session($network = NULL, $session = NULL) {
-    if (($response = $this->checkNetworkChair()) !== FALSE) {
-      return $response;
-    }
+    $this->checkNetworkChair();
 
     $search = $this->getSearch();
     $networkId = ($network !== NULL) ? $network->getId() : -1;

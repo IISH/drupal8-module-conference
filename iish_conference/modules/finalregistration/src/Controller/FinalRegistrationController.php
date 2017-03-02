@@ -35,10 +35,7 @@ class FinalRegistrationController extends ControllerBase {
    * @return string|array|Response The render array or an empty page.
    */
   public function bankTransfer() {
-    if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
-      return $response;
-    }
-
+    $this->redirectIfNotLoggedIn();
     $finalRegistrationLink = Link::fromTextAndUrl(iish_t('Click here'),
       Url::fromRoute('iish_conference_finalregistration.form'));
 

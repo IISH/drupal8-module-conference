@@ -36,11 +36,7 @@ class ChangePasswordForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
-	    // TODO REDIRECT WERKT NIET
-	    drupal_set_message(var_export($response->getContent('targetUrl'))); // QUICK SOLUTION
-
-      $form_state->setResponse($response);
+    if ($this->redirectIfNotLoggedIn() === FALSE) {
       return array();
     }
 

@@ -39,10 +39,7 @@ class ChangeUserForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
-    if (($response = $this->checkAdmin()) !== FALSE) {
-      if ($response instanceof Response) {
-        $form_state->setResponse($response);
-      }
+    if ($response = $this->checkAdmin() === FALSE) {
       return array();
     }
 

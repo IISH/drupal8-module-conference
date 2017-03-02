@@ -54,19 +54,8 @@ class FinalRegistrationForm extends FormBase {
     }
 
     // redirect to login page
-    if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
-	    // TODO REDIRECT WERKT NIET
-	    drupal_set_message(var_export($response->getContent('targetUrl'))); // QUICK SOLUTION
-      if ($response instanceof Response) {
-        $form_state->setResponse($response);
-      }
+    if ($this->redirectIfNotLoggedIn() === FALSE) {
       return array();
-    }
-
-    if (!LoggedInUserDetails::isLoggedIn()) {
-      $form_state->setRedirect(Url::fromRoute('iish_conference_login_logout.login_form',
-        array(), array('query' => \Drupal::destination()->getAsArray())));
-      return $form;
     }
 
     // TODO Should we only allow payments of finished pre-registrations?

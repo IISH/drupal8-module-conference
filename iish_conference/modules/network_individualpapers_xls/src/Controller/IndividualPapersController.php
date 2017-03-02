@@ -22,9 +22,7 @@ class IndividualPapersController extends ControllerBase {
    * @return Response|array Render array.
    */
   public function listNetworks() {
-    if (($response = $this->checkNetworkChair()) !== FALSE) {
-      return $response;
-    }
+    $this->checkNetworkChair();
 
     $networks = $this->getAllowedNetworks();
     if (count($networks) > 0) {
@@ -50,9 +48,7 @@ class IndividualPapersController extends ControllerBase {
    * @return Response|array The response.
    */
   public function network($network) {
-    if (($response = $this->checkNetworkChair()) !== FALSE) {
-      return $response;
-    }
+    $this->checkNetworkChair();
 
     if (!empty($network)) {
       $networkName = EasyProtection::easyAlphaNumericStringProtection($network->getName());

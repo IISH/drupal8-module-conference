@@ -52,9 +52,7 @@ class PersonalPageController extends ControllerBase {
    * @return array|Response Render array.
    */
   public function index() {
-    if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
-      return $response;
-    }
+    $this->redirectIfNotLoggedIn();
 
     $userDetails = LoggedInUserDetails::getUser();
     $participantDateDetails = LoggedInUserDetails::getParticipant();
@@ -80,9 +78,7 @@ class PersonalPageController extends ControllerBase {
    * @return array|Response Render array.
    */
   public function uploadPaper($paper) {
-    if (($response = $this->redirectIfNotLoggedIn()) !== FALSE) {
-      return $response;
-    }
+    $this->redirectIfNotLoggedIn();
 
     if (empty($paper)) {
       drupal_set_message(iish_t('Unfortunately, this paper does not seem to exist.'), 'error');

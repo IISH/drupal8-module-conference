@@ -24,7 +24,7 @@ trait ConferenceTrait {
 
   /**
    * Check if a conference user is logged in. If not, redirect to the login page (if enabled).
-   * @return bool|RedirectResponse Returns a redirect response on a redirect, FALSE otherwise.
+   * @return bool Sends a redirect response on a redirect and returns TRUE, FALSE otherwise.
    */
   public function redirectIfNotLoggedIn() {
     if (!LoggedInUserDetails::isLoggedIn()) {
@@ -37,7 +37,10 @@ trait ConferenceTrait {
         );
       }
 
-      return new RedirectResponse($url->toString());
+      $response = new RedirectResponse($url->toString());
+      $response->send();
+
+      return TRUE;
     }
 
     return FALSE;
@@ -46,7 +49,7 @@ trait ConferenceTrait {
   /**
    * Check if a conference user is logged in and an admin. If not logged in, redirect to the login page (if enabled).
    * If logged in, but not an admin, show 'access denied' message.
-   * @return bool|RedirectResponse|array Returns a redirect response on a redirect,
+   * @return bool|array Returns TRUE on a redirect,
    * a render array on access denied, FALSE otherwise.
    */
   public function checkAdmin() {
@@ -88,7 +91,7 @@ trait ConferenceTrait {
   /**
    * Check if a conference user is logged in and a network chair. If not logged in,
    * redirect to the login page (if enabled). If logged in, but not a network chair, show 'access denied' message.
-   * @return bool|RedirectResponse|array Returns a redirect response on a redirect,
+   * @return bool|array Returns TRUE on a redirect,
    * a render array on access denied, FALSE otherwise.
    */
   public function checkNetworkChair() {
@@ -107,14 +110,13 @@ trait ConferenceTrait {
 
   /**
    * Redirects to the personal page if enabled, otherwise the homepage.
-   * @return RedirectResponse Redirect response.
    */
   public function redirectToPersonalPage() {
+    $response = new RedirectResponse(Url::fromRoute('<front>'));
     if (\Drupal::moduleHandler()->moduleExists('iish_conference_personalpage')) {
-      return new RedirectResponse(Url::fromRoute('iish_conference_personalpage.index'));
+      $response = new RedirectResponse(Url::fromRoute('iish_conference_personalpage.index'));
     }
-
-    return new RedirectResponse(Url::fromRoute('<front>'));
+    $response->send();
   }
 
   /**

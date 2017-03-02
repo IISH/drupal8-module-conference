@@ -44,10 +44,7 @@ class ElectionAdvisoryForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if (($response = $this->checkNetworkChair()) !== FALSE) {
-      if ($response instanceof Response) {
-        $form_state->setResponse($response);
-      }
+    if ($response = $this->checkNetworkChair() === FALSE) {
       return array();
     }
 
