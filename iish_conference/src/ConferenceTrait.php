@@ -53,8 +53,8 @@ trait ConferenceTrait {
    * a render array on access denied, FALSE otherwise.
    */
   public function checkAdmin() {
-    if ($response = self::redirectIfNotLoggedIn() !== TRUE) {
-      return $response;
+    if (self::redirectIfNotLoggedIn() === TRUE) {
+      return TRUE;
     }
 
     if (!LoggedInUserDetails::isCrew() && !LoggedInUserDetails::hasFullRights()) {
@@ -95,8 +95,8 @@ trait ConferenceTrait {
    * a render array on access denied, FALSE otherwise.
    */
   public function checkNetworkChair() {
-    if ($response = self::redirectIfNotLoggedIn() !== TRUE) {
-      return $response;
+    if ($response = self::redirectIfNotLoggedIn() === TRUE) {
+      return TRUE;
     }
 
     if (!LoggedInUserDetails::isCrew() && !LoggedInUserDetails::isNetworkChair()) {
