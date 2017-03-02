@@ -54,7 +54,7 @@ class FinalRegistrationForm extends FormBase {
     }
 
     // redirect to login page
-    if ($this->redirectIfNotLoggedIn() === FALSE) {
+    if ($this->redirectIfNotLoggedIn() === TRUE) {
       return array();
     }
 
