@@ -64,7 +64,7 @@ class FinalRegistrationController extends ControllerBase {
           $bankTransferInfo = str_replace('[PaymentFinalDate]', $finalDate, $bankTransferInfo);
           $bankTransferInfo = str_replace('[NameParticipant]', $fullName, $bankTransferInfo);
 
-          return new ConferenceHTML($bankTransferInfo);
+          return array('#markup' => new ConferenceHTML($bankTransferInfo));
         }
 
         drupal_set_message(iish_t('You have chosen another payment method. @link to change your payment method.',
