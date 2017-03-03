@@ -39,7 +39,9 @@ class FinalRegistrationController extends ControllerBase {
     $finalRegistrationLink = Link::fromTextAndUrl(iish_t('Click here'),
       Url::fromRoute('iish_conference_finalregistration.form'));
 
-    if (LoggedInUserDetails::isAParticipant() && LoggedInUserDetails::getParticipant()->getPaymentId()) {
+      // TODO: it should also work with participants with 'not finished pre-registrations'
+	  if ( LoggedInUserDetails::isAParticipant() && LoggedInUserDetails::getParticipant()->getPaymentId()) {
+//	  if ( ( LoggedInUserDetails::isAParticipant() || LoggedInUserDetails::isAParticipantWithoutConfirmation() ) && LoggedInUserDetails::getParticipant()->getPaymentId()) {
       $participant = LoggedInUserDetails::getParticipant();
       $orderDetails = new PayWayMessage(array('orderid' => $participant->getPaymentId()));
       $order = $orderDetails->send('orderDetails');
@@ -54,8 +56,7 @@ class FinalRegistrationController extends ControllerBase {
         if ($order->get('willpaybybank')) {
           $bankTransferInfo = SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_INFO);
           $amount = ConferenceMisc::getReadableAmount($order->get('amount'), TRUE);
-          $finalDate =
-            date('l j F Y', $participant->getBankTransferFinalDate($order->getDateTime('createdat')));
+          $finalDate = date('l j F Y', $participant->getBankTransferFinalDate($order->getDateTime('createdat')));
           $fullName = LoggedInUserDetails::getUser()->getFullName();
 
           $bankTransferInfo = str_replace('[PaymentNumber]', $order->get('orderid'), $bankTransferInfo);
