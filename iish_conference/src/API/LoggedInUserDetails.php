@@ -58,8 +58,7 @@ class LoggedInUserDetails {
   public static function isAParticipant() {
     return (
       (self::getParticipant() !== NULL) &&
-      (self::getParticipant()
-          ->getStateId() !== ParticipantStateApi::DID_NOT_FINISH_REGISTRATION)
+      (self::getParticipant()->getStateId() !== ParticipantStateApi::DID_NOT_FINISH_REGISTRATION)
     );
   }
 
@@ -71,8 +70,7 @@ class LoggedInUserDetails {
   public static function isAParticipantWithoutConfirmation() {
     return (
       (self::getParticipant() !== NULL) &&
-      (self::getParticipant()
-          ->getStateId() == ParticipantStateApi::DID_NOT_FINISH_REGISTRATION)
+      (self::getParticipant()->getStateId() == ParticipantStateApi::DID_NOT_FINISH_REGISTRATION)
     );
   }
 
