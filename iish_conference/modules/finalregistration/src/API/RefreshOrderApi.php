@@ -19,11 +19,15 @@ class RefreshOrderApi {
    * Refreshes the order with this specific order id
    *
    * @param int $orderId The order id of the order in question
+   * @param int|null $participantId The id of the participant
    *
    * @return bool Whether the refresh was successful or not
    */
-  public function refreshOrder($orderId) {
-    $response = $this->client->get(self::$apiName, array('orderId' => $orderId));
+  public function refreshOrder($orderId, $participantId = NULL) {
+    $response = $this->client->get(self::$apiName, array(
+      'orderId' => $orderId,
+      'participantId' => $participantId
+    ));
 
     return ($response !== NULL) ? $response['success'] : FALSE;
   }

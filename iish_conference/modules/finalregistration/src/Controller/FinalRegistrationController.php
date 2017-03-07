@@ -98,15 +98,12 @@ class FinalRegistrationController extends ControllerBase {
       $userId = $paymentResponse->get('userid');
       $orderId = $paymentResponse->get('orderid');
 
-      $participant = $this->getParticipant($userId);
-      $participant->setPaymentId($orderId);
-
-      // Make sure that cancelled participants are confirmed again
-      if ($participant->getStateId() == ParticipantStateApi::REMOVED_CANCELLED) {
-        $participant->setState(ParticipantStateApi::PARTICIPANT);
+      // TODO: Deprecated
+      if ($userId !== NULL) {
+        $participant = $this->getParticipant($userId);
+        $participant->setPaymentId($orderId);
+        $participant->save();
       }
-
-      $participant->save();
 
       // Also make sure the CMS side is aware of the update of this order
       $refreshOrderApi = new RefreshOrderApi();
