@@ -8,7 +8,7 @@ iish_conference_finalregistration.form:
   options:
     no_cache: 'TRUE'
 
-iish_conference_finalregistration.bank-transfer:
+iish_conference_finalregistration.bank_transfer:
   path: '/conference/user/final-registration/bank-transfer'
   defaults:
     _controller: '\Drupal\iish_conference_finalregistration\Controller\FinalRegistrationController::bankTransfer'
