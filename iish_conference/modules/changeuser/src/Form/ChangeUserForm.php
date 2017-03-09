@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\iish_conference\API\UserInfoApi;
 use Drupal\iish_conference\API\LoggedInUserDetails;
 use Drupal\iish_conference\ConferenceTrait;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The change user form.
@@ -39,7 +38,7 @@ class ChangeUserForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
-    if ($response = $this->checkAdmin() === FALSE) {
+    if ($this->checkAdmin() === TRUE) {
       return array();
     }
 
