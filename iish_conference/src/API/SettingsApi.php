@@ -59,6 +59,7 @@ class SettingsApi {
   const SHOW_NETWORK_CHAIRS = 'show_network_chairs';
   const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
   const SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration';
+  const SHOW_PAPER_KEYWORDS = 'show_paper_keywords';
   const SHOW_PAPER_TYPE_OF_CONTRIBUTION = 'show_paper_type_of_contribution';
   const SHOW_PROGRAMME_ONLINE = 'show_programme_online';
   const SHOW_SESSION_CODES = 'show_session_codes';
@@ -70,6 +71,7 @@ class SettingsApi {
 
   // Required fields
   const REQUIRED_CV = 'required_cv';
+  const REQUIRED_PAPER_UPLOAD = 'required_paper_upload';
 
   // Email templates
   const BANK_TRANSFER_EMAIL_TEMPLATE_ID = 'bank_transfer_email_template_id';

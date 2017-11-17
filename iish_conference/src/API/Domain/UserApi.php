@@ -37,6 +37,7 @@ class UserApi extends CRUDApiClient {
   private $country;
   private $days;
   private $addedBy;
+  private $reviews;
 
   /**
    * Allows the creation of a user via an array with details
@@ -609,5 +610,20 @@ class UserApi extends CRUDApiClient {
   public function getParticipantDate() {
     return CRUDApiMisc::getFirstWherePropertyEquals(
       new ParticipantDateApi(), 'user_id', $this->getId());
+  }
+
+  /**
+   * Returns the reviews by this reviewer
+   *
+   * @return PaperReviewApi[] The reviews by this reviewer
+   */
+  public function getReviews() {
+    if (!$this->reviews) {
+      $this->reviews =
+        CRUDApiMisc::getAllWherePropertyEquals(new PaperReviewApi(), 'reviewer_id', $this->getId())
+          ->getResults();
+    }
+
+    return $this->reviews;
   }
 }

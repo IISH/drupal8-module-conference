@@ -5,6 +5,8 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Form\FormStateInterface;
 
+use Drupal\file\Entity\File;
+use Drupal\iish_conference\API\AccessTokenApi;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\CachedConferenceApi;
@@ -12,6 +14,8 @@ use Drupal\iish_conference\API\CachedConferenceApi;
 use Drupal\iish_conference\API\Domain\PaperApi;
 use Drupal\iish_conference\API\Domain\ParticipantTypeApi;
 use Drupal\iish_conference\API\Domain\SessionParticipantApi;
+
+use Drupal\iish_conference\ConferenceMisc;
 
 use Drupal\iish_conference_preregistration\Form\PreRegistrationState;
 use Drupal\iish_conference_preregistration\Form\PreRegistrationUtils;
@@ -64,6 +68,36 @@ class PaperPage extends PreRegistrationPage {
       '#default_value' => $paper->getTitle(),
     );
 
+    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+      $hasFileUploaded = ($paper->getFileSize() !== NULL && $paper->getFileSize() > 0);
+
+      $maxSize = SettingsApi::getSetting(SettingsApi::MAX_UPLOAD_SIZE_PAPER);
+      $allowedExtensions = SettingsApi::getSetting(SettingsApi::ALLOWED_PAPER_EXTENSIONS);
+
+      $description = iish_t('The file can\'t be larger than @maxSize. ' .
+        'Only files with the following extensions are allowed: @extensions.', array(
+        '@maxSize' => ConferenceMisc::getReadableFileSize($maxSize),
+        '@extensions' => $allowedExtensions
+      ));
+
+      if ($hasFileUploaded) {
+        $description .= ' ' . iish_t('Uploading a new file will replace your earlier uploaded paper "@fileName"', array(
+            "@fileName" => $paper->getFileName()
+          ));
+      }
+
+      $form['paper']['file'] = array(
+        '#type' => 'managed_file',
+        '#title' => iish_t('Upload paper'),
+        '#required' => !$hasFileUploaded,
+        '#description' => $description,
+        '#upload_validators' => array(
+          'file_validate_extensions' => array($allowedExtensions),
+          'file_validate_size' => array($maxSize)
+        )
+      );
+    }
+
     $form['paper']['paperabstract'] = array(
       '#type' => 'textarea',
       '#title' => iish_t('Abstract'),
@@ -89,6 +123,17 @@ class PaperPage extends PreRegistrationPage {
         '#size' => 40,
         '#maxlength' => 100,
         '#default_value' => $paper->getTypeOfContribution(),
+      );
+    }
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS) == 1) {
+      $form['paper']['keywords'] = array(
+        '#type' => 'textarea',
+        '#title' => iish_t('Keywords'),
+        '#required' => TRUE,
+        '#description' => '<em>' . iish_t('Enter keywords seperated with a comma') . '</em>',
+        '#rows' => 2,
+        '#default_value' => $paper->getKeywords(),
       );
     }
 
@@ -240,6 +285,10 @@ class PaperPage extends PreRegistrationPage {
       $paper->setTypeOfContribution($form_state->getValue('typeofcontribution'));
     }
 
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS) == 1) {
+      $paper->setKeywords($form_state->getValue('keywords'));
+    }
+
     // Either save a session or save a network proposal
     $firstSessionId = $paper->getSessionId();
     if (PreRegistrationUtils::useSessions()) {
@@ -307,6 +356,44 @@ class PaperPage extends PreRegistrationPage {
       // Or maybe we removed the session, but still have the session participant
       if (($paper->getSessionId() === NULL) && ($sessionParticipant !== NULL)) {
         $sessionParticipant->delete();
+      }
+    }
+
+    // Then save the paper
+    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+      if (($file = File::load($form_state->getValue(['file', 0]))) !== NULL) {
+        $accessTokenApi = new AccessTokenApi();
+        $token = $accessTokenApi->accessToken($user->getId());
+
+        $config = \Drupal::config('iish_conference.settings');
+        $url = $config->get('conference_base_url') . $config->get('conference_event_code') . '/' .
+          $config->get('conference_date_code') . '/' . 'userApi/uploadPaper?access_token=' . $token;
+
+        try {
+          $clientFactory = \Drupal::service('http_client_factory');
+          $client = $clientFactory->fromOptions(['verify' => FALSE]);
+
+          $response = $client->post($url, array(
+            'multipart' => array(
+              array(
+                'name' => 'paper-id',
+                'contents' => $paper->getId()
+              ),
+              array(
+                'name' => 'paper-file',
+                'contents' => fopen($file->getFileUri(), 'r'),
+                'filename' => $file->getFilename()
+              )
+            )
+          ));
+
+          if ($response->getStatusCode() !== 200) {
+            drupal_set_message(iish_t('Failed to upload the paper!'), 'error');
+          }
+        }
+        catch (\Exception $exception) {
+          drupal_set_message(iish_t('Failed to upload the paper!'), 'error');
+        }
       }
     }
 

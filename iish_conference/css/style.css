@@ -104,6 +104,11 @@ span.iishconference-userblock {
     font-style: italic;
 }
 
+.score-radios .form-radios .form-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 textarea.readonly-text, select.readonly-text, input.readonly-text {
     border: 0;
     background-color: transparent;
@@ -127,4 +132,8 @@ td.noborder {
 
 .form-item-sessiontype, .form-item-sessiondifferenttype {
     display: inline;
+}
+
+.form-item-review .form-textarea-wrapper textarea {
+    width: 100%;
 }

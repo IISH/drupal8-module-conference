@@ -16,6 +16,7 @@ use Drupal\iish_conference\API\CachedConferenceApi;
 use Drupal\iish_conference\API\Domain\UserApi;
 use Drupal\iish_conference\API\Domain\PaperApi;
 use Drupal\iish_conference\API\Domain\SessionApi;
+use Drupal\iish_conference\API\Domain\PaperReviewApi;
 use Drupal\iish_conference\API\Domain\VolunteeringApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
@@ -887,6 +888,19 @@ class PersonalPageController extends ControllerBase {
             Url::fromRoute('iish_conference_preregistration.form'))->toString()
           . '<br />'
       );
+    }
+
+    if ($this->moduleHandler()->moduleExists('iish_conference_reviews')) {
+      $review = CRUDApiMisc::getFirstWherePropertyEquals(
+        new PaperReviewApi(), 'reviewer_id', LoggedInUserDetails::getUser()->getId());
+
+      if ($review !== NULL) {
+        $fields[] = array(
+          '#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Review papers'),
+              Url::fromRoute('iish_conference_reviews.index'))->toString()
+            . '<br />'
+        );
+      }
     }
 
     if ($this->moduleHandler()->moduleExists('iish_conference_changepassword')) {

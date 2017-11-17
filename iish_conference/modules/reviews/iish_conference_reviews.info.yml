@@ -1,0 +1,8 @@
+name: "Reviews"
+type: module
+package: IISH Conference
+description: 'Allows reviewers to review papers of participants.'
+core: 8.x
+version: 8.x-1.0.0
+dependencies:
+  - iish_conference:iish_conference

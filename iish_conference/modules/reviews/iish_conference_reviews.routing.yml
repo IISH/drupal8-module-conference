@@ -1,0 +1,23 @@
+iish_conference_reviews.index:
+  path: '/conference/user/reviews'
+  defaults:
+    _controller: '\Drupal\iish_conference_reviews\Controller\ReviewsController::listReviews'
+    _title: 'Reviews'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+iish_conference_reviews.form:
+  path: '/conference/user/reviews/{paper}'
+  defaults:
+    _form: '\Drupal\iish_conference_reviews\Form\ReviewForm'
+    _title: 'Review paper'
+  options:
+    parameters:
+      paper:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'

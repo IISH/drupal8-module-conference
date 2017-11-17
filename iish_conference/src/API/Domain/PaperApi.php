@@ -17,6 +17,7 @@ class PaperApi extends CRUDApiClient {
   protected $coAuthors;
   protected $abstr;
   protected $typeOfContribution;
+  protected $keywords;
   protected $networkProposal_id;
   protected $sessionProposal;
   protected $proposalDescription;
@@ -32,6 +33,7 @@ class PaperApi extends CRUDApiClient {
   private $user;
   private $session;
   private $addedBy;
+  private $reviews;
 
   /**
    * Creates a new Paper.
@@ -240,6 +242,27 @@ class PaperApi extends CRUDApiClient {
 
     $this->typeOfContribution = $typeOfContribution;
     $this->toSave['typeOfContribution'] = $typeOfContribution;
+  }
+
+  /**
+   * Get the keywords for this paper.
+   *
+   * @return string|null The keywords for this paper
+   */
+  public function getKeywords() {
+    return $this->keywords;
+  }
+
+  /**
+   * Set the keywords for this paper.
+   *
+   * @param string|null $keywords The keywords for this paper
+   */
+  public function setKeywords($keywords) {
+    $keywords = (($keywords !== NULL) && strlen(trim($keywords)) > 0) ? trim($keywords) : NULL;
+
+    $this->keywords = $keywords;
+    $this->toSave['keywords'] = $keywords;
   }
 
   /**
@@ -532,6 +555,21 @@ class PaperApi extends CRUDApiClient {
 
     $this->title = $title;
     $this->toSave['title'] = $title;
+  }
+
+  /**
+   * Returns the reviews for this paper
+   *
+   * @return PaperReviewApi[] The reviews for this paper
+   */
+  public function getReviews() {
+    if (!$this->reviews) {
+      $this->reviews =
+        CRUDApiMisc::getAllWherePropertyEquals(new PaperReviewApi(), 'paper_id', $this->getId())
+          ->getResults();
+    }
+
+    return $this->reviews;
   }
 
   /**

@@ -224,6 +224,21 @@ class ConferenceMisc {
   }
 
   /**
+   * A rating scale to be used in forms.
+   *
+   * @return array The options for a radios form element.
+   */
+  public static function getScoreRadioOptions() {
+    return array(
+      1 => iish_t('Poor'),
+      2 => iish_t('Fair'),
+      3 => iish_t('Good'),
+      4 => iish_t('Very good'),
+      5 => iish_t('Excellent')
+    );
+  }
+
+  /**
    * Tests if a given 'last date' is still open (last day has not yet passed)
    *
    * @param int $lastDate The 'last date' as a UNIX timestamp

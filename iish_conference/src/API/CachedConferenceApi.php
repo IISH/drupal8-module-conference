@@ -10,6 +10,7 @@ use Drupal\iish_conference\API\Domain\NetworkApi;
 use Drupal\iish_conference\API\Domain\PaperStateApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
 use Drupal\iish_conference\API\Domain\ParticipantTypeApi;
+use Drupal\iish_conference\API\Domain\ReviewCriteriaApi;
 use Drupal\iish_conference\API\Domain\RoomApi;
 use Drupal\iish_conference\API\Domain\SessionApi;
 use Drupal\iish_conference\API\Domain\EventDateApi;
@@ -38,6 +39,7 @@ class CachedConferenceApi {
   private static $nameRoomsCache = 'iishconference_rooms';
   private static $nameExtrasCache = 'iishconference_extras';
   private static $nameVolunteeringCache = 'iishconference_volunteering';
+  private static $nameReviewCriteriaCache = 'iishconference_review_criteria';
   private static $nameSettingsCache = 'iishconference_settings';
   private static $nameTranslationsCache = 'iishconference_translations';
   private static $nameSessionsKeyValueCache = 'iishconference_sessions_key_value';
@@ -63,6 +65,7 @@ class CachedConferenceApi {
       self::setRooms();
       self::setExtras();
       self::setVolunteering();
+      self::setReviewCriteria();
       self::setSettings();
       self::setTranslations();
       self::setSessionsKeyValue();
@@ -236,6 +239,15 @@ class CachedConferenceApi {
    */
   public static function setVolunteering() {
     return self::set(self::$nameVolunteeringCache, VolunteeringApi::class);
+  }
+
+  /**
+   * Cache the review criteria.
+   *
+   * @return ReviewCriteriaApi[]
+   */
+  public static function setReviewCriteria() {
+    return self::set(self::$nameReviewCriteriaCache, ReviewCriteriaApi::class);
   }
 
   /**
@@ -447,6 +459,15 @@ class CachedConferenceApi {
    */
   public static function getVolunteering() {
     return self::get(self::$nameVolunteeringCache, VolunteeringApi::class);
+  }
+
+  /**
+   * Get the cached review criteria.
+   *
+   * @return ReviewCriteriaApi[]
+   */
+  public static function getReviewCriteria() {
+    return self::get(self::$nameReviewCriteriaCache, ReviewCriteriaApi::class);
   }
 
   /**
