@@ -140,7 +140,7 @@ class FinalRegistrationForm extends FormBase {
             $form['will-pay-by-bank'] = array(
               '#markup' =>
                 '<div class="eca_warning">'
-                . iish_t('You chose to finish your final registration by bank transfer. '
+                . iish_t('Last time you chose to finish your final registration by bank transfer. '
                 . '@link for the bank transfer information. '
                 . 'Please continue if you want to choose a different payment method.',
                   array('@link' => $bankTransferLink->toString()))

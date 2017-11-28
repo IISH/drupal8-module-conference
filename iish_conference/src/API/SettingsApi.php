@@ -26,6 +26,7 @@ class SettingsApi {
   const NUM_CANDIDATE_VOTES_ADVISORY_BOARD = 'num_candidate_votes_advisory_board';
   const ONLINE_PROGRAM_HEADER = 'online_program_header';
   const ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction';
+  const ON_SITE_PAYMENT_INFO = 'on_site_payment_info';
   const ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate';
   const PARTICIPANT_TYPES_COMBINATION_INFO = 'participant_types_combination_info';
   const PATH_FOR_ADMIN_MENU = 'path_for_admin_menu';

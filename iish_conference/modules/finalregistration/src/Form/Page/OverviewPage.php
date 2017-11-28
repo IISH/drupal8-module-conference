@@ -60,11 +60,21 @@ class OverviewPage extends FormBase {
     );
 
     if (SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_ALLOWED) == 1) {
-      $form['bank_transfer'] = array(
-        '#type' => 'submit',
-        '#name' => 'bank_transfer',
-        '#value' => iish_t('Make payment by bank transfer'),
-      );
+      $order = NULL;
+      $participant = LoggedInUserDetails::getParticipant();
+
+      if ($participant->getPaymentId() !== NULL && $participant->getPaymentId() > 0) {
+        $orderDetails = new PayWayMessage(array('orderid' => $participant->getPaymentId()));
+        $order = $orderDetails->send('orderDetails');
+      }
+
+      if ($order == NULL || $order->get('paymentmethod') != 1) {
+        $form['bank_transfer'] = array(
+          '#type' => 'submit',
+          '#name' => 'bank_transfer',
+          '#value' => iish_t('Make payment by bank transfer'),
+        );
+      }
     }
 
     $form['on_site'] = array(

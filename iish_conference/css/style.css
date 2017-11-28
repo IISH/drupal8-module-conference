@@ -74,13 +74,15 @@ span.iishconference-userblock {
 
 .eca_remark {
     color: blue;
-    /*margin-bottom: 15px;*/
 }
 
 .eca_warning {
     color: #E61A3C;
-    /*margin-bottom: 15px;*/
-    /*margin-top: 15px;*/
+}
+
+.eca_warning a, .eca_warning a:link, .eca_warning a:hover, .eca_warning a:visited {
+    text-decoration: none;
+    border-bottom: 1px dotted #E61A3C;
 }
 
 .heavy {

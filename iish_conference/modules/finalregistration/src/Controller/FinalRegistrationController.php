@@ -52,8 +52,7 @@ class FinalRegistrationController extends ControllerBase {
 
           return array();
         }
-
-        if ($order->get('willpaybybank')) {
+        else if ($order->get('paymentmethod') == 1) {
           $bankTransferInfo = SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_INFO);
           $amount = ConferenceMisc::getReadableAmount($order->get('amount'), TRUE);
           $finalDate = date('l j F Y', $participant->getBankTransferFinalDate($order->getDateTime('createdat')));
@@ -67,11 +66,24 @@ class FinalRegistrationController extends ControllerBase {
 
           return array('#markup' => new ConferenceHTML($bankTransferInfo));
         }
+        else if ($order->get('paymentmethod') == 2) {
+          $cashPaymentInfo = SettingsApi::getSetting(SettingsApi::ON_SITE_PAYMENT_INFO);
+          $amount = ConferenceMisc::getReadableAmount($order->get('amount'), TRUE);
+          $fullName = LoggedInUserDetails::getUser()->getFullName();
 
-        drupal_set_message(iish_t('You have chosen another payment method. @link to change your payment method.',
-          array('@link' => $finalRegistrationLink->toString())), 'error');
+          $cashPaymentInfo = str_replace('[PaymentNumber]', $order->get('orderid'), $cashPaymentInfo);
+          $cashPaymentInfo = str_replace('[PaymentAmount]', $amount, $cashPaymentInfo);
+          $cashPaymentInfo = str_replace('[PaymentDescription]', $order->get('com'), $cashPaymentInfo);
+          $cashPaymentInfo = str_replace('[NameParticipant]', $fullName, $cashPaymentInfo);
 
-        return array();
+          return array('#markup' => new ConferenceHTML($cashPaymentInfo));
+        }
+        else {
+          drupal_set_message(iish_t('You have chosen an unknown payment method. @link to change your payment method.',
+            array('@link' => $finalRegistrationLink->toString())), 'error');
+
+          return array();
+        }
       }
 
       drupal_set_message(iish_t('Currently it is not possible to obtain your payment information. ' .
