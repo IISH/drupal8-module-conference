@@ -575,20 +575,23 @@ class PaperApi extends CRUDApiClient {
   /**
    * The URL that allows the uploader paper to be downloaded
    *
+   * @param string $accessToken The access token to access the download
+   *
    * @return string The URL to fetch the uploaded paper
    */
-  public function getDownloadURL() {
-    return $this->getDownloadURLFor($this);
+  public function getDownloadURL($accessToken) {
+    return $this->getDownloadURLFor($this, $accessToken);
   }
 
   /**
    * The URL that allows the uploader paper to be downloaded
    *
    * @param int|PaperApi $paper The paper
+   * @param string $accessToken The access token to access the download
    *
    * @return string The URL to fetch the uploaded paper
    */
-  public static function getDownloadURLFor($paper) {
+  public static function getDownloadURLFor($paper, $accessToken) {
     if ($paper instanceof PaperApi) {
       $paper = $paper->getId();
     }
@@ -597,7 +600,7 @@ class PaperApi extends CRUDApiClient {
     return $config->get('conference_base_url')
     . $config->get('conference_event_code') . '/'
     . $config->get('conference_date_code') . '/'
-    . 'userApi/downloadPaper/' . $paper;
+    . 'userApi/downloadPaper/' . $paper . '?access_token=' . $accessToken;
   }
 
   public function __toString() {

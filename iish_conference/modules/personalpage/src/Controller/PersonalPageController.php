@@ -91,17 +91,17 @@ class PersonalPageController extends ControllerBase {
       $this->redirectToPersonalPage();
     }
 
+    $accessTokenApi = new AccessTokenApi();
+    $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
+
     $paperDownloadLink = NULL;
     if (($paper->getFileSize() !== NULL) && ($paper->getFileSize() > 0)) {
       $paperDownloadLink = Link::fromTextAndUrl($paper->getFileName(),
-        Url::fromUri($paper->getDownloadURL()))->toString();
+        Url::fromUri($paper->getDownloadURL($token)))->toString();
     }
 
     $backLink = Link::fromTextAndUrl('« ' . iish_t('Go back to your personal page'),
       Url::fromRoute('iish_conference_personalpage.index'))->toString();
-
-    $accessTokenApi = new AccessTokenApi();
-    $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
 
     $config = \Drupal::config('iish_conference.settings');
     $url = $config->get('conference_base_url') . $config->get('conference_event_code') . '/' .
@@ -663,8 +663,11 @@ class PersonalPageController extends ControllerBase {
       );
     }
     else {
+      $accessTokenApi = new AccessTokenApi();
+      $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
+
       $downloadPaperLink = Link::fromTextAndUrl($paper->getFileName(),
-        Url::fromUri($paper->getDownloadURL()));
+        Url::fromUri($paper->getDownloadURL($token)));
 
       $uploadPaperLink = Link::fromTextAndUrl($paper->getFileName(),
         Url::fromRoute('iish_conference_personalpage.upload_paper', array(

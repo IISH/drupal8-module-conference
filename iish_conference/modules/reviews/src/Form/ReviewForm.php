@@ -4,6 +4,7 @@ namespace Drupal\iish_conference_reviews\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+use Drupal\iish_conference\API\AccessTokenApi;
 use Drupal\iish_conference\API\CachedConferenceApi;
 use Drupal\iish_conference\API\Domain\PaperApi;
 use Drupal\iish_conference\API\Domain\PaperReviewApi;
@@ -68,6 +69,9 @@ class ReviewForm extends FormBase {
       return array();
     }
 
+    $accessTokenApi = new AccessTokenApi();
+    $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
+
     $form['paper'] = array(
       '#theme' => 'iish_conference_container',
       '#styled' => FALSE,
@@ -83,7 +87,7 @@ class ReviewForm extends FormBase {
           'newLine' => TRUE,
         ),
         new ConferenceHTML(
-          '<a href="' . $paper->getDownloadURL() . '">' .
+          '<a href="' . $paper->getDownloadURL($token) . '">' .
               '<span class="download-icon"></span> ' .
               iish_t('Download paper') .
             '</a>',

@@ -3,6 +3,7 @@ namespace Drupal\iish_conference_programme\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
+use Drupal\iish_conference\API\AccessTokenApi;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\ApiCriteriaBuilder;
 use Drupal\iish_conference\API\CachedConferenceApi;
@@ -348,6 +349,9 @@ class ProgrammeController extends ControllerBase {
     $alwaysHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME);
     $typesToHide = SettingsApi::getArrayOfValues($alwaysHide);
 
+    $accessTokenApi = new AccessTokenApi();
+    $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
+
     foreach ($programme as &$session) {
       $sessionName = $session['sessionName'];
       $session['sessionNameHl'] = $highlight->highlight($sessionName);
@@ -368,7 +372,7 @@ class ProgrammeController extends ControllerBase {
           $participant['paperNameHl'] = $highlight->highlight($paperName);
 
           $paperId = $participant['paperId'];
-          $participant['paperDownloadLink'] = PaperApi::getDownloadURLFor($paperId);
+          $participant['paperDownloadLink'] = PaperApi::getDownloadURLFor($paperId, $token);
         }
 
         $typeId = $participant['typeId'];
