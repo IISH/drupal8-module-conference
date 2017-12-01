@@ -149,9 +149,9 @@ class FinalRegistrationController extends ControllerBase {
    */
   public function exceptionPayment() {
     return array('#markup' => iish_t('Unfortunately, your payment result is uncertain at the moment.') . '<br />' .
-    iish_t('Please contact @email to request information on your payment transaction.',
+    iish_t('Please contact !email to request information on your payment transaction.',
       array(
-        '@email' => ConferenceMisc::encryptEmailAddress(
+        '!email' => ConferenceMisc::encryptEmailAddress(
           SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
       )));
   }
