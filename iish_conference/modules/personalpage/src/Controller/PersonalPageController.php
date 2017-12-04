@@ -669,7 +669,7 @@ class PersonalPageController extends ControllerBase {
       $downloadPaperLink = Link::fromTextAndUrl($paper->getFileName(),
         Url::fromUri($paper->getDownloadURL($token)));
 
-      $uploadPaperLink = Link::fromTextAndUrl($paper->getFileName(),
+      $uploadPaperLink = Link::fromTextAndUrl(iish_t('Edit uploaded paper'),
         Url::fromRoute('iish_conference_personalpage.upload_paper', array(
           'paper' => $paper->getId()
         )));
