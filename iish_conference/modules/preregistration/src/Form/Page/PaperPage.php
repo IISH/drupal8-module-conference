@@ -74,17 +74,19 @@ class PaperPage extends PreRegistrationPage {
       $maxSize = SettingsApi::getSetting(SettingsApi::MAX_UPLOAD_SIZE_PAPER);
       $allowedExtensions = SettingsApi::getSetting(SettingsApi::ALLOWED_PAPER_EXTENSIONS);
 
-      $description = iish_t('The file can\'t be larger than @maxSize. ' .
-        'Only files with the following extensions are allowed: @extensions.', array(
+      $description = '';
+
+	  if ($hasFileUploaded) {
+	    $description .= '<b>' . iish_t('You have already uploaded a paper "@fileName"<br />Uploading a new file will replace your earlier uploaded paper.', array(
+			    "@fileName" => $paper->getFileName()
+		    )) . '</b><br />';
+	  }
+
+      $description .= iish_t('The file can\'t be larger than <em>@maxSize</em>. ' .
+        'Only files with the following extensions are allowed: <em>@extensions</em>.', array(
         '@maxSize' => ConferenceMisc::getReadableFileSize($maxSize),
         '@extensions' => $allowedExtensions
       ));
-
-      if ($hasFileUploaded) {
-        $description .= ' ' . iish_t('Uploading a new file will replace your earlier uploaded paper "@fileName"', array(
-            "@fileName" => $paper->getFileName()
-          ));
-      }
 
       $form['paper']['file'] = array(
         '#type' => 'managed_file',

@@ -37,8 +37,8 @@ class PreRegistrationController extends ControllerBase {
       new ConferenceHTML(
         '<div class="eca_warning heavy bottommargin">'
         . iish_t('It is not possible to modify your pre-registration anymore.')
-        . '<br />' . iish_t('If you would like to modify your registration please send an email to @email.',
-          array('@email' => $email))
+        . '<br />' . iish_t('If you would like to modify your registration please send an email to !email.',
+          array('!email' => $email))
         . '</div>', TRUE)
     );
 
