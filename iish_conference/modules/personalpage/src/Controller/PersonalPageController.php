@@ -81,6 +81,11 @@ class PersonalPageController extends ControllerBase {
   public function uploadPaper($paper) {
     $this->redirectIfNotLoggedIn();
 
+    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+      drupal_set_message(iish_t('You are not allowed to change your uploaded paper.'), 'error');
+      $this->redirectToPersonalPage();
+    }
+
     if (empty($paper)) {
       drupal_set_message(iish_t('Unfortunately, this paper does not seem to exist.'), 'error');
       $this->redirectToPersonalPage();
@@ -651,7 +656,8 @@ class PersonalPageController extends ControllerBase {
 
     $renderArray[] = new ConferenceHTML('<br/>', TRUE);
 
-    if ($paper->getFileName() == NULL) {
+    if (($paper->getFileName() == NULL) &&
+      (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) != 1)) {
       $uploadPaperLink = Link::fromTextAndUrl(iish_t('Upload paper'),
         Url::fromRoute('iish_conference_personalpage.upload_paper', array(
           'paper' => $paper->getId()
@@ -674,12 +680,21 @@ class PersonalPageController extends ControllerBase {
           'paper' => $paper->getId()
         )));
 
-      $renderArray[] = array(
-        'label' => 'Uploaded paper',
-        'value' => $downloadPaperLink->toString()
-          . '&nbsp; <em>(' . $uploadPaperLink->toString() . ')</em>',
-        'html' => TRUE
-      );
+      if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+        $renderArray[] = array(
+          'label' => 'Uploaded paper',
+          'value' => $downloadPaperLink->toString(),
+          'html' => TRUE
+        );
+      }
+      else {
+        $renderArray[] = array(
+          'label' => 'Uploaded paper',
+          'value' => $downloadPaperLink->toString()
+            . '&nbsp; <em>(' . $uploadPaperLink->toString() . ')</em>',
+          'html' => TRUE
+        );
+      }
     }
   }
 
