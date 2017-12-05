@@ -46,7 +46,7 @@
         {{ curShowing }}
     </div>
 
-    {% if eventDate.isLastDate and downloadPaperIsOpen %}
+    {% if eventDate.isLastDate and isLoggedIn and downloadPaperIsOpen %}
         <div class="download-icon-info">
             <span class="download-icon"></span>
             {{ 'Click on the icon to download the paper'|iish_t }}
@@ -227,7 +227,7 @@
 
                         {{ participant.paperNameHl|markup }}
 
-                        {% if eventDate.isLastDate and downloadPaperIsOpen %}
+                        {% if eventDate.isLastDate and isLoggedIn and downloadPaperIsOpen %}
                             {% if participant.hasDownload %}
                                 &nbsp;
                                 <a href="{{ participant.paperDownloadLink }}" title="{{ 'Download paper'|iish_t }}">

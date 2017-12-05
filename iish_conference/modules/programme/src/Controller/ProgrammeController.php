@@ -240,6 +240,7 @@ class ProgrammeController extends ControllerBase {
       '#curShowing' => $curShowing,
       '#downloadPaperIsOpen' => $downloadPaperIsOpen,
       '#favoriteSessions' => $favoriteSessions,
+      '#isLoggedIn' => LoggedInUserDetails::isLoggedIn(),
       '#isParticipant' => LoggedInUserDetails::isAParticipant(),
     );
   }
