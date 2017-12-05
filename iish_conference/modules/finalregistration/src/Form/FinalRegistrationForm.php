@@ -73,8 +73,7 @@ class FinalRegistrationForm extends FormBase {
       return $form;
     }
 
-    $finalRegistrationLastDate = strtotime(SettingsApi::getSetting(SettingsApi::FINAL_REGISTRATION_LASTDATE));
-    if (!ConferenceMisc::isOpenForLastDate($finalRegistrationLastDate)) {
+    if (!SettingsApi::getSetting(SettingsApi::FINAL_REGISTRATION_LASTDATE, 'lastdate')) {
       drupal_set_message(iish_t('The final registration is closed.'), 'warning');
 
       return $form;
@@ -94,7 +93,7 @@ class FinalRegistrationForm extends FormBase {
       return $form;
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS, 'bool')) {
       $accompanyingPersonsFeeState = FeeStateApi::getAccompanyingPersonFee();
 
       if (($accompanyingPersonsFeeState === NULL) || (count($accompanyingPersonsFeeState->getFeeAmounts()) === 0)) {

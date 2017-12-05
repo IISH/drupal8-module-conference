@@ -48,7 +48,7 @@ class MainPage extends FormBase {
     $days = CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getDays());
 
     // Start with the days
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS, 'bool')) {
       $form['days_present'] = array(
         '#title' => iish_t('Days present'),
         '#type' => 'checkboxes',
@@ -110,7 +110,7 @@ class MainPage extends FormBase {
     }
 
     // Only add accompanying persons if accepted
-    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS, 'bool')) {
       $accompanyingPersons = $participant->getAccompanyingPersons();
       $accompanyingPersonFeeState = FeeStateApi::getAccompanyingPersonFee();
       $accompanyingPersonFees = $accompanyingPersonFeeState->getFeeAmounts();
@@ -234,7 +234,7 @@ class MainPage extends FormBase {
     $user = LoggedInUserDetails::getUser();
 
     // Save days
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS, 'bool')) {
       $days = array();
       foreach ($form_state->getValue('days_present') as $dayId => $day) {
         if ($dayId == $day) {
@@ -267,7 +267,7 @@ class MainPage extends FormBase {
     $participant->setExtras($extras);
 
     // Save accompanying person(s) into the database
-    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS, 'bool')) {
       $accompanyingPersons = array();
       foreach ($form_state->getValue('person') as $accompanyingPerson) {
         $accompanyingPerson = trim($accompanyingPerson);

@@ -81,7 +81,7 @@ class PersonalPageController extends ControllerBase {
   public function uploadPaper($paper) {
     $this->redirectIfNotLoggedIn();
 
-    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
       drupal_set_message(iish_t('You are not allowed to change your uploaded paper.'), 'error');
       $this->redirectToPersonalPage();
     }
@@ -190,14 +190,14 @@ class PersonalPageController extends ControllerBase {
       'value' => $userDetails->getOrganisation()
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT, 'bool')) {
       $fields[] = array(
         'label' => 'Department',
         'value' => $userDetails->getDepartment()
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION, 'bool')) {
       $fields[] = array(
         'label' => 'Education',
         'value' => $userDetails->getEducation()
@@ -209,14 +209,14 @@ class PersonalPageController extends ControllerBase {
       'value' => $userDetails->getEmail()
     );
 
-    if (LoggedInUserDetails::isAParticipant() && (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1)) {
+    if (LoggedInUserDetails::isAParticipant() && SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE, 'bool')) {
       $fields[] = array(
         'label' => 'Age',
         'value' => $participantDateDetails->getAgeRange()
       );
     }
 
-    if (LoggedInUserDetails::isAParticipant() && (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1)) {
+    if (LoggedInUserDetails::isAParticipant() && SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
       $fields[] = array(
         'label' => '(PhD) Student?',
         'value' => ConferenceMisc::getYesOrNo($participantDateDetails->getStudent())
@@ -240,7 +240,7 @@ class PersonalPageController extends ControllerBase {
       'value' => $userDetails->getMobile()
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
       $fields[] = array(
         'label' => 'Curriculum Vitae',
         'value' => ConferenceMisc::getHTMLForLongText($userDetails->getCv()),
@@ -285,7 +285,7 @@ class PersonalPageController extends ControllerBase {
       }
 
       $days = $userDetails->getDaysPresent();
-      if ((count($days) > 0) && (SettingsApi::getSetting(SettingsApi::SHOW_DAYS) == 1)) {
+      if ((count($days) > 0) && SettingsApi::getSetting(SettingsApi::SHOW_DAYS, 'bool')) {
         $fields[] = array(
           'label' => 'I will be present on the following days',
           'value' => array('#theme' => 'item_list', '#items' => $days),
@@ -305,7 +305,7 @@ class PersonalPageController extends ControllerBase {
         }
       }
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS, 'bool')) {
         $accompanyingPersons = $participantDateDetails->getAccompanyingPersons();
         $fields[] = array(
           'label' => 'Accompanying person(s)',
@@ -496,7 +496,7 @@ class PersonalPageController extends ControllerBase {
    * @param SessionApi $session The session in question
    */
   private function setSessionInfo(array &$renderArray, $userDetails, $participantDateDetails, $sessionPapers, $session) {
-    if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool')) {
       $networks = $session->getNetworks();
       foreach ($networks as $network) {
         $renderArray[] = array(
@@ -520,7 +520,7 @@ class PersonalPageController extends ControllerBase {
       'html' => TRUE
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
       $renderArray[] = array(
         'label' => 'Session type',
         'value' => $session->getType()
@@ -611,7 +611,7 @@ class PersonalPageController extends ControllerBase {
       'newLine' => TRUE
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
       $renderArray[] = array(
         'label' => 'Type of contribution',
         'value' => $paper->getTypeOfContribution()
@@ -623,7 +623,7 @@ class PersonalPageController extends ControllerBase {
       'value' => $paper->getCoAuthors()
     );
 
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD) == 1) && $participant->getStudent()) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AWARD, 'bool') && $participant->getStudent()) {
       try {
         $awardLink = Link::fromTextAndUrl(iish_t('more about the award'),
           Url::fromUri(SettingsApi::getSetting(SettingsApi::AWARD_URI)));
@@ -657,7 +657,7 @@ class PersonalPageController extends ControllerBase {
     $renderArray[] = new ConferenceHTML('<br/>', TRUE);
 
     if (($paper->getFileName() == NULL) &&
-      (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) != 1)) {
+      !SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
       $uploadPaperLink = Link::fromTextAndUrl(iish_t('Upload paper'),
         Url::fromRoute('iish_conference_personalpage.upload_paper', array(
           'paper' => $paper->getId()
@@ -680,7 +680,7 @@ class PersonalPageController extends ControllerBase {
           'paper' => $paper->getId()
         )));
 
-      if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
         $renderArray[] = array(
           'label' => 'Uploaded paper',
           'value' => $downloadPaperLink->toString(),
@@ -737,7 +737,7 @@ class PersonalPageController extends ControllerBase {
    * @param ParticipantDateApi|null $participantDateDetails The user in question participant details, if registered
    */
   private function setChairDiscussantInfo(array &$renderArray, $participantDateDetails) {
-    $showChairDiscussant = (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1);
+    $showChairDiscussant = SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool');
 
     if (LoggedInUserDetails::isAParticipant() && $showChairDiscussant) {
       $fields = array();
@@ -756,7 +756,7 @@ class PersonalPageController extends ControllerBase {
         'value' => ConferenceMisc::getYesOrNo(count($networksAsChair) > 0)
       );
 
-      if ((SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) && (count($networksAsChair) > 0)) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool') && (count($networksAsChair) > 0)) {
         $fields[] = array(
           'label' => 'Networks',
           'value' => implode(', ', $networksAsChair)
@@ -768,7 +768,7 @@ class PersonalPageController extends ControllerBase {
         'value' => ConferenceMisc::getYesOrNo(count($networksAsDiscussant) > 0)
       );
 
-      if ((SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) && (count($networksAsDiscussant) > 0)) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool') && (count($networksAsDiscussant) > 0)) {
         $fields[] = array(
           'label' => 'Networks',
           'value' => implode(', ', $networksAsDiscussant)
@@ -789,7 +789,7 @@ class PersonalPageController extends ControllerBase {
    * @param ParticipantDateApi|null $participantDateDetails The user in question participant details, if registered
    */
   private function setLanguageInfo(array &$renderArray, $participantDateDetails) {
-    $showLanguage = (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1);
+    $showLanguage = SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool');
 
     if (LoggedInUserDetails::isAParticipant() && $showLanguage) {
       $fields = array();
@@ -804,7 +804,7 @@ class PersonalPageController extends ControllerBase {
       $languageFound = FALSE;
       $fields[] = array('header' => iish_t('English Language Coach'));
 
-      if ((SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) && (count($networksAsCoach) > 0)) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool') && (count($networksAsCoach) > 0)) {
         $languageFound = TRUE;
         $fields[] = array(
           'label' => iish_t('I would like to be an English Language Coach in the following networks'),
@@ -838,7 +838,7 @@ class PersonalPageController extends ControllerBase {
           }
 
           if (count($emailList) > 0) {
-            if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) {
+            if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool')) {
               $list[] = '<strong>' . $network->getName() . '</strong>: '
                 . ConferenceMisc::getEnumSingleLine($emailList);
             }
@@ -847,7 +847,7 @@ class PersonalPageController extends ControllerBase {
             }
           }
           else {
-            if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) {
+            if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool')) {
               $list[] = '<strong>' . $network->getName() . '</strong>: <em>'
                 . iish_t('No language coaches found in this network!') . '</em>';
             }
@@ -857,7 +857,7 @@ class PersonalPageController extends ControllerBase {
           }
         }
 
-        if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1) {
+        if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool')) {
           $languageCoachLabel = iish_t('I need some help from one of the following English Language Coaches '
             . 'in each chosen network');
         }

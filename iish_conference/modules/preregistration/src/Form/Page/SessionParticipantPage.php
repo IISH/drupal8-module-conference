@@ -131,7 +131,7 @@ class SessionParticipantPage extends PreRegistrationPage {
       '#attributes' => $readOnlyUser,
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
       $form['participant']['addparticipantstudent'] = array(
         '#type' => 'checkbox',
         '#title' => iish_t('Please check if this participant is a (PhD) student'),
@@ -142,9 +142,9 @@ class SessionParticipantPage extends PreRegistrationPage {
 
     // If a field is required, but turns out to be missing in the existing record, allow the user to add a value
     $userIsReadOnly = isset($readOnlyUser['readonly']);
-    $cvRequired = (SettingsApi::getSetting(SettingsApi::REQUIRED_CV) == 1);
+    $cvRequired = (SettingsApi::getSetting(SettingsApi::REQUIRED_CV, 'bool'));
     $userCv = $user->getCv();
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
       $form['participant']['addparticipantcv'] = array(
         '#type' => 'textarea',
         '#title' => iish_t('Curriculum Vitae'),
@@ -331,8 +331,8 @@ class SessionParticipantPage extends PreRegistrationPage {
 
     $userCv = $user->getCv();
     $userCountry = $user->getCountryId();
-    $cvRequired = ((SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) &&
-      (SettingsApi::getSetting(SettingsApi::REQUIRED_CV) == 1) && empty($userCv));
+    $cvRequired = (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool') &&
+      SettingsApi::getSetting(SettingsApi::REQUIRED_CV, 'bool') && empty($userCv));
     $countryRequired = empty($userCountry);
 
     // Then we save the user
@@ -345,7 +345,7 @@ class SessionParticipantPage extends PreRegistrationPage {
       $user->setOrganisation($form_state->getValue('addparticipantorganisation'));
       $user->setCountry($form_state->getValue('addparticipantcountry'));
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
         $user->setCv($form_state->getValue('addparticipantcv'));
       }
 
@@ -369,7 +369,7 @@ class SessionParticipantPage extends PreRegistrationPage {
     if (!$participant->isUpdate() || ($participant->getAddedById() == $preRegisterUser->getId()) |
       ($participant->getUserId() == $preRegisterUser->getId())
     ) {
-      if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
         $participant->setStudent($form_state->getValue('addparticipantstudent'));
       }
       $participant->setUser($user);

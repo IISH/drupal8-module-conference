@@ -52,8 +52,7 @@ class PreRegistrationController extends ControllerBase {
         . '</div>', TRUE);
     }
 
-    $finalRegistrationLastDate = strtotime(SettingsApi::getSetting(SettingsApi::FINAL_REGISTRATION_LASTDATE));
-    $isFinalRegistrationOpen = ConferenceMisc::isOpenForLastDate($finalRegistrationLastDate);
+    $isFinalRegistrationOpen = SettingsApi::getSetting(SettingsApi::FINAL_REGISTRATION_LASTDATE, 'lastdate');
     if ($isFinalRegistrationOpen && $this->moduleHandler()
         ->moduleExists('iish_conference_finalregistration')
     ) {

@@ -66,7 +66,7 @@ class VolunteersController extends ControllerBase {
       'value' => $network->getName(),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS, 'bool')) {
       $chairLinks = array();
       foreach ($network->getChairs() as $chair) {
         $chairLinks[] = Link::fromTextAndUrl(
@@ -94,8 +94,8 @@ class VolunteersController extends ControllerBase {
           VolunteeringApi::PUPIL
         )) !== FALSE);
 
-      $showChairDiscussant = (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1);
-      $showLanguage = (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1);
+      $showChairDiscussant = SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool');
+      $showLanguage = SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool');
 
       if (($isChairDiscussant && $showChairDiscussant) ||
         ($isLanguage && $showLanguage) ||

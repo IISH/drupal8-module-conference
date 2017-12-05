@@ -41,10 +41,9 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
   public function isOpen() {
     $showAuthor = SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION);
     $showOrganizer = SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION);
-    $types = SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION);
-    $typesToShow = SettingsApi::getArrayOfValues($types);
+    $typesToShow = SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION, 'list');
 
-    return (($showAuthor == 1) || ($showOrganizer == 1) || (count($typesToShow) > 0));
+    return ($showAuthor || $showOrganizer || (count($typesToShow) > 0));
   }
 
   /**
@@ -65,7 +64,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // AUTHOR
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION, 'bool')) {
       $form['author'] = array(
         '#type' => 'fieldset',
         '#title' => iish_t('I would like to propose a paper'),
@@ -104,7 +103,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // ORGANIZER
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION, 'bool')) {
       $form['organizer'] = array(
         '#type' => 'fieldset',
         '#title' => iish_t('I\'m an organizer and I would like to propose a session (including multiple participants and papers)'),

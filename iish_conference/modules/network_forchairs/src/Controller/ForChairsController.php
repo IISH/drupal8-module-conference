@@ -109,7 +109,7 @@ class ForChairsController extends ControllerBase {
         'value' => $network->getName(),
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS, 'bool')) {
         $chairLinks = array();
         foreach ($network->getChairs() as $chair) {
           $chairLinks[] = Link::fromTextAndUrl(
@@ -254,7 +254,7 @@ class ForChairsController extends ControllerBase {
         'value' => $network->getName(),
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS, 'bool')) {
         $chairLinks = array();
         foreach ($network->getChairs() as $chair) {
           $chairLinks[] = Link::fromTextAndUrl(
@@ -322,7 +322,7 @@ class ForChairsController extends ControllerBase {
         'html' => TRUE,
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_PARTICIPANT_STATE) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_PARTICIPANT_STATE, 'bool')) {
         $state_pre_style = (($participant_date->getStateId() == 0 || $participant_date->getStateId() == 999) ? '<span class="eca_warning">' : '');
         $state_post_style = (($participant_date->getStateId() == 0 || $participant_date->getStateId() == 999) ? '</span>' : '');
 
@@ -340,7 +340,7 @@ class ForChairsController extends ControllerBase {
         );
       }
 
-      if ((SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) && ($user->getCv() !== NULL) &&
+      if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool') && ($user->getCv() !== NULL) &&
         (strlen($user->getCv()) > 0)
       ) {
         $participantData[] = array(

@@ -86,8 +86,7 @@ class ProgrammeController extends ControllerBase {
     $types = ParticipantTypeApi::getListWithCriteria($props->get())->getResults();
 
     // Make sure we filter out co-authors and types with papers and types configured to be hidden
-    $alwaysHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME);
-    $typesToHide = SettingsApi::getArrayOfValues($alwaysHide);
+    $typesToHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME, 'array');
     foreach ($types as $i => $type) {
       if (($type->getId() == ParticipantTypeApi::CO_AUTHOR_ID) ||
         $type->getWithPaper() ||
@@ -221,9 +220,7 @@ class ProgrammeController extends ControllerBase {
     }
     $this->prepareProgramme($programme, $textsearch);
 
-    $downloadPaperLastDate = strtotime(SettingsApi::getSetting(SettingsApi::DOWNLOAD_PAPER_LASTDATE));
-    $downloadPaperIsOpen = ConferenceMisc::isOpenForLastDate($downloadPaperLastDate);
-
+    $downloadPaperIsOpen = SettingsApi::getSetting(SettingsApi::DOWNLOAD_PAPER_LASTDATE, 'lastdate');
     $participant = LoggedInUserDetails::getParticipant();
     $favoriteSessions = ($participant !== NULL) ? $participant->getFavoriteSessionsId() : array();
 
@@ -346,8 +343,7 @@ class ProgrammeController extends ControllerBase {
     $highlight->setOpeningTag('<span class="highlight">');
     $highlight->setClosingTag('</span>');
 
-    $alwaysHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME);
-    $typesToHide = SettingsApi::getArrayOfValues($alwaysHide);
+    $typesToHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME, 'list');
 
     $accessTokenApi = new AccessTokenApi();
     $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());

@@ -59,7 +59,7 @@ class OverviewPage extends FormBase {
       '#value' => iish_t('Make online payment'),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_ALLOWED) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_ALLOWED, 'bool')) {
       $order = NULL;
       $participant = LoggedInUserDetails::getParticipant();
 
@@ -127,7 +127,7 @@ class OverviewPage extends FormBase {
     $user = LoggedInUserDetails::getUser();
 
     $paymentMethod = PayWayMessage::ORDER_OGONE_PAYMENT;
-    if ((SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_ALLOWED) == 1) &&
+    if ((SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_ALLOWED, 'bool')) &&
       ($form_state->getTriggeringElement()['#name'] === 'bank_transfer')
     ) {
       $paymentMethod = PayWayMessage::ORDER_BANK_PAYMENT;

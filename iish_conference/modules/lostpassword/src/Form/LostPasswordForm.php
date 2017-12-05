@@ -90,8 +90,8 @@ class LostPasswordForm extends FormBase {
     if (is_int($status)) {
       switch ($status) {
         case LostPasswordApi::USER_STATUS_EXISTS:
-          drupal_set_message(iish_t('We have received your request for a new password.') . '<br>' .
-            iish_t('We have sent you an e-mail you have to confirm before we will send you a new password.'),
+          drupal_set_message(iish_t('We have received your request for a new password. ' .
+            'We have sent you an e-mail you have to confirm before we will send you a new password.'),
             'status');
           break;
         case LostPasswordApi::USER_STATUS_DISABLED:

@@ -273,7 +273,7 @@ class ConferenceMisc {
    */
   public static function mayLoggedInUserSeeProgramme() {
     return (
-      (SettingsApi::getSetting(SettingsApi::SHOW_PROGRAMME_ONLINE) == 1) ||
+      SettingsApi::getSetting(SettingsApi::SHOW_PROGRAMME_ONLINE, 'bool') ||
       LoggedInUserDetails::isCrew() ||
       LoggedInUserDetails::isChair() ||
       LoggedInUserDetails::isOrganiser() ||

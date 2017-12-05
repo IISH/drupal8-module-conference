@@ -68,7 +68,7 @@ class PaperPage extends PreRegistrationPage {
       '#default_value' => $paper->getTitle(),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
       $hasFileUploaded = ($paper->getFileSize() !== NULL && $paper->getFileSize() > 0);
 
       $maxSize = SettingsApi::getSetting(SettingsApi::MAX_UPLOAD_SIZE_PAPER);
@@ -117,7 +117,7 @@ class PaperPage extends PreRegistrationPage {
       '#default_value' => $paper->getCoAuthors(),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
       $form['paper']['typeofcontribution'] = array(
         '#type' => 'textfield',
         '#title' => iish_t('Type of contribution'),
@@ -128,7 +128,7 @@ class PaperPage extends PreRegistrationPage {
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS, 'bool')) {
       $form['paper']['keywords'] = array(
         '#type' => 'textarea',
         '#title' => iish_t('Keywords'),
@@ -161,7 +161,7 @@ class PaperPage extends PreRegistrationPage {
 
       PreRegistrationUtils::hideAndSetDefaultNetwork($form['paper']['proposednetwork']);
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL, 'bool')) {
         $form['paper']['partofexistingsession'] = array(
           '#type' => 'checkbox',
           '#title' => iish_t('Is this part of an existing session?'),
@@ -186,7 +186,7 @@ class PaperPage extends PreRegistrationPage {
       }
     }
 
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD) == 1) && $participant->getStudent()) {
+    if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD, 'bool')) && $participant->getStudent()) {
       $awardLink = Link::fromTextAndUrl(iish_t('more about the award'),
         Url::fromUri('award', array('attributes' => array('target' => '_blank'))));
 
@@ -202,7 +202,7 @@ class PaperPage extends PreRegistrationPage {
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // AUDIO VISUAL EQUIPMENT
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT, 'bool')) {
       $equipment = CachedConferenceApi::getEquipment();
 
       $form['equipment'] = array(
@@ -253,7 +253,7 @@ class PaperPage extends PreRegistrationPage {
    *   The current state of the form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL, 'bool')) {
       if (!PreRegistrationUtils::useSessions() && $form_state->getValue('partofexistingsession')) {
         if (strlen(trim($form_state->getValue('proposedsession'))) === 0) {
           $form_state->setErrorByName('proposedsession',
@@ -283,11 +283,11 @@ class PaperPage extends PreRegistrationPage {
     $paper->setAbstr($form_state->getValue('paperabstract'));
     $paper->setCoAuthors($form_state->getValue('coauthors'));
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
       $paper->setTypeOfContribution($form_state->getValue('typeofcontribution'));
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS, 'bool')) {
       $paper->setKeywords($form_state->getValue('keywords'));
     }
 
@@ -298,13 +298,13 @@ class PaperPage extends PreRegistrationPage {
     }
     else {
       $paper->setNetworkProposal($form_state->getValue('proposednetwork'));
-      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PROPOSAL, 'bool')) {
         $paper->setSessionProposal($form_state->getValue('proposedsession'));
       }
     }
 
     // Save equipment
-    if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT, 'bool')) {
       $allEquipment = CachedConferenceApi::getEquipment();
       if (is_array($allEquipment) && (count($allEquipment) > 0)) {
         $equipment = array();
@@ -323,7 +323,7 @@ class PaperPage extends PreRegistrationPage {
     $paper->save();
 
     // Then save the participant
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD) == 1) && $participant->getStudent()) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AWARD, 'bool') && $participant->getStudent()) {
       $participant->setAward($form_state->getValue('award'));
       $participant->save();
     }
@@ -362,7 +362,7 @@ class PaperPage extends PreRegistrationPage {
     }
 
     // Then save the paper
-    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
       if (($file = File::load($form_state->getValue(['file', 0]))) !== NULL) {
         $accessTokenApi = new AccessTokenApi();
         $token = $accessTokenApi->accessToken($user->getId());

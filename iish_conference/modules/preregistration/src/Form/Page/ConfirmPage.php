@@ -52,8 +52,8 @@ class ConfirmPage extends PreRegistrationPage {
     $user = $state->getUser();
     $participant = $state->getParticipant();
 
-    $showChairDiscussantPool = (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1);
-    $showLanguageCoaching = (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1);
+    $showChairDiscussantPool = SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool');
+    $showLanguageCoaching = SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool');
 
     // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
     // PERSONAL INFO
@@ -77,14 +77,14 @@ class ConfirmPage extends PreRegistrationPage {
       'value' => $user->getOrganisation()
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT, 'bool')) {
       $personalInfoContent[] = array(
         'label' => 'Department',
         'value' => $user->getDepartment()
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION, 'bool')) {
       $personalInfoContent[] = array(
         'label' => 'Education',
         'value' => $user->getEducation()
@@ -96,21 +96,21 @@ class ConfirmPage extends PreRegistrationPage {
       'value' => $user->getEmail()
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE, 'bool')) {
       $personalInfoContent[] = array(
         'label' => 'Age',
         'value' => $participant->getAgeRange()
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
       $personalInfoContent[] = array(
         'label' => '(PhD) Student?',
         'value' => ConferenceMisc::getYesOrNo($participant->getStudent())
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
       $personalInfoContent[] = array(
         'label' => 'Curriculum Vitae',
         'value' => $user->getCv(),
@@ -267,7 +267,7 @@ class ConfirmPage extends PreRegistrationPage {
         'newLine' => TRUE
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
         $paperContent[] = array(
           'label' => 'Type of contribution',
           'value' => $paper->getTypeOfContribution()
@@ -286,7 +286,7 @@ class ConfirmPage extends PreRegistrationPage {
         );
       }
 
-      if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD) == 1) && $participant->getStudent()) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_AWARD, 'bool') && $participant->getStudent()) {
         $paperContent[] = array(
           'label' => SettingsApi::getSetting(SettingsApi::AWARD_NAME) . '?',
           'value' => ConferenceMisc::getYesOrNo($participant->getAward()),
@@ -294,7 +294,7 @@ class ConfirmPage extends PreRegistrationPage {
         );
       }
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT, 'bool')) {
         $paperContent[] = array(
           'label' => 'Audio/visual equipment',
           'value' => implode(', ', $paper->getEquipment())
@@ -336,7 +336,7 @@ class ConfirmPage extends PreRegistrationPage {
         'value' => $session->getName()
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
         $sessionContent[] = array(
           'label' => 'Session type',
           'value' => ($session->getType() !== NULL) ? $session->getType() : $session->getDifferentType(),
@@ -381,14 +381,14 @@ class ConfirmPage extends PreRegistrationPage {
           'value' => $user->getLastName()
         );
 
-        if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
+        if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
           $sessionContent[] = array(
             'label' => '(PhD) Student?',
             'value' => ConferenceMisc::getYesOrNo($participantInSession->getStudent())
           );
         }
 
-        if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+        if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
           $sessionContent[] = array(
             'label' => 'Curriculum Vitae',
             'value' => $user->getCv(),
@@ -449,7 +449,7 @@ class ConfirmPage extends PreRegistrationPage {
     // GENERAL COMMENTS
 
     $generalComments = array();
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_GENERAL_COMMENTS) == 1) &&
+    if (SettingsApi::getSetting(SettingsApi::SHOW_GENERAL_COMMENTS, 'bool') &&
       (strlen($participant->getExtraInfo()) > 0)
     ) {
       $generalComments[] = array('header' => iish_t('General comments'));
@@ -528,7 +528,7 @@ class ConfirmPage extends PreRegistrationPage {
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
     $this->buildPrevButton($form, 'confirm_back');
-    if (SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON, 'bool')) {
       $this->buildPrevButton($form, 'confirm_back_personal_page', iish_t('Save and finish pre-registration later'));
     }
     $this->buildNextButton($form, 'confirm_next', iish_t('Confirm and finish pre-registration'));
@@ -583,7 +583,7 @@ class ConfirmPage extends PreRegistrationPage {
     // Now find out if to which step we have to go to
     $submitName = $form_state->getTriggeringElement()['#name'];
 
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON) == 1)
+    if ((SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON, 'bool'))
       && ($submitName === 'confirm_back_personal_page')) {
       $this->formRedirectToPersonalPage($form_state);
     }

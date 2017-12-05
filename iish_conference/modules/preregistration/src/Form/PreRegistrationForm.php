@@ -43,10 +43,6 @@ class PreRegistrationForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#attributes']['class'][] = 'iishconference_form';
 
-    // Load ECA settings
-    $closesOn = SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE);
-    $startsOn = SettingsApi::getSetting(SettingsApi::PREREGISTRATION_STARTDATE);
-
     // Check if user is already registered for the current conference, if so, show message no changes possible
     if (LoggedInUserDetails::isLoggedIn() && LoggedInUserDetails::isAParticipant()) {
       if (\Drupal::moduleHandler()->moduleExists('iish_conference_personalpage')) {
@@ -81,7 +77,7 @@ class PreRegistrationForm extends FormBase {
     }
 
     // Check if preregistration is closed
-    if (($closesOn !== NULL) && (strlen(trim($closesOn)) > 0) && (!ConferenceMisc::isOpenForLastDate(strtotime($closesOn)))) {
+    if (!SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE, 'lastdate')) {
       $form['ct1'] = array(
         '#markup' =>
           '<div class="eca_warning">' .
@@ -102,7 +98,7 @@ class PreRegistrationForm extends FormBase {
     }
 
     // Check if preregistration has started
-    if (($startsOn !== NULL) && (strlen(trim($startsOn)) > 0) && (!ConferenceMisc::isOpenForStartDate(strtotime($startsOn)))) {
+    if (!SettingsApi::getSetting(SettingsApi::PREREGISTRATION_STARTDATE, 'startdate')) {
       $form['ct1'] = array(
         '#markup' =>
           '<div class="eca_warning">' .

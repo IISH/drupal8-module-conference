@@ -95,15 +95,6 @@ class TwigExtension extends \Twig_Extension {
    * @return mixed The value for the given setting.
    */
   public function setting($setting, $type = 'string') {
-    $setting = SettingsApi::getSetting(strtolower($setting));
-    switch ($type) {
-      case 'list':
-        return SettingsApi::getArrayOfValues($setting);
-      case 'bool':
-        return ($setting == '1');
-      case 'string':
-      default:
-        return $setting;
-    }
+    return SettingsApi::getSetting(strtolower($setting), $type);
   }
 }

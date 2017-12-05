@@ -1,6 +1,8 @@
 <?php
 namespace Drupal\iish_conference\API;
 
+use Drupal\iish_conference\ConferenceMisc;
+
 /**
  * API that returns settings set in the CMS
  */
@@ -108,30 +110,34 @@ class SettingsApi {
    * The settings array is obtained from the cache and the value for the given property is returned (if it exists)
    *
    * @param string $property The name of the property
+   * @param string $type What type to return
    *
    * @return mixed The value set for this property for this event, or null if not found
    */
-  public static function getSetting($property) {
+  public static function getSetting($property, $type = 'string') {
     if (!is_array(self::$cachedSettings)) {
       self::$cachedSettings = CachedConferenceApi::getSettings();
     }
 
+    $setting = NULL;
     if (is_array(self::$cachedSettings) && isset(self::$cachedSettings[$property])) {
-      return self::$cachedSettings[$property];
+      $setting = self::$cachedSettings[$property];
     }
-    else {
-      return NULL;
-    }
-  }
 
-  /**
-   * Returns an array of values for the given value returned by 'getSetting'
-   *
-   * @param string|null $values The values returned by 'getSetting'
-   *
-   * @return array An array of values
-   */
-  public static function getArrayOfValues($values) {
-    return (is_string($values)) ? explode(';', $values) : array();
+    switch ($type) {
+      case 'list':
+        return is_string($setting) ? explode(';', $setting) : array();
+      case 'time':
+        return is_string($setting) ? strtotime($setting) : NULL;
+      case 'bool':
+        return $setting == 1;
+      case 'lastdate':
+        return is_string($setting) ? ConferenceMisc::isOpenForLastDate(strtotime($setting)) : false;
+      case 'startdate':
+        return is_string($setting) ? ConferenceMisc::isOpenForStartDate(strtotime($setting)) : false;
+      case 'string':
+      default:
+        return $setting;
+    }
   }
 }

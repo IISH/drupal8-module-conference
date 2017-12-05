@@ -26,7 +26,7 @@ class CommentsPage extends PreRegistrationPage {
    * @return bool Returns true if this page is open
    */
   public function isOpen() {
-    return (SettingsApi::getSetting(SettingsApi::SHOW_GENERAL_COMMENTS) == 1);
+    return SettingsApi::getSetting(SettingsApi::SHOW_GENERAL_COMMENTS, 'bool');
   }
 
   /**
@@ -90,12 +90,11 @@ class CommentsPage extends PreRegistrationPage {
    */
   public function backForm(array &$form, FormStateInterface $form_state) {
     // Move to the 'type of registration' page if either author or organizer registration had been / is possible
-    $showAuthor = SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION);
-    $showOrganizer = SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION);
-    $types = SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION);
-    $typesToShow = SettingsApi::getArrayOfValues($types);
+    $showAuthor = SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION, 'bool');
+    $showOrganizer = SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION, 'bool');
+    $typesToShow = SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION, 'list');
 
-    if (($showAuthor == 1) || ($showOrganizer == 1) || (count($typesToShow) > 0)) {
+    if ($showAuthor || $showOrganizer || (count($typesToShow) > 0)) {
       $this->nextPageName = PreRegistrationPage::TYPE_OF_REGISTRATION;
     }
     else {

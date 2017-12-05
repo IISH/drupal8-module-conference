@@ -69,7 +69,7 @@ class SessionPage extends PreRegistrationPage {
         '#default_value' => $session->getName(),
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
         $form['session']['sessiontype'] = array(
           '#title' => iish_t('Session type'),
           '#type' => 'select',
@@ -120,7 +120,7 @@ class SessionPage extends PreRegistrationPage {
         'value' => $session->getName(),
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
         $fields[] = array(
           'label' => 'Session type',
           'value' => $session->getType(),
@@ -252,7 +252,7 @@ class SessionPage extends PreRegistrationPage {
       $session->setName($form_state->getValue('sessionname'));
       $session->setAbstr($form_state->getValue('sessionabstract'));
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES) == 1) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
         $session->setType($form_state->getValue('sessiontype'));
 
         $differentType = ($form_state->getValue('sessiontype') == '')

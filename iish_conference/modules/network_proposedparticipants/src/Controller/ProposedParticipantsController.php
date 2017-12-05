@@ -68,7 +68,7 @@ class ProposedParticipantsController extends ControllerBase {
       'value' => $network->getName(),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK_CHAIRS, 'bool')) {
       $chairLinks = array();
       foreach ($network->getChairs() as $chair) {
         $chairLinks[] = Link::fromTextAndUrl(

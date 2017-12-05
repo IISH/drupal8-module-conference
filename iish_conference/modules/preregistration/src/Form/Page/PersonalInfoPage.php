@@ -49,8 +49,8 @@ class PersonalInfoPage extends PreRegistrationPage {
     $user = $state->getUser();
     $participant = $state->getParticipant();
 
-    $showChairDiscussantPool = (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1);
-    $showLanguageCoaching = (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1);
+    $showChairDiscussantPool = SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool');
+    $showLanguageCoaching = SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool');
 
     $allVolunteering = PreRegistrationUtils::getAllVolunteeringOfUser($state);
     $networkOptions = CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getNetworks());
@@ -99,7 +99,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       '#default_value' => $user->getOrganisation(),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT, 'bool')) {
       $form['personal_info']['department'] = array(
         '#type' => 'textfield',
         '#title' => iish_t('Department'),
@@ -110,7 +110,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION, 'bool')) {
       $form['personal_info']['education'] = array(
         '#type' => 'textfield',
         '#title' => iish_t('Education'),
@@ -134,7 +134,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       ),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE, 'bool')) {
       $form['personal_info']['age_range'] = array(
         '#type' => 'select',
         '#title' => iish_t('Age'),
@@ -144,7 +144,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
       $form['personal_info']['student'] = array(
         '#type' => 'checkbox',
         '#title' => iish_t('Please check if you are a (PhD) student'),
@@ -152,13 +152,13 @@ class PersonalInfoPage extends PreRegistrationPage {
       );
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
       $form['personal_info']['cv'] = array(
         '#type' => 'textarea',
         '#title' => iish_t('Curriculum Vitae'),
         '#description' => '<em>' . iish_t('(optional, max. 200 words)') . '</em>',
         '#rows' => 2,
-        '#required' => SettingsApi::getSetting(SettingsApi::REQUIRED_CV) == 1,
+        '#required' => SettingsApi::getSetting(SettingsApi::REQUIRED_CV, 'bool'),
         '#default_value' => $user->getCv(),
       );
     }
@@ -368,7 +368,7 @@ class PersonalInfoPage extends PreRegistrationPage {
    *   The current state of the form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool')) {
       // Make sure that when a chair is checked, a network is chosen as well
       if ($form_state->getValue('volunteerchair')) {
         if (count($form_state->getValue('volunteerchair_networks')) === 0) {
@@ -388,7 +388,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       }
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool')) {
       // Make sure that when a language coach or pupil is checked, a network is chosen as well
       if (in_array($form_state->getValue('coachpupil'), array(
         'coach',
@@ -427,27 +427,27 @@ class PersonalInfoPage extends PreRegistrationPage {
     $user->setPhone($form_state->getValue('phone'));
     $user->setMobile($form_state->getValue('mobile'));
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DEPARTMENT, 'bool')) {
       $user->setDepartment($form_state->getValue('department'));
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_EDUCATION, 'bool')) {
       $user->setEducation($form_state->getValue('education'));
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CV) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
       $user->setCv($form_state->getValue('cv'));
     }
 
     $user->save();
 
     // Then save the participant
-    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
       $participant->setStudent($form_state->getValue('student'));
     }
     $participant->setUser($user);
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_AGE_RANGE, 'bool')) {
       $participant->setAgeRange($form_state->getValue('age_range'));
     }
 
@@ -470,7 +470,7 @@ class PersonalInfoPage extends PreRegistrationPage {
     $data = $state->getFormData();
     $allToDelete = $data['volunteering'];
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool')) {
       if ($form_state->getValue('volunteerchair')) {
         $this->saveVolunteering($participant, VolunteeringApi::CHAIR,
           $form_state->getValue('volunteerchair_networks'), $allToDelete);
@@ -481,7 +481,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       }
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool')) {
       if ($form_state->getValue('coachpupil') == 'coach') {
         $this->saveVolunteering($participant, VolunteeringApi::COACH,
           $form_state->getValue('coachpupil_networks'), $allToDelete);

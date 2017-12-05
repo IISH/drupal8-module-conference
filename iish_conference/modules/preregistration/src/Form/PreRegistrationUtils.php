@@ -24,7 +24,7 @@ class PreRegistrationUtils {
    * @return bool Returns true when networks can be shown
    */
   public static function showNetworks() {
-    return (SettingsApi::getSetting(SettingsApi::SHOW_NETWORK) == 1);
+    return SettingsApi::getSetting(SettingsApi::SHOW_NETWORK, 'bool');
   }
 
   /**
@@ -33,7 +33,7 @@ class PreRegistrationUtils {
    * @return bool Returns true if pre-defined sessions should be used
    */
   public static function useSessions() {
-    return (SettingsApi::getSetting(SettingsApi::PREREGISTRATION_SESSIONS) == 1);
+    return SettingsApi::getSetting(SettingsApi::PREREGISTRATION_SESSIONS, 'bool');
   }
 
   /**
@@ -42,14 +42,9 @@ class PreRegistrationUtils {
    * @return bool Whether author registration is still opened
    */
   public static function isAuthorRegistrationOpen() {
-    $showAuthor = SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION);
-    $authorClosesOn = SettingsApi::getSetting(SettingsApi::AUTHOR_REGISTRATION_LASTDATE);
-
     return (
-      ($showAuthor == 1) &&
-      ($authorClosesOn !== NULL) &&
-      (strlen(trim($authorClosesOn)) > 0) &&
-      ConferenceMisc::isOpenForLastDate(strtotime($authorClosesOn))
+      SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION, 'bool') &&
+      SettingsApi::getSetting(SettingsApi::AUTHOR_REGISTRATION_LASTDATE, 'lastdate')
     );
   }
 
@@ -59,14 +54,9 @@ class PreRegistrationUtils {
    * @return bool Whether organizer registration is still opened
    */
   public static function isOrganizerRegistrationOpen() {
-    $showOrganizer = SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION);
-    $organizerClosesOn = SettingsApi::getSetting(SettingsApi::ORGANIZER_REGISTRATION_LASTDATE);
-
     return (
-      ($showOrganizer == 1) &&
-      ($organizerClosesOn !== NULL) &&
-      (strlen(trim($organizerClosesOn)) > 0) &&
-      ConferenceMisc::isOpenForLastDate(strtotime($organizerClosesOn))
+      SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION, 'bool') &&
+      SettingsApi::getSetting(SettingsApi::ORGANIZER_REGISTRATION_LASTDATE, 'lastdate')
     );
   }
 
@@ -95,8 +85,7 @@ class PreRegistrationUtils {
    * @return ParticipantTypeApi[] All participant types with which the user may add him/herself to sessions
    */
   public static function getParticipantTypesForUser() {
-    $types = SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION);
-    $typesToShow = SettingsApi::getArrayOfValues($types);
+    $typesToShow = SettingsApi::getSetting(SettingsApi::SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION, 'list');
 
     $participantTypes = array();
     foreach (CachedConferenceApi::getParticipantTypes() as $participantType) {
@@ -138,8 +127,8 @@ class PreRegistrationUtils {
     $volunteering = array();
     $participant = $state->getParticipant();
 
-    if ((SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL) == 1) ||
-      (SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL) == 1)
+    if (SettingsApi::getSetting(SettingsApi::SHOW_CHAIR_DISCUSSANT_POOL, 'bool') ||
+      SettingsApi::getSetting(SettingsApi::SHOW_LANGUAGE_COACH_PUPIL, 'bool')
     ) {
       $volunteering = CRUDApiMisc::getAllWherePropertyEquals(
         new ParticipantVolunteeringApi(), 'participantDate_id', $participant->getId()

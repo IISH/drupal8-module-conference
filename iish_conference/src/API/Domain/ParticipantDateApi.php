@@ -403,7 +403,7 @@ class ParticipantDateApi extends CRUDApiClient {
       $totalAmount += $extra->getAmount();
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS, 'bool')) {
       $feeAmountAccompanyingPerson = $this->getFeeAmount(NULL, FeeStateApi::getAccompanyingPersonFee());
       $totalAmount += (count($this->getAccompanyingPersons()) * $feeAmountAccompanyingPerson->getFeeAmount());
     }
@@ -426,7 +426,7 @@ class ParticipantDateApi extends CRUDApiClient {
       $totalAmount += $extra->getAmount();
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS) == 1) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS, 'bool')) {
       $feeAmountAccompanyingPerson = $this->getFeeAmount(NULL, FeeStateApi::getAccompanyingPersonFee());
       $totalAmount += (count($this->getAccompanyingPersons()) * $feeAmountAccompanyingPerson->getFeeAmountOnSite());
     }
@@ -580,8 +580,7 @@ class ParticipantDateApi extends CRUDApiClient {
     $feeAmount = $this->getFeeAmount($orderCreationDate);
     $finalDate = $feeAmount->getEndDate();
 
-    $lastDate = strtotime(SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_LASTDATE));
-    if (!ConferenceMisc::isOpenForLastDate($lastDate, $finalDate)) {
+    if (!SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_LASTDATE, 'lastdate')) {
       $finalDate = $lastDate;
     }
 
