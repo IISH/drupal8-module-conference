@@ -86,7 +86,7 @@ class ProgrammeController extends ControllerBase {
     $types = ParticipantTypeApi::getListWithCriteria($props->get())->getResults();
 
     // Make sure we filter out co-authors and types with papers and types configured to be hidden
-    $typesToHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME, 'array');
+    $typesToHide = SettingsApi::getSetting(SettingsApi::HIDE_ALWAYS_IN_ONLINE_PROGRAMME, 'list');
     foreach ($types as $i => $type) {
       if (($type->getId() == ParticipantTypeApi::CO_AUTHOR_ID) ||
         $type->getWithPaper() ||

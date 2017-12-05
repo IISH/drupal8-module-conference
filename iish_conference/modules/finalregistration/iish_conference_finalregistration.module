@@ -38,7 +38,7 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
       $variables['sessionDays'] = SessionApi::getAllPlannedDaysForSessions($sessions);
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS, 'bool')) {
+    if (!SettingsApi::getSetting(SettingsApi::SHOW_DAYS, 'bool')) {
       $days = CachedConferenceApi::getDays();
       $feeAmounts = LoggedInUserDetails::getParticipant()
         ->getFeeAmounts(count($days));
