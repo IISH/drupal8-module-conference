@@ -154,7 +154,7 @@ class LoginForm extends FormBase {
         case LoggedInUserDetails::USER_STATUS_PARTICIPANT_DOUBLE_ENTRY:
           drupal_set_message(iish_t('Your account is disabled. ' .
                 '(Probably due to a double registration, please login with your other registration) ' .
-                'Please contact !email', array('!email' =>
+                'Please contact :email', array(':email' =>
             ConferenceMisc::encryptEmailAddress(
               SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL)))), 'error');
           break;
