@@ -84,8 +84,9 @@ class PersonalInfoPage extends PreRegistrationPage {
     );
 
     $form['personal_info']['gender'] = array(
-      '#title' => iish_t('Gender'),
       '#type' => 'select',
+      '#title' => iish_t('Gender'),
+      '#description' => iish_t('Choose \'Other\' if you do not wish to enter your gender.'),
       '#options' => ConferenceMisc::getGenders(),
       '#default_value' => $user->getGender(),
     );

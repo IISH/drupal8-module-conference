@@ -50,7 +50,7 @@ class ConferenceMisc {
    */
   public static function getGenders() {
     return array(
-      '' => '',
+      '' => iish_t('Other'),
       'M' => iish_t('Male'),
       'F' => iish_t('Female'),
     );
