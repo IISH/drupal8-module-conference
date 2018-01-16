@@ -78,7 +78,7 @@ class SessionPage extends PreRegistrationPage {
         );
 
         if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_SESSION_TYPE, 'bool')) {
-          $form['session']['sessiontype']['#required'] = TRUE;
+          $form['session']['sessiontype']['#empty_option'] = iish_t('Something else');
 
           $form['session']['sessiondifferenttype'] = array(
             '#type' => 'textfield',
@@ -93,7 +93,7 @@ class SessionPage extends PreRegistrationPage {
           );
         }
         else {
-          $form['session']['sessiontype']['#empty_option'] = iish_t('Something else');
+          $form['session']['sessiontype']['#required'] = TRUE;
         }
       }
 

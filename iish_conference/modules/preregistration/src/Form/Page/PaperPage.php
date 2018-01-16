@@ -126,7 +126,7 @@ class PaperPage extends PreRegistrationPage {
       );
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_PAPER_TYPE, 'bool')) {
-        $form['paper']['type']['#required'] = TRUE;
+        $form['paper']['type']['#empty_option'] = iish_t('Something else');
 
         $form['paper']['differenttype'] = array(
           '#type' => 'textfield',
@@ -141,7 +141,7 @@ class PaperPage extends PreRegistrationPage {
         );
       }
       else {
-        $form['paper']['type']['#empty_option'] = iish_t('Something else');
+        $form['paper']['type']['#required'] = TRUE;
       }
     }
 
