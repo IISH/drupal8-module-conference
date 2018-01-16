@@ -611,10 +611,10 @@ class PersonalPageController extends ControllerBase {
       'newLine' => TRUE
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
       $renderArray[] = array(
-        'label' => 'Type of contribution',
-        'value' => $paper->getTypeOfContribution()
+        'label' => 'Paper type',
+        'value' => $paper->getType()
       );
     }
 
