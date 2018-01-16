@@ -70,15 +70,21 @@ class SessionPage extends PreRegistrationPage {
       );
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
-        $form['session']['sessiontype'] = array(
-          '#title' => iish_t('Session type'),
-          '#type' => 'select',
-          '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getSessionTypes()),
-          '#default_value' => $session->getTypeId(),
-        );
+        $sessionTypes = CachedConferenceApi::getSessionTypes();
+
+        if (count($sessionTypes) > 0) {
+          $form['session']['sessiontype'] = array(
+            '#title' => iish_t('Session type'),
+            '#type' => 'select',
+            '#options' => CRUDApiClient::getAsKeyValueArray($sessionTypes),
+            '#default_value' => $session->getTypeId(),
+          );
+        }
 
         if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_SESSION_TYPE, 'bool')) {
-          $form['session']['sessiontype']['#empty_option'] = iish_t('Something else');
+          if (count($sessionTypes) > 0) {
+            $form['session']['sessiontype']['#empty_option'] = iish_t('Something else');
+          }
 
           $form['session']['sessiondifferenttype'] = array(
             '#type' => 'textfield',
@@ -92,7 +98,7 @@ class SessionPage extends PreRegistrationPage {
             ),
           );
         }
-        else {
+        else if (count($sessionTypes) > 0) {
           $form['session']['sessiontype']['#required'] = TRUE;
         }
       }

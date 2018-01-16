@@ -118,15 +118,21 @@ class PaperPage extends PreRegistrationPage {
     );
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
-      $form['paper']['type'] = array(
-        '#title' => iish_t('Paper type'),
-        '#type' => 'select',
-        '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getPaperTypes()),
-        '#default_value' => $paper->getTypeId(),
-      );
+      $paperTypes = CachedConferenceApi::getPaperTypes();
+
+      if (count($paperTypes) > 0) {
+        $form['paper']['type'] = array(
+          '#title' => iish_t('Paper type'),
+          '#type' => 'select',
+          '#options' => CRUDApiClient::getAsKeyValueArray($paperTypes),
+          '#default_value' => $paper->getTypeId(),
+        );
+      }
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_PAPER_TYPE, 'bool')) {
-        $form['paper']['type']['#empty_option'] = iish_t('Something else');
+        if (count($paperTypes) > 0) {
+          $form['paper']['type']['#empty_option'] = iish_t('Something else');
+        }
 
         $form['paper']['differenttype'] = array(
           '#type' => 'textfield',
@@ -140,7 +146,7 @@ class PaperPage extends PreRegistrationPage {
           ),
         );
       }
-      else {
+      else if (count($paperTypes) > 0) {
         $form['paper']['type']['#required'] = TRUE;
       }
     }
