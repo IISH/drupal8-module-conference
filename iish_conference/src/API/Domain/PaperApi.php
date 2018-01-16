@@ -16,7 +16,8 @@ class PaperApi extends CRUDApiClient {
   protected $title;
   protected $coAuthors;
   protected $abstr;
-  protected $typeOfContribution;
+  protected $type_id;
+  protected $differentType;
   protected $keywords;
   protected $networkProposal_id;
   protected $sessionProposal;
@@ -29,6 +30,7 @@ class PaperApi extends CRUDApiClient {
   protected $addedBy_id;
 
   private $paperState;
+  private $paperType;
   private $equipment;
   private $user;
   private $session;
@@ -224,24 +226,68 @@ class PaperApi extends CRUDApiClient {
   }
 
   /**
-   * Returns the type of contribution of this paper
+   * Returns the id of this papers type
    *
-   * @return string|null The type of contribution of this paper
+   * @return int The paper type id
    */
-  public function getTypeOfContribution() {
-    return $this->typeOfContribution;
+  public function getTypeId() {
+    return $this->type_id;
   }
 
   /**
-   * Set the type of contribution of this paper
+   * Returns this papers type
    *
-   * @param string|null $typeOfContribution The type of contribution of this paper
+   * @return PaperTypeApi The paper type
    */
-  public function setTypeOfContribution($typeOfContribution) {
-    $typeOfContribution = (($typeOfContribution !== NULL) && strlen(trim($typeOfContribution)) > 0) ? trim($typeOfContribution) : NULL;
+  public function getType() {
+    if (!$this->paperType && is_int($this->getTypeId())) {
+      $paperTypes = CachedConferenceApi::getPaperTypes();
 
-    $this->typeOfContribution = $typeOfContribution;
-    $this->toSave['typeOfContribution'] = $typeOfContribution;
+      foreach ($paperTypes as $paperType) {
+        if ($paperType->getId() == $this->type_id) {
+          $this->paperType = $paperType;
+          break;
+        }
+      }
+    }
+
+    return $this->paperType;
+  }
+
+  /**
+   * Set the type of this paper
+   *
+   * @param int|PaperTypeApi $type The paper type (id)
+   */
+  public function setType($type) {
+    if ($type instanceof PaperTypeApi) {
+      $type = $type->getId();
+    }
+
+    $this->paperType = NULL;
+    $this->type_id = $type;
+    $this->toSave['type.id'] = $type;
+  }
+
+  /**
+   * Returns this papers different paper type
+   *
+   * @return string|null This papers different paper type
+   */
+  public function getDifferentType() {
+    return $this->differentType;
+  }
+
+  /**
+   * Sets this sessions different session type
+   *
+   * @param string|null $differentType This sessions different session type
+   */
+  public function setDifferentType($differentType) {
+    $differentType = (($differentType !== NULL) && strlen(trim($differentType)) > 0) ? trim($differentType) : NULL;
+
+    $this->differentType = $differentType;
+    $this->toSave['differentType'] = $differentType;
   }
 
   /**

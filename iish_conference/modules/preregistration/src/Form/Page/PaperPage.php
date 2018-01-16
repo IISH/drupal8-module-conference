@@ -117,15 +117,32 @@ class PaperPage extends PreRegistrationPage {
       '#default_value' => $paper->getCoAuthors(),
     );
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
-      $form['paper']['typeofcontribution'] = array(
-        '#type' => 'textfield',
-        '#title' => iish_t('Type of contribution'),
-        '#required' => TRUE,
-        '#size' => 40,
-        '#maxlength' => 100,
-        '#default_value' => $paper->getTypeOfContribution(),
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
+      $form['paper']['type'] = array(
+        '#title' => iish_t('Paper type'),
+        '#type' => 'select',
+        '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getPaperTypes()),
+        '#default_value' => $paper->getTypeId(),
       );
+
+      if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_PAPER_TYPE, 'bool')) {
+        $form['paper']['type']['#required'] = TRUE;
+
+        $form['paper']['differenttype'] = array(
+          '#type' => 'textfield',
+          '#size' => 25,
+          '#maxlength' => 50,
+          '#default_value' => $paper->getDifferentType(),
+          '#states' => array(
+            'visible' => array(
+              'select[name="differenttype"]' => array('value' => ''),
+            ),
+          ),
+        );
+      }
+      else {
+        $form['paper']['type']['#empty_option'] = iish_t('Something else');
+      }
     }
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS, 'bool')) {
@@ -283,8 +300,14 @@ class PaperPage extends PreRegistrationPage {
     $paper->setAbstr($form_state->getValue('paperabstract'));
     $paper->setCoAuthors($form_state->getValue('coauthors'));
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
-      $paper->setTypeOfContribution($form_state->getValue('typeofcontribution'));
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
+      $paper->setType($form_state->getValue('type'));
+
+      if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_PAPER_TYPE, 'bool')) {
+        $differentType = ($form_state->getValue('type') == '')
+          ? $form_state->getValue('differenttype') : NULL;
+        $paper->setDifferentType($differentType);
+      }
     }
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_KEYWORDS, 'bool')) {

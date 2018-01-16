@@ -267,10 +267,10 @@ class ConfirmPage extends PreRegistrationPage {
         'newLine' => TRUE
       );
 
-      if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPE_OF_CONTRIBUTION, 'bool')) {
+      if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
         $paperContent[] = array(
-          'label' => 'Type of contribution',
-          'value' => $paper->getTypeOfContribution()
+          'label' => 'Paper type',
+          'value' => ($paper->getType() !== NULL) ? $paper->getType() : $paper->getDifferentType(),
         );
       }
 

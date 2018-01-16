@@ -8,6 +8,7 @@ use Drupal\iish_conference\API\Domain\EquipmentApi;
 use Drupal\iish_conference\API\Domain\ExtraApi;
 use Drupal\iish_conference\API\Domain\NetworkApi;
 use Drupal\iish_conference\API\Domain\PaperStateApi;
+use Drupal\iish_conference\API\Domain\PaperTypeApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
 use Drupal\iish_conference\API\Domain\ParticipantTypeApi;
 use Drupal\iish_conference\API\Domain\ReviewCriteriaApi;
@@ -35,6 +36,7 @@ class CachedConferenceApi {
   private static $nameSessionStatesCache = 'iishconference_session_states';
   private static $nameSessionTypesCache = 'iishconference_session_types';
   private static $namePaperStatesCache = 'iishconference_paper_states';
+  private static $namePaperTypesCache = 'iishconference_paper_types';
   private static $nameEquipmentCache = 'iishconference_equipment';
   private static $nameRoomsCache = 'iishconference_rooms';
   private static $nameExtrasCache = 'iishconference_extras';
@@ -61,6 +63,7 @@ class CachedConferenceApi {
       self::setSessionStates();
       self::setSessionTypes();
       self::setPaperStates();
+      self::setPaperTypes();
       self::setEquipment();
       self::setRooms();
       self::setExtras();
@@ -203,6 +206,15 @@ class CachedConferenceApi {
    */
   public static function setPaperStates() {
     return self::set(self::$namePaperStatesCache, PaperStateApi::class);
+  }
+
+  /**
+   * Cache the paper types.
+   *
+   * @return PaperTypeApi[]
+   */
+  public static function setPaperTypes() {
+    return self::set(self::$namePaperTypesCache, PaperTypeApi::class);
   }
 
   /**
@@ -441,6 +453,15 @@ class CachedConferenceApi {
    */
   public static function getPaperStates() {
     return self::get(self::$namePaperStatesCache, PaperStateApi::class);
+  }
+
+  /**
+   * Get the cached session types.
+   *
+   * @return PaperTypeApi[]
+   */
+  public static function getPaperTypes() {
+    return self::get(self::$namePaperTypesCache, PaperTypeApi::class);
   }
 
   /**

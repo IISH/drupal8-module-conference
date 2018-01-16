@@ -63,13 +63,15 @@ class SettingsApi {
   const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
   const SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration';
   const SHOW_PAPER_KEYWORDS = 'show_paper_keywords';
-  const SHOW_PAPER_TYPE_OF_CONTRIBUTION = 'show_paper_type_of_contribution';
+  const SHOW_PAPER_TYPES= 'show_paper_types';
+  const SHOW_OPTIONAL_PAPER_TYPE = 'show_optional_paper_type';
   const SHOW_PROGRAMME_ONLINE = 'show_programme_online';
   const SHOW_SESSION_CODES = 'show_session_codes';
   const SHOW_SESSION_ENDTIME_IN_PP = 'show_session_endtime_in_pp';
   const SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration';
   const SHOW_SESSION_PROPOSAL = 'show_session_proposal';
   const SHOW_SESSION_TYPES = 'show_session_types';
+  const SHOW_OPTIONAL_SESSION_TYPE = 'show_optional_session_type';
   const SHOW_STUDENT = 'show_student';
 
   // Required fields

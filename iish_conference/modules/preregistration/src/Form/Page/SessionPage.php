@@ -74,21 +74,27 @@ class SessionPage extends PreRegistrationPage {
           '#title' => iish_t('Session type'),
           '#type' => 'select',
           '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getSessionTypes()),
-          '#empty_option' => iish_t('Something else'),
           '#default_value' => $session->getTypeId(),
         );
 
-        $form['session']['sessiondifferenttype'] = array(
-          '#type' => 'textfield',
-          '#size' => 25,
-          '#maxlength' => 50,
-          '#default_value' => $session->getDifferentType(),
-          '#states' => array(
-            'visible' => array(
-              'select[name="sessiontype"]' => array('value' => ''),
+        if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_SESSION_TYPE, 'bool')) {
+          $form['session']['sessiontype']['#required'] = TRUE;
+
+          $form['session']['sessiondifferenttype'] = array(
+            '#type' => 'textfield',
+            '#size' => 25,
+            '#maxlength' => 50,
+            '#default_value' => $session->getDifferentType(),
+            '#states' => array(
+              'visible' => array(
+                'select[name="sessiontype"]' => array('value' => ''),
+              ),
             ),
-          ),
-        );
+          );
+        }
+        else {
+          $form['session']['sessiontype']['#empty_option'] = iish_t('Something else');
+        }
       }
 
       $form['session']['sessionabstract'] = array(
@@ -255,9 +261,11 @@ class SessionPage extends PreRegistrationPage {
       if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
         $session->setType($form_state->getValue('sessiontype'));
 
-        $differentType = ($form_state->getValue('sessiontype') == '')
-          ? $form_state->getValue('sessiondifferenttype') : NULL;
-        $session->setDifferentType($differentType);
+        if (SettingsApi::getSetting(SettingsApi::SHOW_OPTIONAL_SESSION_TYPE, 'bool')) {
+          $differentType = ($form_state->getValue('sessiontype') == '')
+            ? $form_state->getValue('sessiondifferenttype') : NULL;
+          $session->setDifferentType($differentType);
+        }
       }
 
       $networkId = EasyProtection::easyIntegerProtection($form_state->getValue('sessioninnetwork'));
