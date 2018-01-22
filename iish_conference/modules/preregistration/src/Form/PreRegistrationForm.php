@@ -80,18 +80,20 @@ class PreRegistrationForm extends FormBase {
     if (!SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE, 'lastdate')) {
       $form['ct1'] = array(
         '#markup' =>
-          '<div class="eca_warning">' .
-          new ConferenceHTML(iish_t('Please note it is no longer possible to pre-register online. ' .
+         '<div class="eca_warning">' .
+          iish_t('Please note it is no longer possible to pre-register online. ' .
             'If you wish to register as listener, you can do so at the conference desk. ' .
             'If you have been in touch with the network chairs or session organizers about a paper proposal ' .
-            'and still have to pre-register, please contact the secretariat at :email. ' .
+            'and still have to pre-register, please contact the secretariat at @email . ' .
             'It is still possible to do the Final Registration and Payment. ' .
             'If you haven\'t payed the conference fee, please do it as soon as possible.',
             array(
-              ':email' => ConferenceMisc::encryptEmailAddress(
-                SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
-            ))) .
-          '</div>',
+              '@email' => ConferenceMisc::emailLink(
+                SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL)
+              )->toString()
+            )
+          ) .
+         '</div>',
       );
 
       return $form;
@@ -102,7 +104,7 @@ class PreRegistrationForm extends FormBase {
       $form['ct1'] = array(
         '#markup' =>
           '<div class="eca_warning">' .
-          new ConferenceHTML(iish_t('The pre-registration for this conference has not started yet.')) .
+          iish_t('The pre-registration for this conference has not started yet.') .
           '</div>',
       );
 

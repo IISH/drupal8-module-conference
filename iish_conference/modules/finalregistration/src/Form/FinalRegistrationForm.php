@@ -84,10 +84,11 @@ class FinalRegistrationForm extends FormBase {
     $feeAmounts = $participant->getFeeAmounts();
 
     if (count($feeAmounts) === 0) {
-      drupal_set_message(iish_t('Something is wrong with your fee, please contact :email.',
+      drupal_set_message(iish_t('Something is wrong with your fee, please contact @email.',
         array(
-          ':email' => ConferenceMisc::encryptEmailAddress(
-            SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
+          '@email' => ConferenceMisc::emailLink(
+            SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL)
+          )->toString()
         )), 'error');
 
       return $form;
@@ -97,10 +98,11 @@ class FinalRegistrationForm extends FormBase {
       $accompanyingPersonsFeeState = FeeStateApi::getAccompanyingPersonFee();
 
       if (($accompanyingPersonsFeeState === NULL) || (count($accompanyingPersonsFeeState->getFeeAmounts()) === 0)) {
-        drupal_set_message(iish_t('Something is wrong with your fee, please contact :email .',
+        drupal_set_message(iish_t('Something is wrong with your fee, please contact @email .',
           array(
-            ':email' => ConferenceMisc::encryptEmailAddress(
-              SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
+            '@email' => ConferenceMisc::emailLink(
+              SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL)
+            )->toString()
           )), 'error');
 
         return $form;
@@ -121,9 +123,9 @@ class FinalRegistrationForm extends FormBase {
 	            . ' ' .
 	            iish_t('(See your personal page.)')
 		        . '<br />' .
-		        iish_t('If you have questions please contact the secretariat at :email .',
+		        iish_t('If you have questions please contact the secretariat at @email .',
 			        array(
-				        ':email' => ConferenceMisc::encryptEmailAddress(SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))
+				        '@email' => ConferenceMisc::emailLink(SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))->toString()
 			        ))
 			);
 

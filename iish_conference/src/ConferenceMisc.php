@@ -153,23 +153,22 @@ class ConferenceMisc {
     return
       '<div class="eca_warning topmargin">'
       . iish_t('For any remarks or questions, please contact: ')
-      . self::encryptEmailAddress($email)
+      . self::emailLink($email)->toString()
       . '</div>';
   }
 
   /**
-   * Protects again email harvesting by cutting up the email address into pieces
+   * Creates an email link
    *
    * @param string $email The email address in question
    * @param string $label The label of the email address
    *
-   * @return MarkupInterface The HTML/Javascript to place in the document
+   * @return Link The link to place in the document
    */
-  public static function encryptEmailAddress($email, $label = '') {
+  public static function emailLink($email, $label = '') {
     $email = trim($email);
     $label = ($label == '') ? $email : trim($label);
-    return Link::fromTextAndUrl($label, Url::fromUri('mailto:' . $email))->toString();
-    // TODO: return new Email($email, $label);
+    return Link::fromTextAndUrl($label, Url::fromUri('mailto:' . $email, array('absolute' => TRUE)));
   }
 
   /**

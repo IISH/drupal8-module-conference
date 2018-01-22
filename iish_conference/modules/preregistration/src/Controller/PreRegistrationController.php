@@ -21,8 +21,6 @@ class PreRegistrationController extends ControllerBase {
    * @return array Render array.
    */
   public function completed() {
-    $email = ConferenceMisc::encryptEmailAddress(SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL));
-
     $fields = array(
       new ConferenceHTML(
         '<div class="eca_remark heavy bottommargin">'
@@ -37,8 +35,8 @@ class PreRegistrationController extends ControllerBase {
       new ConferenceHTML(
         '<div class="eca_warning heavy bottommargin">'
         . iish_t('It is not possible to modify your pre-registration anymore.')
-        . '<br />' . iish_t('If you would like to modify your registration please send an email to :email.',
-          array(':email' => $email))
+        . '<br />' . iish_t('If you would like to modify your registration please send an email to @email.',
+          array('@email' => ConferenceMisc::emailLink(SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))->toString()))
         . '</div>', TRUE)
     );
 
