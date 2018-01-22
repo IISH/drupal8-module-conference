@@ -462,8 +462,11 @@ class ConfirmPage extends PreRegistrationPage {
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
 
-    drupal_set_message(iish_t('Please check your data, scroll down, and confirm and finish your pre-registration.'),
-      'warning');
+    $message = iish_t('Please check your data, scroll down, and confirm and finish your pre-registration.');
+    if (SettingsApi::getSetting(SettingsApi::SHOW_FINISH_LATER_BUTTON, 'bool')) {
+      $message .= ' ' . iish_t('Or save your registration to update your registration info at a later moment.');
+    }
+    drupal_set_message(iish_t($message),'warning');
 
     $form['confirm'] = array();
 

@@ -68,6 +68,8 @@ class LoginPage extends PreRegistrationPage {
         iish_t('Use the back/next buttons in the form, do NOT use the browser back button') . '</li>
 				<li>' .
         iish_t('Prepare your abstract beforehand. Do NOT type your abstract in the form field, but COPY it into the form field') . '</li>
+				<li>' .
+        iish_t('As long as you haven\'t confirmed your registration, you can always come back later to change your registration info') . '</li>
 			</ol>
 		</div>',
     );
