@@ -1,11 +1,14 @@
 <?php
 namespace Drupal\iish_conference_personalpage\Controller;
 
+use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Form\FormAjaxException;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Controller\ControllerBase;
 
+use Drupal\iish_conference\API\Domain\PaperStateApi;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\CRUDApiMisc;
 use Drupal\iish_conference\API\CRUDApiClient;
@@ -31,6 +34,7 @@ use Drupal\iish_conference\Markup\ConferenceHTML;
 use Drupal\iish_conference_personalpage\Form\DeletePaperForm;
 use Drupal\iish_conference_finalregistration\API\PayWayMessage;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -53,7 +57,7 @@ class PersonalPageController extends ControllerBase {
    * @return array|Response Render array.
    */
   public function index() {
-    $this->redirectIfNotLoggedIn();
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     $userDetails = LoggedInUserDetails::getUser();
     $participantDateDetails = LoggedInUserDetails::getParticipant();
@@ -79,21 +83,35 @@ class PersonalPageController extends ControllerBase {
    * @return array|Response Render array.
    */
   public function uploadPaper($paper) {
-    $this->redirectIfNotLoggedIn();
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
       drupal_set_message(iish_t('You are not allowed to change your uploaded paper.'), 'error');
       $this->redirectToPersonalPage();
+      return array();
     }
 
     if (empty($paper)) {
       drupal_set_message(iish_t('Unfortunately, this paper does not seem to exist.'), 'error');
       $this->redirectToPersonalPage();
+      return array();
     }
 
     if ($paper->getUserId() !== LoggedInUserDetails::getId()) {
       drupal_set_message(iish_t('You are only allowed to upload a paper for your own papers.'), 'error');
       $this->redirectToPersonalPage();
+      return array();
+    }
+
+    $editPaper = (!SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool') || (
+        ($paper->getState()->getId() === PaperStateApi::NEW_PAPER) &&
+        SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE, 'lastdate')
+      ));
+
+    if (!$editPaper) {
+      drupal_set_message(iish_t('You are not allowed to change your uploaded paper.'), 'error');
+      $this->redirectToPersonalPage();
+      return array();
     }
 
     $accessTokenApi = new AccessTokenApi();
@@ -668,7 +686,7 @@ class PersonalPageController extends ControllerBase {
           . $uploadPaperLink->toString() . '</span>'
       );
     }
-    else {
+    else if ($paper->getFileName() != NULL) {
       $accessTokenApi = new AccessTokenApi();
       $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
 
@@ -680,7 +698,12 @@ class PersonalPageController extends ControllerBase {
           'paper' => $paper->getId()
         )));
 
-      if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
+      $editPaper = (!SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool') || (
+          ($paper->getState()->getId() === PaperStateApi::NEW_PAPER) &&
+          SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE, 'lastdate')
+        ));
+
+      if (!$editPaper) {
         $renderArray[] = array(
           'label' => 'Uploaded paper',
           'value' => $downloadPaperLink->toString(),
@@ -1053,10 +1076,12 @@ class PersonalPageController extends ControllerBase {
         );
       }
 
-      $renderArray[] = array(
-        '#theme' => 'iish_conference_container',
-        '#fields' => $fields
-      );
+      if (count($fields) > 1) {
+        $renderArray[] = array(
+          '#theme' => 'iish_conference_container',
+          '#fields' => $fields
+        );
+      }
     }
   }
 }

@@ -10,6 +10,7 @@ use Drupal\iish_conference\API\Domain\NetworkApi;
 use Drupal\iish_conference\API\Domain\SentEmailApi;
 use Drupal\iish_conference\API\Domain\EventDateApi;
 
+use Drupal\iish_conference\API\Domain\UserApi;
 use Symfony\Component\Routing\Route;
 use Drupal\iish_conference\EasyProtection;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
@@ -46,6 +47,8 @@ class ConferenceParamConverter implements ParamConverterInterface {
         return $this->loadPaper($value);
       case 'event_date':
         return $this->loadEventDate($value);
+      case 'user':
+        return $this->loadUser($value);
       default:
         return NULL;
     }
@@ -142,5 +145,16 @@ class ConferenceParamConverter implements ParamConverterInterface {
     }
 
     return NULL;
+  }
+
+  /**
+   * Fetches a user based on a user id
+   *
+   * @param mixed $id The user id
+   *
+   * @return UserApi|null The user in question, or null if not found
+   */
+  private function loadUser($id) {
+    return CRUDApiMisc::getById(new UserApi(), EasyProtection::easyIntegerProtection($id));
   }
 }

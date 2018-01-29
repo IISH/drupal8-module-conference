@@ -54,9 +54,7 @@ class FinalRegistrationForm extends FormBase {
     }
 
     // redirect to login page
-    if ($this->redirectIfNotLoggedIn() === TRUE) {
-      return array();
-    }
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     // TODO Should we only allow payments of finished pre-registrations?
     // if (!LoggedInUserDetails::isAParticipant()) {

@@ -36,9 +36,7 @@ class ChangePasswordForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if ($this->redirectIfNotLoggedIn() === TRUE) {
-      return array();
-    }
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     $form['hint'] = array(
       '#markup' => '<div class="topmargin">'

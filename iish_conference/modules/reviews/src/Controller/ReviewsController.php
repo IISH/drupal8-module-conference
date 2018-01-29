@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\iish_conference\API\ApiCriteriaBuilder;
 use Drupal\iish_conference\API\Domain\PaperReviewApi;
 use Drupal\iish_conference\API\LoggedInUserDetails;
+use Drupal\iish_conference\API\CachedConferenceApi;
 
 use Drupal\iish_conference\ConferenceTrait;
 
@@ -23,7 +24,7 @@ class ReviewsController extends ControllerBase {
    * @return array Render array.
    */
   public function listReviews() {
-    $this->redirectIfNotLoggedIn();
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     $props = new ApiCriteriaBuilder();
     $reviewsLeft = PaperReviewApi::getListWithCriteria(
@@ -88,5 +89,19 @@ class ReviewsController extends ControllerBase {
         )
       )
     );
+  }
+
+  /**
+   * The reviewer title.
+   * @return string The reviewer title.
+   */
+  public function getReviewerTitle() {
+    try {
+      return iish_t('I would like to participate as a reviewer in the')
+        . ' ' . CachedConferenceApi::getEventDate()->getLongNameAndYear();
+    }
+    catch (\Exception $exception) {
+      return t('I would like to participate as a reviewer');
+    }
   }
 }

@@ -12,6 +12,7 @@ class PaperReviewApi extends CRUDApiClient {
   protected $reviewer_id;
   protected $review;
   protected $comments;
+  protected $award;
   protected $avgScore;
 
   private $paper;
@@ -90,6 +91,37 @@ class PaperReviewApi extends CRUDApiClient {
    */
   public function getComments() {
     return $this->comments;
+  }
+
+  /**
+   * Set the comments of this review
+   *
+   * @param string|null $comments The comments of this review
+   */
+  public function setComments($comments) {
+    $comments = (($comments !== NULL) && strlen(trim($comments)) > 0) ? trim($comments) : NULL;
+
+    $this->comments = $comments;
+    $this->toSave['comments'] = $comments;
+  }
+
+  /**
+   * Is this paper eligible for the award?
+   *
+   * @return bool Whether this paper eligible for the award
+   */
+  public function getAward() {
+    return $this->award;
+  }
+
+  /**
+   * Set whether this paper is eligible for the award
+   *
+   * @param bool $award Whether this paper eligible for the award
+   */
+  public function setAward($award) {
+    $this->award = (bool) $award;
+    $this->toSave['award'] = $this->award;
   }
 
   /**

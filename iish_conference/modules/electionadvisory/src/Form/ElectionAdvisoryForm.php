@@ -44,9 +44,7 @@ class ElectionAdvisoryForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if ($response = $this->checkNetworkChair() === TRUE) {
-      return array();
-    }
+    if ($this->checkNetworkChair()) return array();
 
     $props = new ApiCriteriaBuilder();
     $hasVotedCount = NetworkChairApi::getListWithCriteria(

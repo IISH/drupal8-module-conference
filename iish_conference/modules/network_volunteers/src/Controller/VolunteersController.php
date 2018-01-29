@@ -27,7 +27,7 @@ class VolunteersController extends ControllerBase {
    * @return array|string|Response Render array or a redirect response.
    */
   public function listNetworks() {
-    $this->checkNetworkChair();
+    if ($this->checkNetworkChair()) return array();
 
     $networks = $this->getAllowedNetworks();
     if (count($networks) > 0) {
@@ -53,7 +53,7 @@ class VolunteersController extends ControllerBase {
    * @return array|string|Response The render array or redirect response.
    */
   public function network($network) {
-    $this->checkNetworkChair();
+    if ($this->checkNetworkChair()) return array();
 
     if (!$network) {
       drupal_set_message(iish_t('The network does not exist.'), 'error');

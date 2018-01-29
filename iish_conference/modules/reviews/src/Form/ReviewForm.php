@@ -46,9 +46,7 @@ class ReviewForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $paper = NULL) {
     // redirect to login page
-    if ($this->redirectIfNotLoggedIn() === TRUE) {
-      return array();
-    }
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     $props = new ApiCriteriaBuilder();
     $paperReview = PaperReviewApi::getListWithCriteria(
@@ -103,6 +101,17 @@ class ReviewForm extends FormBase {
       '#rows' => 10,
     );
 
+    $form['comments'] = array(
+      '#type' => 'textarea',
+      '#title' => iish_t('Confidential remarks'),
+      '#rows' => 5,
+    );
+
+    $form['award'] = array(
+      '#type' => 'checkbox',
+      '#title' => iish_t('Should be considered for best paper?'),
+    );
+
     $reviewCriteria = CachedConferenceApi::getReviewCriteria();
     foreach ($reviewCriteria as $criteria) {
       $form['score_' . $criteria->getId()] = array(
@@ -148,6 +157,8 @@ class ReviewForm extends FormBase {
     }
 
     $paperReview->setReview($form_state->getValue('review'));
+    $paperReview->setComments($form_state->getValue('comments'));
+    $paperReview->setAward($form_state->getValue('award'));
     $paperReview->setAvgScore(round(
       $totalScore / count($reviewCriteria), 1, PHP_ROUND_HALF_UP));
     $paperReview->save();

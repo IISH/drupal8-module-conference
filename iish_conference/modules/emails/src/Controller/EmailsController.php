@@ -30,7 +30,8 @@ class EmailsController extends ControllerBase {
    * @return array|Response The render array.
    */
   public function listEmails() {
-    $this->redirectIfNotLoggedIn();
+    if ($this->redirectIfNotLoggedIn()) return array();
+
     $maxTries = intval(SettingsApi::getSetting(SettingsApi::EMAIL_MAX_NUM_TRIES));
 
     $props = new ApiCriteriaBuilder();
@@ -135,7 +136,7 @@ class EmailsController extends ControllerBase {
    * @return array|Response The render array.
    */
   public function email($sent_email) {
-    $this->redirectIfNotLoggedIn();
+    if ($this->redirectIfNotLoggedIn()) return array();
 
     if (empty($sent_email)) {
       drupal_set_message(iish_t('Unfortunately, this email does not seem to exist.'), 'error');

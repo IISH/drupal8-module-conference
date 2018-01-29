@@ -22,7 +22,7 @@ class ParticipantsController extends ControllerBase {
    * @return array|string|Response Render array.
    */
   public function listNetworks() {
-    $this->checkNetworkChair();
+    if ($this->checkNetworkChair()) return array();
 
     $networks = $this->getAllowedNetworks();
     if (count($networks) > 0) {
@@ -45,10 +45,10 @@ class ParticipantsController extends ControllerBase {
   /**
    * Download the XLS for the given network.
    * @param NetworkApi $network The network.
-   * @return Response|string The response.
+   * @return Response|string|array The response.
    */
   public function network($network) {
-    $this->checkNetworkChair();
+    if ($this->checkNetworkChair()) return array();
 
     if (!empty($network)) {
       $networkName = EasyProtection::easyAlphaNumericStringProtection($network->getName());

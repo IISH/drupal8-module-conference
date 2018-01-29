@@ -38,9 +38,7 @@ class ChangeUserForm extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
-    if ($this->checkAdmin() === TRUE) {
-      return array();
-    }
+    if ($this->checkAdmin()) return array();
 
     $form['hint'] = array(
       '#markup' => '<div class="topmargin">'

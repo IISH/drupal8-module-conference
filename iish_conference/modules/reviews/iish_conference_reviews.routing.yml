@@ -21,3 +21,17 @@ iish_conference_reviews.form:
     _access: 'TRUE'
   options:
     no_cache: 'TRUE'
+
+iish_conference_reviewers.form:
+  path: '/conference/reviewer/{user}/{reviewerId}'
+  defaults:
+    _form: '\Drupal\iish_conference_reviews\Form\ReviewerForm'
+    _title_callback: '\Drupal\iish_conference_reviews\Controller\ReviewsController::getReviewerTitle'
+  options:
+    parameters:
+      user:
+        type: 'iish_conference_param_converter'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
