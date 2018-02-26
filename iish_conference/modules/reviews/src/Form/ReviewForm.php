@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 
 use Drupal\iish_conference\API\AccessTokenApi;
 use Drupal\iish_conference\API\CachedConferenceApi;
+use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\Domain\PaperApi;
 use Drupal\iish_conference\API\Domain\PaperReviewApi;
 use Drupal\iish_conference\API\Domain\PaperReviewScoreApi;
@@ -70,28 +71,37 @@ class ReviewForm extends FormBase {
     $accessTokenApi = new AccessTokenApi();
     $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
 
+    $fields = array();
+    $fields[] = array(
+        'label' => 'Paper',
+        'value' => $paper->getTitle(),
+    );
+    $fields[] = array(
+        'label' => 'Paper abstract',
+        'value' => ConferenceMisc::getHTMLForLongText($paper->getAbstr()),
+        'html' => TRUE,
+        'newLine' => TRUE,
+    );
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
+      $fields[] = array(
+          'label' => 'Paper type',
+          'value' => $paper->getType()
+      );
+    }
+
+    $fields[] = new ConferenceHTML(
+        '<a href="' . $paper->getDownloadURL($token) . '">' .
+        '<span class="download-icon"></span> ' .
+        iish_t('Download paper') .
+        '</a>',
+        TRUE
+    );
+
     $form['paper'] = array(
       '#theme' => 'iish_conference_container',
       '#styled' => FALSE,
-      '#fields' => array(
-        array(
-          'label' => 'Paper',
-          'value' => $paper->getTitle(),
-        ),
-        array(
-          'label' => 'Paper abstract',
-          'value' => ConferenceMisc::getHTMLForLongText($paper->getAbstr()),
-          'html' => TRUE,
-          'newLine' => TRUE,
-        ),
-        new ConferenceHTML(
-          '<a href="' . $paper->getDownloadURL($token) . '">' .
-              '<span class="download-icon"></span> ' .
-              iish_t('Download paper') .
-            '</a>',
-          TRUE
-        ),
-      )
+      '#fields' => $fields,
     );
 
     $form['review'] = array(
@@ -104,6 +114,7 @@ class ReviewForm extends FormBase {
     $form['comments'] = array(
       '#type' => 'textarea',
       '#title' => iish_t('Confidential remarks'),
+      '#description' => '<em>' . iish_t('Confidential remarks for the organizers only.') . '</em>',
       '#rows' => 5,
     );
 
