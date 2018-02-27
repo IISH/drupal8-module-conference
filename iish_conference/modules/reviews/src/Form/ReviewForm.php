@@ -76,19 +76,20 @@ class ReviewForm extends FormBase {
         'label' => 'Paper',
         'value' => $paper->getTitle(),
     );
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
+        $fields[] = array(
+            'label' => 'Paper type',
+           'value' => $paper->getType()
+        );
+    }
+
     $fields[] = array(
         'label' => 'Paper abstract',
         'value' => ConferenceMisc::getHTMLForLongText($paper->getAbstr()),
         'html' => TRUE,
         'newLine' => TRUE,
     );
-
-    if (SettingsApi::getSetting(SettingsApi::SHOW_PAPER_TYPES, 'bool')) {
-      $fields[] = array(
-          'label' => 'Paper type',
-          'value' => $paper->getType()
-      );
-    }
 
     $fields[] = new ConferenceHTML(
         '<a href="' . $paper->getDownloadURL($token) . '">' .
