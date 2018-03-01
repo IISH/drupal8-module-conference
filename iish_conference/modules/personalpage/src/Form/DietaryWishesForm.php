@@ -43,7 +43,7 @@ class DietaryWishesForm extends FormBase {
     $user = LoggedInUserDetails::getUser();
 
     $form['dietary-wish'] = [
-      '#title' => iish_t('Foodwise, I identify as'),
+      '#title' => iish_t('Foodwise, I identify as a'),
       '#type' => 'radios',
       '#required' => TRUE,
       '#options' => ConferenceMisc::getDietaryWishesOptions(),
