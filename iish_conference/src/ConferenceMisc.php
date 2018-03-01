@@ -83,6 +83,20 @@ class ConferenceMisc {
   }
 
   /**
+   * Returns the human-friendly texts for dietary wishes.
+   *
+   * @return array The human-friendly texts for dietary wishes.
+   */
+  public static function getDietaryWishesOptions() {
+    return array(
+      1 => iish_t('Carnivore'),
+      2 => iish_t('Pescatarian'),
+      3 => iish_t('Vegetarian'),
+      0 => iish_t('Other (please specify)')
+    );
+  }
+
+  /**
    * Returns the filesize in a human friendly format
    *
    * @param int|null $filesize The filesize in bytes

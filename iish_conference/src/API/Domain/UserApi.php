@@ -28,6 +28,8 @@ class UserApi extends CRUDApiClient {
   protected $education;
   protected $cv;
   protected $extraInfo;
+  protected $dietaryWishes;
+  protected $otherDietaryWishes;
   protected $papers_id;
   protected $daysPresent_day_id;
   protected $addedBy_id;
@@ -626,4 +628,44 @@ class UserApi extends CRUDApiClient {
 
     return $this->reviews;
   }
+
+    /**
+     * Returns dietary wishes of this user
+     *
+     * @return int The dietary wishes of this user
+     */
+    public function getDietaryWishes() {
+        return $this->dietaryWishes;
+    }
+
+    /**
+     * Sets the dietary wishes of this user
+     *
+     * @param int $dietaryWishes The dietary wishes of this user
+     */
+    public function setDietaryWishes($dietaryWishes) {
+        $this->dietaryWishes = $dietaryWishes;
+        $this->toSave['dietaryWishes'] = $dietaryWishes;
+    }
+
+    /**
+     * Returns the other dietary wishes of this user
+     *
+     * @return string The other dietary wishes of this user
+     */
+    public function getOtherDietaryWishes() {
+        return $this->otherDietaryWishes;
+    }
+
+    /**
+     * Sets the other dietary wishes of this user
+     *
+     * @param mixed $otherDietaryWishes The other dietary wishes of this user
+     */
+    public function setOtherDietaryWishes($otherDietaryWishes) {
+        $otherDietaryWishes = (($otherDietaryWishes !== NULL) && strlen(trim($otherDietaryWishes)) > 0) ? trim($otherDietaryWishes) : NULL;
+
+        $this->otherDietaryWishes = $otherDietaryWishes;
+        $this->toSave['otherDietaryWishes'] = $otherDietaryWishes;
+    }
 }

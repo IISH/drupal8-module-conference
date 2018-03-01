@@ -21,3 +21,13 @@ iish_conference_personalpage.upload_paper:
     _access: 'TRUE'
   options:
     no_cache: 'TRUE'
+
+iish_conference_personalpage.dietary_wishes_form:
+  path: '/conference/user/personalpage/dietary-wishes'
+  defaults:
+    _form: '\Drupal\iish_conference_personalpage\Form\DietaryWishesForm'
+    _title: 'Dietary wishes'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
