@@ -28,11 +28,27 @@
     </div>
 
     <div class="bottommargin">
-        {{ 'This is the first page of the \'Final Registration and Payment\' procedure.
-        Please enter which days you will be present and the total conference fee will be computed automatically.
-        You can pay with your CreditCard/iDeal or via bank transfer. If the process is completely finished,
-        (including payment) you will receive a confirmation email
-        from our payment provider and a confirmation email.'|iish_t }}
+        {% if setting('SHOW_DAYS', 'bool') and setting('BANK_TRANSFER_ALLOWED', 'bool') %}
+            {{ 'This is the first page of the \'Final Registration and Payment\' procedure.
+            Please enter which days you will be present and the total conference fee will be computed automatically.
+            You can pay online or via bank transfer. If the process is completely finished,
+            (including payment) you will receive a confirmation email
+            from our payment provider and a confirmation email.'|iish_t }}
+        {% elseif setting('SHOW_DAYS', 'bool') and not setting('BANK_TRANSFER_ALLOWED', 'bool') %}
+            {{ 'This is the first page of the \'Final Registration and Payment\' procedure.
+            Please enter which days you will be present and the total conference fee will be computed automatically.
+            If the process is completely finished, (including payment) you will receive a confirmation email
+            from our payment provider and a confirmation email.'|iish_t }}
+        {% elseif not setting('SHOW_DAYS', 'bool') and setting('BANK_TRANSFER_ALLOWED', 'bool') %}
+            {{ 'This is the first page of the \'Final Registration and Payment\' procedure.
+            You can pay online or via bank transfer. If the process is completely finished,
+            (including payment) you will receive a confirmation email
+            from our payment provider and a confirmation email.'|iish_t }}
+        {% else %}
+            {{ 'This is the first page of the \'Final Registration and Payment\' procedure.
+            If the process is completely finished, (including payment) you will receive a confirmation email
+            from our payment provider and a confirmation email.'|iish_t }}
+        {% endif %}
     </div>
 
     {% if not setting('SHOW_DAYS', 'bool') %}

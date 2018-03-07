@@ -12,6 +12,7 @@ class FeeStateApi extends CRUDApiClient {
 
   protected $name;
   protected $isDefaultFee;
+  protected $isStudentFee;
   protected $isAccompanyingPersonFee;
   protected $feeAmounts_id;
 
@@ -22,6 +23,15 @@ class FeeStateApi extends CRUDApiClient {
    */
   public static function getDefaultFee() {
     return CRUDApiMisc::getFirstWherePropertyEquals(new FeeStateApi(), 'isDefaultFee', TRUE);
+  }
+
+  /**
+   * Returns the student fee state, if there is one
+   *
+   * @return FeeStateApi|null The student fee state, if found
+   */
+  public static function getStudentFee() {
+    return CRUDApiMisc::getFirstWherePropertyEquals(new FeeStateApi(), 'isStudentFee', TRUE);
   }
 
   /**
@@ -58,6 +68,15 @@ class FeeStateApi extends CRUDApiClient {
    */
   public function isDefaultFee() {
     return $this->isDefaultFee;
+  }
+
+  /**
+   * Returns whether this fee is the student fee
+   *
+   * @return bool Returns true if this is the student fee
+   */
+  public function isStudentFee() {
+    return $this->isStudentFee;
   }
 
   /**
