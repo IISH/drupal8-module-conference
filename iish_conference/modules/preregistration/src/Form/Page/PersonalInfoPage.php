@@ -165,6 +165,22 @@ class PersonalInfoPage extends PreRegistrationPage {
     }
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
+    // EXTRA'S
+
+    $extras = ExtraApi::getOnlyPreRegistrationFiltered(CachedConferenceApi::getExtras());
+    if (count($extras) > 0) {
+      foreach ($extras as $extra) {
+        $form['extras']['extras_' . $extra->getId()] = array(
+          '#title' => $extra->getTitle(),
+          '#type' => 'checkboxes',
+          '#description' => $extra->getSecondDescription(),
+          '#options' => array($extra->getId() => $extra->getDescription()),
+          '#default_value' => $participant->getExtrasId(),
+        );
+      }
+    }
+
+    // + + + + + + + + + + + + + + + + + + + + + + + +
     // ADDRESS
 
     $form['address'] = array(
@@ -220,22 +236,6 @@ class PersonalInfoPage extends PreRegistrationPage {
         iish_t('Please enter international numbers (including country prefix etc.)') .
         '</span>',
     );
-
-    // + + + + + + + + + + + + + + + + + + + + + + + +
-    // EXTRA'S
-
-    $extras = ExtraApi::getOnlyPreRegistrationFiltered(CachedConferenceApi::getExtras());
-    if (count($extras) > 0) {
-      foreach ($extras as $extra) {
-        $form['extras']['extras_' . $extra->getId()] = array(
-          '#title' => $extra->getTitle(),
-          '#type' => 'checkboxes',
-          '#description' => $extra->getSecondDescription(),
-          '#options' => array($extra->getId() => $extra->getDescription()),
-          '#default_value' => $participant->getExtrasId(),
-        );
-      }
-    }
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // CHAIR / DISCUSSANT POOL
