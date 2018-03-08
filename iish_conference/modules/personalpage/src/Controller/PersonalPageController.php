@@ -281,19 +281,20 @@ class PersonalPageController extends ControllerBase {
    * @param ParticipantDateApi|null $participantDateDetails The user in question participant details, if registered
    */
   private function setRegistrationInfo(array &$renderArray, $userDetails, $participantDateDetails) {
+    $fields = array();
+    $fields[] = array(
+      'header' => iish_t('Registration information'),
+    );
+
     if (LoggedInUserDetails::isAParticipant()) {
       $isFinalRegistrationOpen = $this->moduleHandler()->moduleExists('iish_conference_finalregistration');
 
-      $fields = array();
-
-      $renderArray[] = array(
+      $fields[] = array(
         '#markup' => '<div class="eca_remark heavy">'
           . iish_t('You have pre-registered for the @conference', array(
             '@conference' => CachedConferenceApi::getEventDate()->getLongNameAndYear()
           )) . '</div>'
       );
-
-      $this->setPaymentStatus($renderArray, $participantDateDetails);
 
       if ($isFinalRegistrationOpen) {
         $fields[] = array(
@@ -331,11 +332,6 @@ class PersonalPageController extends ControllerBase {
             iish_t('No accompanying person')
         );
       }
-
-      $renderArray[] = array(
-        '#theme' => 'iish_conference_container',
-        '#fields' => $fields
-      );
     }
     else {
       if ($this->moduleHandler()->moduleExists('iish_conference_preregistration')) {
@@ -343,7 +339,7 @@ class PersonalPageController extends ControllerBase {
           Url::fromRoute('iish_conference_preregistration.form'));
 
         if (LoggedInUserDetails::isAParticipantWithoutConfirmation()) {
-          $renderArray[] = array(
+          $fields[] = array(
             '#markup' => '<div class="eca_warning">' .
               iish_t('You have not finished the pre-registration for the @conference. Please go to the @link.',
                 array(
@@ -351,12 +347,9 @@ class PersonalPageController extends ControllerBase {
                   '@link' => $preRegistrationLink->toString()
                 )) . '</div>'
           );
-
-          // TODO Should we only allow payments of finished pre-registrations? if so remove next line
-          $this->setPaymentStatus($renderArray, $participantDateDetails);
         }
         else {
-          $renderArray[] = array(
+          $fields[] = array(
             '#markup' => '<div class="eca_warning">' .
               iish_t('You are not registered for the @conference. Please go to the @link.',
                 array(
@@ -376,14 +369,28 @@ class PersonalPageController extends ControllerBase {
         $dietaryWishes = ($userDetails->getDietaryWishes() === 0)
           ? $userDetails->getOtherDietaryWishes()
           : ConferenceMisc::getDietaryWishesOptions()[$userDetails->getDietaryWishes()];
-        $dietaryWishes .= ' ';
-      }
 
-      $renderArray[] = array(
-        '#markup' => '<span class="heavy"> '
-          . $dietaryWishes . '('. $dietaryWishesLink->toString() . ')'
-          . '</span>'
-      );
+        $fields[] = [
+          '#markup' => '<span class="heavy">'
+            . $dietaryWishes . ' (' . $dietaryWishesLink->toString() . ')'
+            . '</span>'
+        ];
+      }
+      else {
+        $fields[] = [
+          '#markup' => '<span class="heavy">'
+            . $dietaryWishesLink->toString() . '</span>'
+        ];
+      }
+    }
+
+    $renderArray[] = array(
+      '#theme' => 'iish_conference_container',
+      '#fields' => $fields
+    );
+
+    if (LoggedInUserDetails::isAParticipant() || LoggedInUserDetails::isAParticipantWithoutConfirmation()) {
+      $this->setPaymentStatus($renderArray, $participantDateDetails);
     }
   }
 
@@ -474,8 +481,7 @@ class PersonalPageController extends ControllerBase {
       }
     }
 
-	#$renderArray[] = array(
-	$fields[] = array(
+	  $fields[] = array(
       '#markup' => '<div class="bottommargin">' .
         trim($paymentMethod . ' ' . $paymentStatus) . $amount . $extraMessage .
         '</div>'
@@ -484,8 +490,7 @@ class PersonalPageController extends ControllerBase {
     $renderArray[] = array(
 		  '#theme' => 'iish_conference_container',
 		  '#fields' => $fields
-	);
-
+	  );
   }
 
   /**
