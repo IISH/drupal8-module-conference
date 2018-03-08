@@ -53,6 +53,7 @@ class SettingsApi {
   const SHOW_DAYS = 'show_days';
   const SHOW_DAYS_SESSION_PLANNED = 'show_days_session_planned';
   const SHOW_DEPARTMENT = 'show_department';
+  const SHOW_DIETARY_WISHES = 'show_dietary_wishes';
   const SHOW_EDUCATION = 'show_education';
   const SHOW_EQUIPMENT = 'show_equipment';
   const SHOW_FINISH_LATER_BUTTON = 'show_finish_later_button';

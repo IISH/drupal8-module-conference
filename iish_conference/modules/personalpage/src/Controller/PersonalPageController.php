@@ -367,6 +367,24 @@ class PersonalPageController extends ControllerBase {
         }
       }
     }
+
+    if (SettingsApi::getSetting(SettingsApi::SHOW_DIETARY_WISHES, 'bool')) {
+      $dietaryWishesLink = Link::fromTextAndUrl(iish_t('Update dietary wishes'),
+        Url::fromRoute('iish_conference_personalpage.dietary_wishes_form'));
+
+      if ($userDetails->getDietaryWishes() !== NULL) {
+        $dietaryWishes = ($userDetails->getDietaryWishes() === 0)
+          ? $userDetails->getOtherDietaryWishes()
+          : ConferenceMisc::getDietaryWishesOptions()[$userDetails->getDietaryWishes()];
+        $dietaryWishes .= ' ';
+      }
+
+      $renderArray[] = array(
+        '#markup' => '<span class="heavy"> '
+          . $dietaryWishes . '('. $dietaryWishesLink->toString() . ')'
+          . '</span>'
+      );
+    }
   }
 
   /**
