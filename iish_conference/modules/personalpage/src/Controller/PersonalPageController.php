@@ -85,12 +85,6 @@ class PersonalPageController extends ControllerBase {
   public function uploadPaper($paper) {
     if ($this->redirectIfNotLoggedIn()) return array();
 
-    if (SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool')) {
-      drupal_set_message(iish_t('You are not allowed to change your uploaded paper.'), 'error');
-      $this->redirectToPersonalPage();
-      return array();
-    }
-
     if (empty($paper)) {
       drupal_set_message(iish_t('Unfortunately, this paper does not seem to exist.'), 'error');
       $this->redirectToPersonalPage();
