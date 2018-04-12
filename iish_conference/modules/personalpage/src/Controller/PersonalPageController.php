@@ -719,10 +719,8 @@ class PersonalPageController extends ControllerBase {
           'paper' => $paper->getId()
         )));
 
-      $editPaper = (!SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool') || (
-          ($paper->getState()->getId() === PaperStateApi::NEW_PAPER) &&
-          SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE, 'lastdate')
-        ));
+      $editPaper = (!SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool') ||
+        ($paper->getState()->getId() === PaperStateApi::PAPER_ACCEPTED));
 
       if (!$editPaper) {
         $renderArray[] = array(
