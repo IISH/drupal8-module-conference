@@ -103,10 +103,8 @@ class PersonalPageController extends ControllerBase {
       return array();
     }
 
-    $editPaper = (!SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool') || (
-        ($paper->getState()->getId() === PaperStateApi::NEW_PAPER) &&
-        SettingsApi::getSetting(SettingsApi::PREREGISTRATION_LASTDATE, 'lastdate')
-      ));
+    $editPaper = (!SettingsApi::getSetting(SettingsApi::REQUIRED_PAPER_UPLOAD, 'bool') ||
+        ($paper->getState()->getId() === PaperStateApi::PAPER_ACCEPTED));
 
     if (!$editPaper) {
       drupal_set_message(iish_t('You are not allowed to change your uploaded paper.'), 'error');
