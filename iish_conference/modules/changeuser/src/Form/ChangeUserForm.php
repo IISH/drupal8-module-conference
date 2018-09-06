@@ -49,7 +49,7 @@ class ChangeUserForm extends FormBase {
     $form['user_id'] = array(
       '#type' => 'textfield',
       '#title' => iish_t('User # or e-mail'),
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 100,
       '#required' => TRUE,
       '#prefix' => '<div class="iishconference_container_inline">',

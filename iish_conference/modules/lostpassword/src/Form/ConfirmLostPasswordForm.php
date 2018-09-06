@@ -59,7 +59,7 @@ class ConfirmLostPasswordForm extends FormBase {
       $form['id'] = array(
         '#type' => 'textfield',
         '#title' => iish_t('ID'),
-        '#size' => 20,
+        '#size' => 30,
         '#maxlength' => 50,
         '#required' => TRUE,
         '#prefix' => '<div class="container-inline bottommargin">',
@@ -70,7 +70,7 @@ class ConfirmLostPasswordForm extends FormBase {
       $form['code'] = array(
         '#type' => 'textfield',
         '#title' => iish_t('CODE'),
-        '#size' => 20,
+        '#size' => 30,
         '#maxlength' => 50,
         '#required' => TRUE,
         '#prefix' => '<div class="container-inline bottommargin">',

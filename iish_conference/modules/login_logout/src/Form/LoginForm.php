@@ -55,7 +55,7 @@ class LoginForm extends FormBase {
     $form['email'] = array(
       '#type' => 'textfield',
       '#title' => iish_t('E-mail'),
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 255,
       '#prefix' => '<div class="container-inline bottommargin">',
       '#suffix' => '</div>',
@@ -66,7 +66,7 @@ class LoginForm extends FormBase {
     $form['password'] = array(
       '#type' => 'password',
       '#title' => iish_t('Password'),
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 50,
       '#prefix' => '<div class="container-inline bottommargin">',
       '#suffix' => '</div>',

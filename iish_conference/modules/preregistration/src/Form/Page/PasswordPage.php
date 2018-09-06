@@ -49,7 +49,7 @@ class PasswordPage extends PreRegistrationPage {
     $form['login_with_password']['email'] = array(
       '#type' => 'textfield',
       '#title' => 'E-mail',
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 100,
       '#default_value' => $state->getEmail(),
       '#attributes' => array(
@@ -62,7 +62,7 @@ class PasswordPage extends PreRegistrationPage {
       '#type' => 'password',
       '#title' => 'Password',
       '#required' => TRUE,
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 50,
     );
 

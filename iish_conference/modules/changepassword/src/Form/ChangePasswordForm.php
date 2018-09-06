@@ -47,7 +47,7 @@ class ChangePasswordForm extends FormBase {
     $form['new_password'] = array(
       '#type' => 'password',
       '#title' => iish_t('New password'),
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
       '#prefix' => '<div class="iishconference_container_inline">',
@@ -57,7 +57,7 @@ class ChangePasswordForm extends FormBase {
     $form['confirm_password'] = array(
       '#type' => 'password',
       '#title' => iish_t('Confirm new password'),
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
       '#prefix' => '<div class="iishconference_container_inline">',

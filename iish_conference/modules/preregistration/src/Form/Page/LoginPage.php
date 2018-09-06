@@ -46,7 +46,7 @@ class LoginPage extends PreRegistrationPage {
       '#type' => 'textfield',
       '#title' => 'E-mail',
       '#required' => TRUE,
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 100,
     );
 

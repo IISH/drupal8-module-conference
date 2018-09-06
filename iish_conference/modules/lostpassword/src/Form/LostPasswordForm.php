@@ -42,7 +42,7 @@ class LostPasswordForm extends FormBase {
     $form['email'] = array(
       '#type' => 'textfield',
       '#title' => iish_t('E-mail'),
-      '#size' => 20,
+      '#size' => 30,
       '#maxlength' => 100,
       '#required' => TRUE,
       '#prefix' => '<div class="container-inline bottommargin">',
