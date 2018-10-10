@@ -62,6 +62,7 @@ class SettingsApi {
   const SHOW_NETWORK = 'show_network';
   const SHOW_NETWORK_CHAIRS = 'show_network_chairs';
   const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
+  const SHOW_OPT_IN = 'show_opt_in';
   const SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration';
   const SHOW_PAPER_KEYWORDS = 'show_paper_keywords';
   const SHOW_PAPER_TYPES= 'show_paper_types';

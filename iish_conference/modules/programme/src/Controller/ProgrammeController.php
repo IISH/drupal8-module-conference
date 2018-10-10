@@ -263,7 +263,7 @@ class ProgrammeController extends ControllerBase {
         $sessionIds[] = $session->getId();
         $participant->setFavoriteSessionsId($sessionIds);
 
-        $success = $participant->save(FALSE);
+        $success = $participant->save();
         $output['success'] = $success;
       }
     }
@@ -289,7 +289,7 @@ class ProgrammeController extends ControllerBase {
         $sessionIds = array_diff($sessionIds, array($session->getId()));
         $participant->setFavoriteSessionsId($sessionIds);
 
-        $success = $participant->save(FALSE);
+        $success = $participant->save();
         $output['success'] = $success;
       }
     }

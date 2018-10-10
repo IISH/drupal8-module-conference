@@ -1,0 +1,6 @@
+global-styling:
+  version: 1.x
+  js:
+    js/personalpage.js: {}
+  dependencies:
+    - core/jquery

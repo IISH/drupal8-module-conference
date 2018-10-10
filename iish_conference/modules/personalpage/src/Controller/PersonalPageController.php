@@ -34,6 +34,7 @@ use Drupal\iish_conference_personalpage\Form\DeletePaperForm;
 use Drupal\iish_conference_finalregistration\API\PayWayMessage;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * The controller for the personal page.
@@ -65,6 +66,7 @@ class PersonalPageController extends ControllerBase
 		$renderArray = array();
 		$this->setPersonalInfo($renderArray, $userDetails, $participantDateDetails);
 		$this->setRegistrationInfo($renderArray, $userDetails, $participantDateDetails);
+    $this->setOptInInfo($renderArray, $userDetails);
 		$this->setSessionsInfo($renderArray, $userDetails, $participantDateDetails);
 		$this->setPapersInfo($renderArray, $userDetails, $participantDateDetails);
 		$this->setChairDiscussantInfo($renderArray, $participantDateDetails);
@@ -74,6 +76,27 @@ class PersonalPageController extends ControllerBase
 
 		return $renderArray;
 	}
+
+  /**
+   * Toggles the opt-in of the logged-in user.
+   *
+   * @return JsonResponse The response in JSON
+   */
+  public function optIn()
+  {
+    $output = array('success' => false);
+
+    if (LoggedInUserDetails::isLoggedIn()) {
+      $user = LoggedInUserDetails::getUser();
+      $user->setOptIn(!$user->getOptIn());
+
+      $success = $user->save();
+      $output['success'] = $success;
+      $output['optin'] = $user->getOptIn();
+    }
+
+    return new JsonResponse($output);
+  }
 
 	/**
 	 * Allows users to upload their paper.
@@ -489,8 +512,39 @@ class PersonalPageController extends ControllerBase
 		);
 	}
 
-	/**
-	 * Creates the sessions containers for the personal page
+  /**
+   * Creates the opt-in functionality
+   *
+   * @param array $renderArray The render array
+   * @param UserApi $userDetails The user in question
+   */
+  private function setOptInInfo(array &$renderArray, $userDetails)
+  {
+    if (LoggedInUserDetails::isAParticipant() && SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN) == 1) {
+      $fields = [];
+      $fields[] = [
+        'header' => iish_t('Opt-in to continue receiving communications'),
+      ];
+
+      $checked = $userDetails->getOptIn() ? 'checked="checked"' : '';
+      $fields[] = array(
+        '#markup' => '<label><input type="checkbox" id="opt-in" name="opt-in" ' . $checked . ' /> '
+          . iish_t('I would like to continue receiving communications (including newsletters, updates and calls for papers) from the @conference.',
+            array('@conference' => CachedConferenceApi::getEventDate()->getEvent()->getShortName())) . '</label>',
+        '#allowed_tags' => array('label', 'input')
+      );
+
+      $renderArray[] = array(
+        '#theme' => 'iish_conference_container',
+        '#fields' => $fields
+      );
+
+      $renderArray[]['#attached']['library'][] = 'iish_conference_personalpage/global-styling';
+    }
+  }
+
+  /**
+   * Creates the sessions containers for the personal page
 	 *
 	 * @param array $renderArray The render array
 	 * @param UserApi $userDetails The user in question

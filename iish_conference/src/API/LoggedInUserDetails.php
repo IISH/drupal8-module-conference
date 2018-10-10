@@ -23,7 +23,12 @@ class LoggedInUserDetails {
    * @return bool Whether the user is currently logged in
    */
   public static function isLoggedIn() {
-    return is_int(self::getId());
+    $loggedIn = is_int(self::getId());
+    if (!$loggedIn) {
+      self::autoLogin();
+      $loggedIn = is_int(self::getId());
+    }
+    return $loggedIn;
   }
 
   /**
@@ -348,5 +353,20 @@ class LoggedInUserDetails {
     $userInfoApi = new UserInfoApi();
 
     return $userInfoApi->userInfo($userId);
+  }
+
+  /**
+   * Attempt an auto login
+   *
+   * @return int The user status of the currently logged in user
+   */
+  private static function autoLogin() {
+    if (isset($_GET['id']) && isset($_GET['ulogin'])) {
+      $autoLoginApi = new AutoLoginApi();
+
+      return $autoLoginApi->login($_GET['id'], $_GET['ulogin']);
+    }
+
+    return NULL;
   }
 }

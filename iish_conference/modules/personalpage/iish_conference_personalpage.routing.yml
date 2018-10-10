@@ -8,6 +8,15 @@ iish_conference_personalpage.index:
   options:
     no_cache: 'TRUE'
 
+iish_conference_personalpage.opt_in:
+  path: '/conference/user/personalpage/opt-in'
+  defaults:
+    _controller: '\Drupal\iish_conference_personalpage\Controller\PersonalPageController::optIn'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 iish_conference_personalpage.upload_paper:
   path: '/conference/user/personalpage/upload-paper/{paper}'
   defaults:

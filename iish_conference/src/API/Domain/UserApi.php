@@ -30,6 +30,7 @@ class UserApi extends CRUDApiClient {
   protected $extraInfo;
   protected $dietaryWishes;
   protected $otherDietaryWishes;
+  protected $optIn;
   protected $papers_id;
   protected $daysPresent_day_id;
   protected $addedBy_id;
@@ -667,5 +668,24 @@ class UserApi extends CRUDApiClient {
 
         $this->otherDietaryWishes = $otherDietaryWishes;
         $this->toSave['otherDietaryWishes'] = $otherDietaryWishes;
+    }
+
+    /**
+     * Did this user opt in for the newsletter?
+     *
+     * @return bool Whether this user opt in for the newsletter
+     */
+    public function getOptIn() {
+        return $this->optIn;
+    }
+
+    /**
+     * Sets whether this user has opt in for the newsletter
+     *
+     * @param bool $optIn Whethert this user opt in for the newsletter
+     */
+    public function setOptIn($optIn) {
+        $this->optIn = (bool) $optIn;
+        $this->toSave['optIn'] = $this->optIn;
     }
 }
