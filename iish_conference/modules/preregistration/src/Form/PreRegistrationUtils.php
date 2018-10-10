@@ -1,17 +1,18 @@
 <?php
 namespace Drupal\iish_conference_preregistration\Form;
 
+use Drupal\iish_conference\API\SettingsApi;
+use Drupal\iish_conference\API\CRUDApiMisc;
 use Drupal\iish_conference\API\ApiCriteriaBuilder;
 use Drupal\iish_conference\API\CachedConferenceApi;
-use Drupal\iish_conference\API\CRUDApiMisc;
+
+use Drupal\iish_conference\API\Domain\UserApi;
 use Drupal\iish_conference\API\Domain\PaperApi;
+use Drupal\iish_conference\API\Domain\SessionApi;
+use Drupal\iish_conference\API\Domain\PaperCoAuthorApi;
 use Drupal\iish_conference\API\Domain\ParticipantTypeApi;
 use Drupal\iish_conference\API\Domain\ParticipantVolunteeringApi;
-use Drupal\iish_conference\API\Domain\SessionApi;
-use Drupal\iish_conference\API\Domain\SessionParticipantApi;
-use Drupal\iish_conference\API\Domain\UserApi;
-use Drupal\iish_conference\API\SettingsApi;
-use Drupal\iish_conference\ConferenceMisc;
+use Drupal\iish_conference\API\Domain\CombinedSessionParticipantApi;
 
 /**
  * Contains utilities methods for the pre registration
@@ -143,13 +144,13 @@ class PreRegistrationUtils {
    *
    * @param PreRegistrationState $state The state of the pre registration
    *
-   * @return SessionParticipantApi[] All session participants added by the user
+   * @return CombinedSessionParticipantApi[] All session participants added by the user
    */
   public static function getSessionParticipantsAddedByUser($state) {
     $user = $state->getUser();
 
     return CRUDApiMisc::getAllWherePropertyEquals(
-      new SessionParticipantApi(), 'addedBy_id', $user->getId()
+      new CombinedSessionParticipantApi(), 'addedBy_id', $user->getId()
     )->getResults();
   }
 
@@ -159,13 +160,13 @@ class PreRegistrationUtils {
    * @param PreRegistrationState $state The state of the pre registration
    * @param SessionApi $session The session in question
    *
-   * @return SessionParticipantApi[] All session participants added by the user for the given session
+   * @return CombinedSessionParticipantApi[] All session participants added by the user for the given session
    */
   public static function getSessionParticipantsAddedByUserForSession($state, $session) {
     $user = $state->getUser();
 
     $props = new ApiCriteriaBuilder();
-    return SessionParticipantApi::getListWithCriteria(
+    return CombinedSessionParticipantApi::getListWithCriteria(
       $props
         ->eq('session_id', $session->getId())
         ->eq('addedBy_id', $user->getId())
@@ -180,14 +181,14 @@ class PreRegistrationUtils {
    * @param PreRegistrationState $state The state of the pre registration
    * @param ParticipantTypeApi $type The type with which the user is added to the sessions
    *
-   * @return SessionParticipantApi[] All session participant information for the user
+   * @return CombinedSessionParticipantApi[] All session participant information for the user
    * with which he/she added him/herself to sessions with the given type
    */
   public static function getSessionParticipantsOfUserWithType($state, $type) {
     $user = $state->getUser();
 
     $props = new ApiCriteriaBuilder();
-    return SessionParticipantApi::getListWithCriteria(
+    return CombinedSessionParticipantApi::getListWithCriteria(
       $props
         ->eq('type_id', $type->getId())
         ->eq('user_id', $user->getId())
@@ -203,13 +204,13 @@ class PreRegistrationUtils {
    * @param SessionApi $session The session in question
    * @param UserApi $user The user in question
    *
-   * @return SessionParticipantApi[] All session participants added by the user for the given session and user
+   * @return CombinedSessionParticipantApi[] All session participants added by the user for the given session and user
    */
   public static function getSessionParticipantsAddedByUserForSessionAndUser($state, $session, $user) {
     $preRegisterUser = $state->getUser();
 
     $props = new ApiCriteriaBuilder();
-    return SessionParticipantApi::getListWithCriteria(
+    return CombinedSessionParticipantApi::getListWithCriteria(
       $props
         ->eq('session_id', $session->getId())
         ->eq('user_id', $user->getId())
@@ -226,14 +227,14 @@ class PreRegistrationUtils {
    * @param int $sessionId The session id in question
    * @param int $typeId The type id in question
    *
-   * @return SessionParticipantApi The session participant information for the user
+   * @return CombinedSessionParticipantApi The session participant information for the user
    * with which he/she added him/herself to the given session with the given type
    */
   public static function getSessionParticipantsOfUserWithSessionAndType($state, $sessionId, $typeId) {
     $user = $state->getUser();
 
     $props = new ApiCriteriaBuilder();
-    return SessionParticipantApi::getListWithCriteria(
+    return CombinedSessionParticipantApi::getListWithCriteria(
       $props
         ->eq('session_id', $sessionId)
         ->eq('type_id', $typeId)
@@ -250,13 +251,13 @@ class PreRegistrationUtils {
    * @param SessionApi $session The session in question
    * @param UserApi $user The user in question
    *
-   * @return SessionParticipantApi[] All session participants for the given session and user
+   * @return CombinedSessionParticipantApi[] All session participants for the given session and user
    */
   public static function getSessionParticipantsNotAddedByUserForSessionAndUser($state, $session, $user) {
     $preRegisterUser = $state->getUser();
 
     $props = new ApiCriteriaBuilder();
-    $sessionParticipants = SessionParticipantApi::getListWithCriteria(
+    $sessionParticipants = CombinedSessionParticipantApi::getListWithCriteria(
       $props
         ->eq('session_id', $session->getId())
         ->eq('user_id', $user->getId())
@@ -295,5 +296,57 @@ class PreRegistrationUtils {
     )->getFirstResult();
 
     return ($paper !== NULL) ? $paper : new PaperApi();
+  }
+
+  /**
+   * Returns the paper co-author for a given session and co-author
+   *
+   * @param PreRegistrationState $state The state of the pre registration
+   * @param SessionApi $session The session in question
+   * @param UserApi $user The co-author in question
+   *
+   * @return PaperCoAuthorApi The paper co-author for a given session and
+   *   co-author
+   */
+  public static function getPaperCoAuthor($state, $session, $user) {
+    $preRegisterUser = $state->getUser();
+
+    $props = new ApiCriteriaBuilder();
+    $paperCoAuthors = PaperCoAuthorApi::getListWithCriteria(
+      $props
+        ->eq('user_id', $user->getId())
+        ->eq('addedBy_id', $preRegisterUser->getId())
+        ->get()
+    );
+
+    foreach ($paperCoAuthors->getResults() as $paperCoAuthor) {
+      if ($paperCoAuthor->getPaper()->getSessionId() == $session->getId()) {
+        return $paperCoAuthor;
+      }
+    }
+
+    return new PaperCoAuthorApi();
+  }
+
+  /**
+   * Returns all papers added to the given session not by the user themselves
+   *
+   * @param PreRegistrationState $state The state of the pre registration
+   * @param SessionApi $session The session in question
+   * @param UserApi $user The user in question
+   *
+   * @return PaperApi[] All papers added to the given session
+   */
+  public static function getPapersOfSession($state, $session, $user) {
+    $preRegisterUser = $state->getUser();
+
+    $props = new ApiCriteriaBuilder();
+    return PaperApi::getListWithCriteria(
+      $props
+        ->ne('user_id', $user->getId())
+        ->eq('session_id', $session->getId())
+        ->eq('addedBy_id', $preRegisterUser->getId())
+        ->get()
+    )->getResults();
   }
 } 

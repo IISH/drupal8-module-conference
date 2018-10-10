@@ -9,7 +9,7 @@ use Drupal\iish_conference\API\CachedConferenceApi;
 
 use Drupal\iish_conference\API\Domain\SessionApi;
 use Drupal\iish_conference\API\Domain\FeeStateApi;
-use Drupal\iish_conference\API\Domain\SessionParticipantApi;
+use Drupal\iish_conference\API\Domain\CombinedSessionParticipantApi;
 
 /**
  * Implements hook_theme()
@@ -33,7 +33,7 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
     $variables['user'] = LoggedInUserDetails::getUser();
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS_SESSION_PLANNED, 'bool')) {
-      $sessions = SessionParticipantApi::getAllSessions(LoggedInUserDetails::getUser()
+      $sessions = CombinedSessionParticipantApi::getAllSessions(LoggedInUserDetails::getUser()
         ->getSessionParticipantInfo());
       $variables['sessionDays'] = SessionApi::getAllPlannedDaysForSessions($sessions);
     }

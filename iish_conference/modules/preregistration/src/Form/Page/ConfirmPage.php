@@ -12,8 +12,8 @@ use Drupal\iish_conference\API\Domain\ExtraApi;
 use Drupal\iish_conference\API\Domain\VolunteeringApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
-use Drupal\iish_conference\API\Domain\SessionParticipantApi;
 use Drupal\iish_conference\API\Domain\ParticipantVolunteeringApi;
+use Drupal\iish_conference\API\Domain\CombinedSessionParticipantApi;
 
 use Drupal\iish_conference\ConferenceMisc;
 use Drupal\iish_conference\ConferenceTrait;
@@ -313,13 +313,13 @@ class ConfirmPage extends PreRegistrationPage {
 
     $sessionsContent = array();
     $sessionParticipants = PreRegistrationUtils::getSessionParticipantsAddedByUser($state);
-    $sessions = SessionParticipantApi::getAllSessions($sessionParticipants);
+    $sessions = CombinedSessionParticipantApi::getAllSessions($sessionParticipants);
 
     foreach ($sessions as $i => $session) {
       $networks = $session->getNetworks();
 
       $sessionParticipants = PreRegistrationUtils::getSessionParticipantsAddedByUserForSession($state, $session);
-      $users = SessionParticipantApi::getAllUsers($sessionParticipants);
+      $users = CombinedSessionParticipantApi::getAllUsers($sessionParticipants);
 
       // + + + + + + + + + + + + + + + + + + + + + + + +
 
@@ -358,7 +358,7 @@ class ConfirmPage extends PreRegistrationPage {
 
       foreach ($users as $user) {
         $participantInSession = $user->getParticipantDate();
-        $roles = SessionParticipantApi::getAllTypesOfUserForSession(
+        $roles = CombinedSessionParticipantApi::getAllTypesOfUserForSession(
           $sessionParticipants,
           $user->getId(),
           $session->getId()
@@ -429,7 +429,7 @@ class ConfirmPage extends PreRegistrationPage {
 
     foreach ($participantTypes as $participantType) {
       $sessionParticipants = PreRegistrationUtils::getSessionParticipantsOfUserWithType($state, $participantType);
-      $sessions = SessionParticipantApi::getAllSessions($sessionParticipants);
+      $sessions = CombinedSessionParticipantApi::getAllSessions($sessionParticipants);
 
       if (count($sessionParticipants) > 0) {
         $sessionParticipantTypeContent = array(
@@ -557,8 +557,8 @@ class ConfirmPage extends PreRegistrationPage {
 
     // Also set the state of all session participants we added to 0
     $sessionParticipants =
-      CRUDApiMisc::getAllWherePropertyEquals(new SessionParticipantApi(), 'addedBy_id', $user->getId())->getResults();
-    $users = SessionParticipantApi::getAllUsers($sessionParticipants);
+      CRUDApiMisc::getAllWherePropertyEquals(new CombinedSessionParticipantApi(), 'addedBy_id', $user->getId())->getResults();
+    $users = CombinedSessionParticipantApi::getAllUsers($sessionParticipants);
     foreach ($users as $addedUser) {
       $participant =
         CRUDApiMisc::getFirstWherePropertyEquals(new ParticipantDateApi(), 'user_id', $addedUser->getId());

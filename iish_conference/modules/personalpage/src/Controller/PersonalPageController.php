@@ -2,8 +2,6 @@
 
 namespace Drupal\iish_conference_personalpage\Controller;
 
-use Drupal\Core\Form\EnforcedResponseException;
-use Drupal\Core\Form\FormAjaxException;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Form\FormState;
@@ -24,9 +22,9 @@ use Drupal\iish_conference\API\Domain\PaperReviewApi;
 use Drupal\iish_conference\API\Domain\VolunteeringApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
-use Drupal\iish_conference\API\Domain\SessionParticipantApi;
 use Drupal\iish_conference\API\Domain\SessionRoomDateTimeApi;
 use Drupal\iish_conference\API\Domain\ParticipantVolunteeringApi;
+use Drupal\iish_conference\API\Domain\CombinedSessionParticipantApi;
 
 use Drupal\iish_conference\ConferenceMisc;
 use Drupal\iish_conference\ConferenceTrait;
@@ -35,7 +33,6 @@ use Drupal\iish_conference\Markup\ConferenceHTML;
 use Drupal\iish_conference_personalpage\Form\DeletePaperForm;
 use Drupal\iish_conference_finalregistration\API\PayWayMessage;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -503,7 +500,7 @@ class PersonalPageController extends ControllerBase
 	{
 		if (LoggedInUserDetails::isAParticipant()) {
 			$papers = $userDetails->getPapers();
-			$sessions = SessionParticipantApi::getAllSessions($userDetails->getSessionParticipantInfo());
+			$sessions = CombinedSessionParticipantApi::getAllSessions($userDetails->getCombinedSessionParticipantInfo());
 
 			foreach ($sessions as $i => $session) {
 				$sessionPapers = PaperApi::getPapersWithSession($papers, $session->getId());
@@ -596,8 +593,8 @@ class PersonalPageController extends ControllerBase
 			'value' => $submittedBy
 		);
 
-		$functionsInSession = SessionParticipantApi::getAllTypesOfUserForSession(
-			$userDetails->getSessionParticipantInfo(),
+		$functionsInSession = CombinedSessionParticipantApi::getAllTypesOfUserForSession(
+			$userDetails->getCombinedSessionParticipantInfo(),
 			$userDetails->getId(),
 			$session->getId()
 		);

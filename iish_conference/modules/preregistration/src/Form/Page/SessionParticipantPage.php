@@ -15,6 +15,7 @@ use Drupal\iish_conference\API\Domain\CountryApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantTypeApi;
 use Drupal\iish_conference\API\Domain\SessionParticipantApi;
+use Drupal\iish_conference\API\Domain\CombinedSessionParticipantApi;
 
 use Drupal\iish_conference_preregistration\Form\PreRegistrationState;
 use Drupal\iish_conference_preregistration\Form\PreRegistrationUtils;
@@ -58,12 +59,14 @@ class SessionParticipantPage extends PreRegistrationPage {
     $participant = ($participant === NULL) ? new ParticipantDateApi() : $participant;
 
     $paper = PreRegistrationUtils::getPaperForSessionAndUser($state, $session, $user);
+    $paperCoAuthor = PreRegistrationUtils::getPaperCoAuthor($state, $session, $user);
 
     $state->setFormData(array(
       'session' => $session,
       'user' => $user,
       'participant' => $participant,
       'paper' => $paper,
+      'paper_co_author' => $paperCoAuthor,
       'session_participants' => $sessionParticipants
     ));
 
@@ -181,7 +184,7 @@ class SessionParticipantPage extends PreRegistrationPage {
 
     $description = ParticipantTypeApi::getCombinationsNotAllowedText();
     if (strlen(trim($description)) > 0) {
-      $description = '<br />' . new ConferenceHTML($description);
+      $description = new ConferenceHTML($description);
     }
     else {
       $description = '';
@@ -230,6 +233,26 @@ class SessionParticipantPage extends PreRegistrationPage {
       '#description' => '<em>' . iish_t('(max. 500 words)') . '</em>',
       '#rows' => 3,
       '#default_value' => $paper->getAbstr(),
+    );
+
+    // + + + + + + + + + + + + + + + + + + + + + + + +
+    // PARTICIPANT PAPER CO-AUTHOR
+
+    $form['participant_paper_coauthor'] = array(
+      '#type'   => 'fieldset',
+      '#title'  => iish_t('Select paper of co-author'),
+      '#states' => array('visible' => array(
+        ':input[name="addparticipanttype[' . ParticipantTypeApi::CO_AUTHOR_ID . ']"]' => array('checked' => TRUE))
+      ),
+    );
+
+    $form['participant_paper_coauthor']['addpapercoauthor'] = array(
+      '#type'          => 'select',
+      '#title'         => iish_t('Paper'),
+      '#description'   => iish_t('First add the authors and their papers to the session. Then add the co-authors to the session.'),
+      '#options'       => CRUDApiClient::getAsKeyValueArray(PreRegistrationUtils::getPapersOfSession($state, $session, $user)),
+      '#empty_option'  => '- ' . iish_t('Select a paper') . ' -',
+      '#default_value' => $paperCoAuthor->getPaperId(),
     );
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
@@ -282,6 +305,12 @@ class SessionParticipantPage extends PreRegistrationPage {
       }
     }
 
+    if (array_search(ParticipantTypeApi::CO_AUTHOR_ID, $form_state->getValue('addparticipanttype')) !== false) {
+      if (strlen(trim($form_state->getValue('addpapercoauthor'))) === 0) {
+        $form_state->setErrorByName('addpapercoauthor', iish_t('A paper is required for the co-author.'));
+      }
+    }
+
     if (PreRegistrationUtils::useSessions()) {
       $email = strtolower(trim($form_state->getValue('addparticipantemail')));
       $foundUser = CRUDApiMisc::getFirstWherePropertyEquals(new UserApi(), 'email', $email);
@@ -316,7 +345,8 @@ class SessionParticipantPage extends PreRegistrationPage {
     $user = $data['user'];
     $participant = $data['participant'];
     $paper = $data['paper'];
-    $allToDelete = $data['session_participants'];
+    $paperCoAuthor = $data['paper_co_author'];
+    $allToDelete = CombinedSessionParticipantApi::getAllSessionParticipants($data['session_participants']);
 
     // First check if the user with the given email does not exists already
     $email = strtolower(trim($form_state->getValue('addparticipantemail')));
@@ -391,6 +421,17 @@ class SessionParticipantPage extends PreRegistrationPage {
       $paper->delete();
     }
 
+    // Then save the paper co-author
+    if (array_search(ParticipantTypeApi::CO_AUTHOR_ID, $form_state->getValue('addparticipanttype')) !== false) {
+      $paperCoAuthor->setUser($user);
+      $paperCoAuthor->setPaper($form_state->getValue('addpapercoauthor'));
+      $paperCoAuthor->setAddedBy($preRegisterUser);
+      $paperCoAuthor->save();
+    }
+    else {
+      $paperCoAuthor->delete();
+    }
+
     // Last the types
     foreach ($form_state->getValue('addparticipanttype') as $typeId => $type) {
       if ($typeId == $type) {
@@ -403,7 +444,7 @@ class SessionParticipantPage extends PreRegistrationPage {
           }
         }
 
-        if (!$foundInstance) {
+        if (!$foundInstance && ($typeId !== ParticipantTypeApi::CO_AUTHOR_ID)) {
           $sessionParticipant = new SessionParticipantApi();
           $sessionParticipant->setSession($session);
           $sessionParticipant->setUser($user);
@@ -455,7 +496,7 @@ class SessionParticipantPage extends PreRegistrationPage {
     $data = $state->getFormData();
 
     $session = $data['session'];
-    $sessionParticipants = $data['session_participants'];
+    $sessionParticipants = CombinedSessionParticipantApi::getAllSessionParticipants($data['session_participants']);
 
     foreach ($sessionParticipants as $sessionParticipant) {
       $sessionParticipant->delete();

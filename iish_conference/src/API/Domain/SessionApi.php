@@ -321,12 +321,12 @@ class SessionApi extends CRUDApiClient {
   /**
    * Returns session participants information of this session
    *
-   * @return SessionParticipantApi[] The session participant information
+   * @return CombinedSessionParticipantApi[] The session participant information
    */
   public function getSessionParticipantInfo() {
     if (!$this->sessionParticipants) {
       $this->sessionParticipants =
-        CRUDApiMisc::getAllWherePropertyEquals(new SessionParticipantApi(), 'session_id', $this->getId())
+        CRUDApiMisc::getAllWherePropertyEquals(new CombinedSessionParticipantApi(), 'session_id', $this->getId())
           ->getResults();
     }
 

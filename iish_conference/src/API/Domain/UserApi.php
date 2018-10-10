@@ -403,14 +403,14 @@ class UserApi extends CRUDApiClient {
   }
 
   /**
-   * Returns session participants information of this user
+   * Returns combined session participants information of this user
    *
-   * @return SessionParticipantApi[] The session participant information
+   * @return CombinedSessionParticipantApi[] The session participant information
    */
-  public function getSessionParticipantInfo() {
+  public function getCombinedSessionParticipantInfo() {
     if (!$this->sessionParticipants) {
       $this->sessionParticipants =
-        CRUDApiMisc::getAllWherePropertyEquals(new SessionParticipantApi(), 'user_id', $this->getId())
+        CRUDApiMisc::getAllWherePropertyEquals(new CombinedSessionParticipantApi(), 'user_id', $this->getId())
           ->getResults();
     }
 
