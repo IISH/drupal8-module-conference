@@ -6,6 +6,7 @@ use Drupal\iish_conference\API\Domain\CountryApi;
 use Drupal\iish_conference\API\Domain\DayApi;
 use Drupal\iish_conference\API\Domain\EquipmentApi;
 use Drupal\iish_conference\API\Domain\ExtraApi;
+use Drupal\iish_conference\API\Domain\KeywordApi;
 use Drupal\iish_conference\API\Domain\NetworkApi;
 use Drupal\iish_conference\API\Domain\PaperStateApi;
 use Drupal\iish_conference\API\Domain\PaperTypeApi;
@@ -30,6 +31,7 @@ class CachedConferenceApi {
   private static $nameCountriesCache = 'iishconference_countries';
   private static $nameAgeRangesCache = 'iishconference_age_ranges';
   private static $nameDaysCache = 'iishconference_days';
+  private static $nameKeywordsCache = 'iishconference_keywords';
   private static $nameSessionDateTimesCache = 'iishconference_session_date_times';
   private static $nameParticipantTypesCache = 'iishconference_participant_types';
   private static $nameParticipantStatesCache = 'iishconference_participant_states';
@@ -57,6 +59,7 @@ class CachedConferenceApi {
       self::setCountries();
       self::setAgeRanges();
       self::setDays();
+      self::setKeywords();
       self::setSessionDateTimes();
       self::setParticipantTypes();
       self::setParticipantStates();
@@ -152,6 +155,15 @@ class CachedConferenceApi {
    */
   public static function setDays() {
     return self::set(self::$nameDaysCache, DayApi::class);
+  }
+
+  /**
+   * Cache the keywords.
+   *
+   * @return KeywordApi[]
+   */
+  public static function setKeywords() {
+    return self::set(self::$nameKeywordsCache, KeywordApi::class);
   }
 
   /**
@@ -390,6 +402,15 @@ class CachedConferenceApi {
    */
   public static function getDays() {
     return self::get(self::$nameDaysCache, DayApi::class);
+  }
+
+  /**
+   * Get the cached keywords.
+   *
+   * @return KeywordApi[]
+   */
+  public static function getKeywords() {
+    return self::get(self::$nameKeywordsCache, KeywordApi::class);
   }
 
   /**

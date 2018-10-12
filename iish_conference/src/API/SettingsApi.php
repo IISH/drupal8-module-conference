@@ -26,6 +26,8 @@ class SettingsApi {
   const NETWORK_NAME_PLURAL = 'network_name_plural';
   const NETWORK_NAME_SINGULAR = 'network_name_singular';
   const NUM_CANDIDATE_VOTES_ADVISORY_BOARD = 'num_candidate_votes_advisory_board';
+  const NUM_PAPER_KEYWORDS_FREE = 'num_paper_keywords_free';
+  const NUM_PAPER_KEYWORDS_FROM_LIST = 'num_paper_keywords_from_list';
   const ONLINE_PROGRAM_HEADER = 'online_program_header';
   const ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction';
   const ON_SITE_PAYMENT_INFO = 'on_site_payment_info';
@@ -64,7 +66,6 @@ class SettingsApi {
   const SHOW_NETWORK_PARTICIPANT_STATE = 'show_network_participant_state';
   const SHOW_OPT_IN = 'show_opt_in';
   const SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration';
-  const SHOW_PAPER_KEYWORDS = 'show_paper_keywords';
   const SHOW_PAPER_TYPES= 'show_paper_types';
   const SHOW_OPTIONAL_PAPER_TYPE = 'show_optional_paper_type';
   const SHOW_PROGRAMME_ONLINE = 'show_programme_online';

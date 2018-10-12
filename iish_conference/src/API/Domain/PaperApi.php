@@ -18,7 +18,6 @@ class PaperApi extends CRUDApiClient {
   protected $abstr;
   protected $type_id;
   protected $differentType;
-  protected $keywords;
   protected $networkProposal_id;
   protected $sessionProposal;
   protected $proposalDescription;
@@ -26,6 +25,7 @@ class PaperApi extends CRUDApiClient {
   protected $contentType;
   protected $fileSize;
   protected $equipmentComment;
+  protected $keywords;
   protected $equipment_id;
   protected $addedBy_id;
 
@@ -293,22 +293,20 @@ class PaperApi extends CRUDApiClient {
   /**
    * Get the keywords for this paper.
    *
-   * @return string|null The keywords for this paper
+   * @return string[] The keywords for this paper
    */
   public function getKeywords() {
-    return $this->keywords;
+    return is_array($this->keywords) ? array_values($this->keywords) : array();
   }
 
   /**
    * Set the keywords for this paper.
    *
-   * @param string|null $keywords The keywords for this paper
+   * @param string[] $keywords The keywords for this paper
    */
   public function setKeywords($keywords) {
-    $keywords = (($keywords !== NULL) && strlen(trim($keywords)) > 0) ? trim($keywords) : NULL;
-
     $this->keywords = $keywords;
-    $this->toSave['keywords'] = $keywords;
+    $this->toSave['keywords'] = json_encode($this->keywords);
   }
 
   /**

@@ -294,6 +294,14 @@ class ConfirmPage extends PreRegistrationPage {
         );
       }
 
+      if (intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST)) > 0
+        || intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE)) > 0) {
+        $paperContent[] = array(
+          'label' => 'Keywords',
+          'value' => implode(', ', $paper->getKeywords())
+        );
+      }
+
       if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT, 'bool')) {
         $paperContent[] = array(
           'label' => 'Audio/visual equipment',
