@@ -239,6 +239,7 @@ class PaperPage extends PreRegistrationPage {
 
       if ($numKeywordsFromList > 0) {
         $options = CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getKeywords());
+        asort($options);
         $defaultValues = array();
         foreach ($options as $id => $keyword) {
           if (array_search($keyword, $keywordsFromList) !== false) {
@@ -277,8 +278,8 @@ class PaperPage extends PreRegistrationPage {
         );
 
         $title = ($numKeywordsFree === 1)
-          ? iish_t('Free-form keyword')
-          : iish_t('Free-form keywords');
+          ? iish_t('Enter other keyword')
+          : iish_t('Enter other keywords (single keyword per line)');
         $description = ($numKeywordsFree > 1)
           ? iish_t('Please leave this field empty if you have no keywords.')
           : null;
