@@ -7,6 +7,10 @@ use Drupal\Core\Form\FormStateInterface;
 
 use Drupal\file\Entity\File;
 use Drupal\iish_conference\API\AccessTokenApi;
+use Drupal\iish_conference\API\ApiCriteriaBuilder;
+use Drupal\iish_conference\API\CRUDApiMisc;
+use Drupal\iish_conference\API\Domain\KeywordApi;
+use Drupal\iish_conference\API\Domain\PaperKeywordApi;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\CachedConferenceApi;
@@ -214,140 +218,152 @@ class PaperPage extends PreRegistrationPage {
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // KEYWORDS
 
-    if (intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST)) > 0
-      || intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE)) > 0) {
-      $form['keywords'] = array(
-        '#type'  => 'fieldset',
-        '#title' => iish_t('Keywords'),
-      );
+    $numKeywordsFromListMap = SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST, 'map');
+    $numKeywordsFreeMap = SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE, 'map');
 
-      $numKeywordsFromList = intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST));
-      $numKeywordsFree = intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE));
+    foreach (KeywordApi::getGroups() as $group) {
+      if (intval($numKeywordsFromListMap[$group]) > 0 || intval($numKeywordsFreeMap[$group]) > 0) {
+        $form['keywords_' . $group] = [
+          '#type' => 'fieldset',
+          '#title' => iish_t(ConferenceMisc::replaceKeyword('Keywords', $group)),
+        ];
 
-      $allKeywords = $paper->getKeywords();
-      $allPredefinedKeywords = CRUDApiClient::getForMethod(CachedConferenceApi::getKeywords(), 'getKeyword');
-      $keywordsFromList = array();
-      $keywordsFree = array();
-      foreach ($allKeywords as $keyword) {
-        if (array_search($keyword, $allPredefinedKeywords) !== false) {
-          $keywordsFromList[] = $keyword;
-        }
-        else {
-          $keywordsFree[] = $keyword;
-        }
-      }
+        $numKeywordsFromList = intval($numKeywordsFromListMap[$group]);
+        $numKeywordsFree = intval($numKeywordsFreeMap[$group]);
 
-      if ($numKeywordsFromList > 0) {
-        $options = CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getKeywords());
-        asort($options);
-        $defaultValues = array();
-        foreach ($options as $id => $keyword) {
-          if (array_search($keyword, $keywordsFromList) !== false) {
-            $defaultValues[] = $id;
+        $allKeywords = PaperKeywordApi::getKeywordsForPaperInGroup($paper, $group);
+        $allPredefinedKeywords = array();
+        foreach (CachedConferenceApi::getKeywords() as $keyword) {
+          if ($keyword->getGroupName() == $group) {
+            $allPredefinedKeywords[] = $keyword;
           }
         }
 
-        $title = ($numKeywordsFromList === 1)
-          ? iish_t('Predefined keyword')
-          : iish_t('Predefined keywords');
-
-        $form['keywords']['list'] = array(
-          '#type' => 'select',
-          '#title' => $title,
-          '#multiple' => $numKeywordsFromList > 1,
-          '#size' => 4,
-          '#options' => $options,
-          '#default_value' => $defaultValues,
-          '#attributes' => array('class' => array('iishconference_new_line')),
-          '#description' =>  ($numKeywordsFromList > 1) ? iish_t('Select up to @numKeywords keywords', array(
-            '@numKeywords' => $numKeywordsFromList
-          )) : null,
-        );
-      }
-
-      if ($numKeywordsFree > 0) {
-        // Always show add least one text field for users to enter a keyword
-        if ($form_state->get('num_free_keywords') === NULL) {
-          $form_state->set('num_free_keywords', max(1, count($keywordsFree)));
-        }
-
-        $form['keywords']['free_keywords'] = array(
-          '#type'   => 'container',
-          '#prefix' => '<div id="free-keywords-wrapper">',
-          '#suffix' => '</div>',
-        );
-
-        $title = ($numKeywordsFree === 1)
-          ? iish_t('Enter other keyword')
-          : iish_t('Enter other keywords (single keyword per line)');
-        $description = ($numKeywordsFree > 1)
-          ? iish_t('Please leave this field empty if you have no keywords.')
-          : null;
-        $form['keywords']['free_keywords']['free_keyword']['#tree'] = TRUE;
-
-        // Display all keywords previously stored, unless the user deliberately removed some
-        foreach ($keywordsFree as $i => $keyword) {
-          if ($i <= ($form_state->get('num_free_keywords') - 1)) {
-            $form['keywords']['free_keywords']['free_keyword'][$i] = array(
-              '#type'          => 'textfield',
-              '#size'          => 40,
-              '#maxlength'     => 100,
-              '#default_value' => $keyword,
-              '#title'         => ($i === 0) ? $title : null,
-              '#description'   => ($i === ($form_state->get('num_free_keywords') - 1)) ? $description : null,
-              '#attributes'    => array('class' => array('iishconference_new_line')),
-            );
+        $allPredefinedKeywordsPlain =
+          CRUDApiClient::getForMethod($allPredefinedKeywords, 'getKeyword');
+        $keywordsFromList = [];
+        $keywordsFree = [];
+        foreach ($allKeywords->getResults() as $keyword) {
+          if (array_search($keyword->getKeyword(), $allPredefinedKeywordsPlain) !== FALSE) {
+            $keywordsFromList[] = $keyword->getKeyword();
+          }
+          else {
+            $keywordsFree[] = $keyword->getKeyword();
           }
         }
 
-        // Now display all additional empty text fields to enter keywords, as many as requested by the user
-        for ($i = count($keywordsFree); $i < $form_state->get('num_free_keywords'); $i++) {
-          $form['keywords']['free_keywords']['free_keyword'][$i] = array(
-            '#type'        => 'textfield',
-            '#size'        => 40,
-            '#maxlength'   => 100,
-            '#title'       => ($i === 0) ? $title : null,
-            '#description' => ($i === ($form_state->get('num_free_keywords') - 1)) ? $description : null,
-            '#attributes'  => array('class' => array('iishconference_new_line')),
-          );
+        if ($numKeywordsFromList > 0) {
+          $options = CRUDApiClient::getAsKeyValueArray($allPredefinedKeywords);
+          asort($options);
+          $defaultValues = [];
+          foreach ($options as $id => $keyword) {
+            if (array_search($keyword, $keywordsFromList) !== FALSE) {
+              $defaultValues[] = $id;
+            }
+          }
+
+          $title = ($numKeywordsFromList === 1)
+            ? iish_t(ConferenceMisc::replaceKeyword('Predefined keyword ', $group))
+            : iish_t(ConferenceMisc::replaceKeyword('Predefined keywords ', $group));
+
+          $form['keywords_' . $group]['list_' . $group] = [
+            '#type' => 'select',
+            '#title' => $title,
+            '#multiple' => $numKeywordsFromList > 1,
+            '#size' => 4,
+            '#options' => $options,
+            '#default_value' => $defaultValues,
+            '#attributes' => ['class' => ['iishconference_new_line']],
+            '#description' => ($numKeywordsFromList > 1) ? iish_t(ConferenceMisc::replaceKeyword('Select up to @num keywords', $group), [
+              '@num' => $numKeywordsFromList
+            ]) : NULL,
+          ];
         }
 
-        // Only allow a maximum number of free keywords
-        if ($form_state->get('num_free_keywords') < $numKeywordsFree) {
-          $form['keywords']['free_keywords']['add_keyword'] = array(
-            '#type'                    => 'submit',
-            '#name'                    => 'add_keyword',
-            '#value'                   => iish_t('Add one more keyword'),
-            '#submit'                  => array(get_class() . '::addKeyword'),
-            '#limit_validation_errors' => array(),
-            '#ajax'                    => array(
-              'callback' => get_class() . '::callback',
-              'wrapper'  => 'free-keywords-wrapper',
-              'progress' => array(
-                'type'    => 'throbber',
-                'message' => iish_t('Please wait...'),
-              ),
-            ),
-          );
-        }
+        if ($numKeywordsFree > 0) {
+          // Always show add least one text field for users to enter a keyword
+          if ($form_state->get('num_free_keywords_' . $group) === NULL) {
+            $form_state->set('num_free_keywords_' . $group, max(1, count($keywordsFree)));
+          }
 
-        // Always display add least one text field to enter keywords
-        if ($form_state->get('num_free_keywords') > 1) {
-          $form['keywords']['free_keywords']['remove_keyword'] = array(
-            '#type'                    => 'submit',
-            '#name'                    => 'remove_keyword',
-            '#value'                   => iish_t('Remove the last keyword'),
-            '#submit'                  => array(get_class() . '::removeKeyword'),
-            '#limit_validation_errors' => array(),
-            '#ajax'                    => array(
-              'callback' => get_class() . '::callback',
-              'wrapper'  => 'free-keywords-wrapper',
-              'progress' => array(
-                'type'    => 'throbber',
-                'message' => iish_t('Please wait...'),
-              ),
-            ),
-          );
+          $form['keywords_' . $group]['free_keywords_' . $group] = [
+            '#type' => 'container',
+            '#prefix' => '<div id="free-keywords-wrapper-' . $group . '">',
+            '#suffix' => '</div>',
+          ];
+
+          $title = ($numKeywordsFree === 1)
+            ? iish_t(ConferenceMisc::replaceKeyword('Enter other keyword', $group))
+            : iish_t(ConferenceMisc::replaceKeyword('Enter other keywords (single keyword per line)', $group));
+          $description = ($numKeywordsFree > 1)
+            ? iish_t(ConferenceMisc::replaceKeyword('Please leave this field empty if you have no keywords.', $group))
+            : NULL;
+          $form['keywords_' . $group]['free_keywords_' . $group]['free_keyword_' . $group]['#tree'] = TRUE;
+
+          // Display all keywords previously stored, unless the user deliberately removed some
+          foreach ($keywordsFree as $i => $keyword) {
+            if ($i <= ($form_state->get('num_free_keywords_' . $group) - 1)) {
+              $form['keywords_' . $group]['free_keywords_' . $group]['free_keyword_'  . $group][$i] = [
+                '#type' => 'textfield',
+                '#size' => 40,
+                '#maxlength' => 100,
+                '#default_value' => $keyword,
+                '#title' => ($i === 0) ? $title : NULL,
+                '#description' => ($i === ($form_state->get('num_free_keywords_' . $group) - 1)) ? $description : NULL,
+                '#attributes' => ['class' => ['iishconference_new_line']],
+              ];
+            }
+          }
+
+          // Now display all additional empty text fields to enter keywords, as many as requested by the user
+          for ($i = count($keywordsFree); $i < $form_state->get('num_free_keywords_' . $group); $i++) {
+            $form['keywords_' . $group]['free_keywords_' . $group]['free_keyword_' . $group][$i] = [
+              '#type' => 'textfield',
+              '#size' => 40,
+              '#maxlength' => 100,
+              '#title' => ($i === 0) ? $title : NULL,
+              '#description' => ($i === ($form_state->get('num_free_keywords_' . $group) - 1)) ? $description : NULL,
+              '#attributes' => ['class' => ['iishconference_new_line']],
+            ];
+          }
+
+          // Only allow a maximum number of free keywords
+          if ($form_state->get('num_free_keywords_' . $group) < $numKeywordsFree) {
+            $form['keywords_' . $group]['free_keywords_' . $group]['add_keyword_' . $group] = [
+              '#type' => 'submit',
+              '#name' => 'add_keyword_' . $group,
+              '#value' => iish_t(ConferenceMisc::replaceKeyword('Add one more keyword', $group)),
+              '#submit' => [get_class() . '::addKeyword'],
+              '#limit_validation_errors' => [],
+              '#ajax' => [
+                'callback' => get_class() . '::callback',
+                'wrapper' => 'free-keywords-wrapper-' . $group,
+                'progress' => [
+                  'type' => 'throbber',
+                  'message' => iish_t('Please wait...'),
+                ],
+              ],
+            ];
+          }
+
+          // Always display add least one text field to enter keywords
+          if ($form_state->get('num_free_keywords_' . $group) > 1) {
+            $form['keywords_' . $group]['free_keywords_' . $group]['remove_keyword_' . $group] = [
+              '#type' => 'submit',
+              '#name' => 'remove_keyword_' . $group,
+              '#value' => iish_t(ConferenceMisc::replaceKeyword('Remove the last keyword', $group)),
+              '#submit' => [get_class() . '::removeKeyword'],
+              '#limit_validation_errors' => [],
+              '#ajax' => [
+                'callback' => get_class() . '::callback',
+                'wrapper' => 'free-keywords-wrapper-' . $group,
+                'progress' => [
+                  'type' => 'throbber',
+                  'message' => iish_t('Please wait...'),
+                ],
+              ],
+            ];
+          }
         }
       }
     }
@@ -415,12 +431,15 @@ class PaperPage extends PreRegistrationPage {
       }
     }
 
-    $maxKeywords = intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST));
-    if (($maxKeywords > 0) && (sizeof($form_state->getValue('list')) > $maxKeywords)) {
-      $form_state->setErrorByName('list',
-        iish_t('You can only select up to @maxSize keywords from the list!', array(
-          '@maxSize' => $maxKeywords
-        )));
+    $numKeywordsFromListMap = SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST, 'map');
+    foreach (KeywordApi::getGroups() as $group) {
+      $maxKeywords = intval($numKeywordsFromListMap[$group]);
+      if (($maxKeywords > 0) && (sizeof($form_state->getValue('list_' . $group)) > $maxKeywords)) {
+        $form_state->setErrorByName('list_' . $group,
+          iish_t(ConferenceMisc::replaceKeyword('You can only select up to @maxSize keywords from the list!', $group), [
+            '@maxSize' => $maxKeywords
+          ]));
+      }
     }
   }
 
@@ -467,25 +486,34 @@ class PaperPage extends PreRegistrationPage {
     }
 
     // Save keyword(s) into the database
-    $keywords = array();
-    if (intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE)) > 0) {
-      foreach ($form_state->getValue('free_keyword') as $keyword) {
-        $keyword = trim($keyword);
-        if (strlen($keyword) > 0) {
-          $keywords[] = $keyword;
-        }
-      }
+    $numKeywordsFromListMap = SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST, 'map');
+    $numKeywordsFreeMap = SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE, 'map');
 
-      // Reset the number of additional keywords in form state
-      $form_state->set('num_free_keywords', NULL);
-    }
-    if (intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST)) > 0) {
-      foreach (CachedConferenceApi::getKeywords() as $keyword) {
-        if (is_array($form_state->getValue('list')) && array_search($keyword->getId(), $form_state->getValue('list')) !== false) {
-          $keywords[] = $keyword->getKeyword();
+    $keywords = array();
+    foreach (KeywordApi::getGroups() as $group) {
+      if (intval($numKeywordsFreeMap[$group]) > 0) {
+        foreach ($form_state->getValue('free_keyword_' . $group) as $keyword) {
+          $keyword = trim($keyword);
+          if (strlen($keyword) > 0) {
+            $keywords[] = array($group, $keyword);
+          }
         }
-        else if (!is_array($form_state->getValue('list')) && ($keyword->getId() == $form_state->getValue('list'))) {
-          $keywords[] = $keyword->getKeyword();
+
+        // Reset the number of additional keywords in form state
+        $form_state->set('num_free_keywords_' . $group, NULL);
+      }
+      if (intval($numKeywordsFromListMap[$group]) > 0) {
+        foreach (CachedConferenceApi::getKeywords() as $keyword) {
+          if ($keyword->getGroupName() === $group) {
+            if (is_array($form_state->getValue('list_' . $group)) && array_search($keyword->getId(), $form_state->getValue('list_' . $group)) !== FALSE) {
+              $keywords[] = array($group, $keyword->getKeyword());
+            }
+            else {
+              if (!is_array($form_state->getValue('list_' . $group)) && ($keyword->getId() == $form_state->getValue('list_' . $group))) {
+                $keywords[] = array($group, $keyword->getKeyword());
+              }
+            }
+          }
         }
       }
     }
@@ -606,6 +634,11 @@ class PaperPage extends PreRegistrationPage {
     $state->setMultiPageData(array());
 
     $this->nextPageName = PreRegistrationPage::TYPE_OF_REGISTRATION;
+
+    // Reset the number of additional keywords in form state
+    foreach (KeywordApi::getGroups() as $group) {
+      $form_state->set('num_free_keywords_' . $group, NULL);
+    }
   }
 
   /**
@@ -635,6 +668,11 @@ class PaperPage extends PreRegistrationPage {
     $state->setMultiPageData(array());
 
     $this->nextPageName = PreRegistrationPage::TYPE_OF_REGISTRATION;
+
+    // Reset the number of additional keywords in form state
+    foreach (KeywordApi::getGroups() as $group) {
+      $form_state->set('num_free_keywords_' . $group, NULL);
+    }
   }
 
   /**
@@ -646,8 +684,11 @@ class PaperPage extends PreRegistrationPage {
    *   The current state of the form.
    */
   public static function addKeyword(array $form, FormStateInterface $form_state) {
-    if ($form_state->get('num_free_keywords') < intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE))) {
-      $form_state->set('num_free_keywords', $form_state->get('num_free_keywords') + 1);
+    $group = str_replace('add_keyword_', '', $form_state->getTriggeringElement()['#name']);
+    $numKeywordsFreeMap = SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE, 'map');
+
+    if ($form_state->get('num_free_keywords_' . $group) < intval($numKeywordsFreeMap[$group])) {
+      $form_state->set('num_free_keywords_' . $group, $form_state->get('num_free_keywords_' . $group) + 1);
       $form_state->setRebuild();
     }
   }
@@ -661,8 +702,10 @@ class PaperPage extends PreRegistrationPage {
    *   The current state of the form.
    */
   public static function removeKeyword(array $form, FormStateInterface $form_state) {
-    if ($form_state->get('num_free_keywords') > 1) {
-      $form_state->set('num_free_keywords', $form_state->get('num_free_keywords') - 1);
+    $group = str_replace('remove_keyword_', '', $form_state->getTriggeringElement()['#name']);
+
+    if ($form_state->get('num_free_keywords_' . $group) > 1) {
+      $form_state->set('num_free_keywords_' . $group, $form_state->get('num_free_keywords_' . $group) - 1);
       $form_state->setRebuild();
     }
   }
@@ -679,7 +722,10 @@ class PaperPage extends PreRegistrationPage {
    *   The form structure.
    */
   public static function callback(array $form, FormStateInterface $form_state) {
-    return $form['keywords']['free_keywords'];
+    $group = str_replace('add_keyword_', '', $form_state->getTriggeringElement()['#name']);
+    $group = str_replace('remove_keyword_', '', $group);
+
+    return $form['keywords_' . $group]['free_keywords_' . $group];
   }
 
   /**

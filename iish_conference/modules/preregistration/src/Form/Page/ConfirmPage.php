@@ -3,7 +3,10 @@ namespace Drupal\iish_conference_preregistration\Form\Page;
 
 use Drupal\Core\Form\FormStateInterface;
 
+use Drupal\iish_conference\API\CRUDApiClient;
 use Drupal\iish_conference\API\CRUDApiMisc;
+use Drupal\iish_conference\API\Domain\KeywordApi;
+use Drupal\iish_conference\API\Domain\PaperKeywordApi;
 use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\API\SendEmailApi;
 use Drupal\iish_conference\API\CachedConferenceApi;
@@ -294,12 +297,17 @@ class ConfirmPage extends PreRegistrationPage {
         );
       }
 
-      if (intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FROM_LIST)) > 0
-        || intval(SettingsApi::getSetting(SettingsApi::NUM_PAPER_KEYWORDS_FREE)) > 0) {
-        $paperContent[] = array(
-          'label' => 'Keywords',
-          'value' => implode(', ', $paper->getKeywords())
-        );
+      foreach (KeywordApi::getGroups() as $group) {
+        $keywords = PaperKeywordApi::getKeywordsForPaperInGroup($paper, $group);
+
+        if (count($keywords) > 0) {
+          $plainKeywords = CRUDApiClient::getForMethod($keywords, 'getKeyword');
+
+          $paperContent[] = [
+            'label' => ConferenceMisc::replaceKeyword('Keywords', $group),
+            'value' => implode(', ', $plainKeywords)
+          ];
+        }
       }
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_EQUIPMENT, 'bool')) {

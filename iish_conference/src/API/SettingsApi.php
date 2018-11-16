@@ -21,6 +21,8 @@ class SettingsApi {
   const EMAIL_MAX_NUM_TRIES = 'email_max_num_tries';
   const FINAL_REGISTRATION_LASTDATE = 'final_registration_lastdate';
   const GENERAL_TERMS_CONDITIONS_LINK = 'general_terms_conditions_link';
+  const KEYWORD_NAME_PLURAL = 'keyword_name_plural';
+  const KEYWORD_NAME_SINGULAR = 'keyword_name_singular';
   const MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session';
   const MAX_UPLOAD_SIZE_PAPER = 'max_upload_size_paper';
   const NETWORK_NAME_PLURAL = 'network_name_plural';
@@ -132,6 +134,14 @@ class SettingsApi {
     switch ($type) {
       case 'list':
         return is_string($setting) ? explode(';', $setting) : array();
+      case 'map':
+        $map = array();
+        $list = is_string($setting) ? explode(';', $setting) : array();
+        foreach ($list as $item) {
+          $keyValue = explode(':', $item);
+          $map[$keyValue[0]] = $keyValue[1];
+        }
+        return $map;
       case 'time':
         return is_string($setting) ? strtotime($setting) : NULL;
       case 'bool':
