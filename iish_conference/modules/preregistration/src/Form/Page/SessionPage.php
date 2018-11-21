@@ -239,9 +239,11 @@ class SessionPage extends PreRegistrationPage {
         $form_state->setErrorByName('sessionname', iish_t('You already created a session with the same name.'));
       }
 
-      if (($form_state->getValue('sessiontype') == '') &&
-        (strlen(trim($form_state->getValue('sessiondifferenttype'))) === 0))  {
-        $form_state->setErrorByName('sessiontype', iish_t('Please enter a session type.'));
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
+        if (($form_state->getValue('sessiontype') == '') &&
+          (strlen(trim($form_state->getValue('sessiondifferenttype'))) === 0))  {
+          $form_state->setErrorByName('sessiontype', iish_t('Please enter a session type.'));
+        }
       }
     }
   }
