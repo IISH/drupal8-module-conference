@@ -520,7 +520,8 @@ class PersonalPageController extends ControllerBase
    */
   private function setOptInInfo(array &$renderArray, $userDetails)
   {
-    if (LoggedInUserDetails::isAParticipant() && SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN) == 1) {
+	  //if (LoggedInUserDetails::isAParticipant() && SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN) == 1) {
+	  if (SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN) == 1) {
       $fields = [];
       $fields[] = [
         'header' => iish_t('Opt-in to continue receiving communications'),
