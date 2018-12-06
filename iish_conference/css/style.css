@@ -77,6 +77,7 @@ span.iishconference-userblock {
 
 .eca_warning {
     color: #E61A3C;
+	font-weight: bold;
 }
 
 .eca_warning a, .eca_warning a:link, .eca_warning a:hover, .eca_warning a:visited {

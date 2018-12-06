@@ -58,8 +58,7 @@ class PreRegistrationForm extends FormBase {
               )) .
             '</div>',
         );
-      }
-      else {
+      } else {
         $form['ct1'] = array(
           '#markup' => '<div class="eca_warning">' .
             iish_t('You are already pre-registered for the @codeYear. It is not allowed to modify online ' .
@@ -72,6 +71,20 @@ class PreRegistrationForm extends FormBase {
             '</div>',
         );
       }
+
+      // show 'go to final registration' link
+	  $isFinalRegistrationOpen = SettingsApi::getSetting(SettingsApi::FINAL_REGISTRATION_LASTDATE, 'lastdate');
+	  if ($isFinalRegistrationOpen && \Drupal::moduleHandler()
+	    ->moduleExists('iish_conference_finalregistration')
+	  ) {
+	   $finalRegistrationLink = Link::fromTextAndUrl(iish_t('final registration and payment'),
+	    Url::fromRoute('iish_conference_finalregistration.form'));
+		  $form['ct2'] = array(
+			  '#markup' => '<br><div class="eca_remark heavy bottommargin">' .
+              iish_t('Please go to @link.', array('@link' => $finalRegistrationLink->toString())) .
+			  '</div>',
+		  );
+	  }
 
       return $form;
     }
