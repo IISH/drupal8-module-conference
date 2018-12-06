@@ -34,7 +34,8 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_DAYS_SESSION_PLANNED, 'bool')) {
       $sessions = CombinedSessionParticipantApi::getAllSessions(LoggedInUserDetails::getUser()
-        ->getSessionParticipantInfo());
+	      ->getCombinedSessionParticipantInfo());
+//	    ->getSessionParticipantInfo());
       $variables['sessionDays'] = SessionApi::getAllPlannedDaysForSessions($sessions);
     }
 

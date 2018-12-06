@@ -68,7 +68,8 @@ class MainPage extends FormBase {
     $isCountryExempt = (($userCountry !== NULL) && ($countryEvent !== NULL) &&
       in_array($userCountry->getId(), $countryEvent->getExemptCountriesId()));
 
-    $isSessionParticipant = (count($user->getSessionParticipantInfo()) > 0);
+	//$isSessionParticipant = (count($user->getSessionParticipantInfo()) > 0);
+	$isSessionParticipant = (count($user->getCombinedSessionParticipantInfo()) > 0);
 
     if (!$isCountryExempt && $isSessionParticipant) {
       $form['invitation_letter'] = array(
