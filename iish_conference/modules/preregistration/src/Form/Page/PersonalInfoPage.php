@@ -145,6 +145,14 @@ class PersonalInfoPage extends PreRegistrationPage {
       );
     }
 
+	if (SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN, 'bool')) {
+	  $form['personal_info']['opt_in'] = array(
+		  '#type' => 'checkbox',
+		  '#title' => iish_t('Check if you would like to receiving communications (newsletters and calls for papers)'),
+		  '#default_value' => ( $user->getId() === null ? true : $user->getOptIn() ),
+	  );
+	}
+
     if (SettingsApi::getSetting(SettingsApi::SHOW_STUDENT, 'bool')) {
       $form['personal_info']['student'] = array(
         '#type' => 'checkbox',
@@ -436,9 +444,13 @@ class PersonalInfoPage extends PreRegistrationPage {
       $user->setEducation($form_state->getValue('education'));
     }
 
-    if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
-      $user->setCv($form_state->getValue('cv'));
-    }
+	if (SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN, 'bool')) {
+	  $user->setOptIn($form_state->getValue('opt_in'));
+	}
+
+	if (SettingsApi::getSetting(SettingsApi::SHOW_CV, 'bool')) {
+	  $user->setCv($form_state->getValue('cv'));
+	}
 
     $user->save();
 
