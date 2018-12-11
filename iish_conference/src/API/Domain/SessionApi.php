@@ -12,6 +12,7 @@ use Drupal\iish_conference\API\CachedConferenceApi;
 class SessionApi extends CRUDApiClient {
   protected $name;
   protected $abstr;
+  protected $extraInfo;
   protected $state_id;
   protected $type_id;
   protected $differentType;
@@ -109,6 +110,27 @@ class SessionApi extends CRUDApiClient {
 
     $this->abstr = $abstr;
     $this->toSave['abstr'] = $abstr;
+  }
+
+  /**
+   * Returns the extra info of this session
+   *
+   * @return string The extra info of this session
+   */
+  public function getExtraInfo() {
+    return $this->extraInfo;
+  }
+
+  /**
+   * Set the extra info for this paper
+   *
+   * @param string $extraInfo The extra info
+   */
+  public function setExtraInfo($extraInfo) {
+    $extraInfo = (($extraInfo !== NULL) && strlen(trim($extraInfo)) > 0) ? trim($extraInfo) : NULL;
+
+    $this->extraInfo = $extraInfo;
+    $this->toSave['extraInfo'] = $extraInfo;
   }
 
   /**

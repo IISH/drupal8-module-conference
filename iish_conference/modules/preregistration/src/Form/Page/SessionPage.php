@@ -112,6 +112,15 @@ class SessionPage extends PreRegistrationPage {
         '#default_value' => $session->getAbstr(),
       );
 
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_EXTRA_INFO, 'bool')) {
+        $form['session']['extra_info'] = [
+          '#type' => 'textarea',
+          '#title' => iish_t('Extra information'),
+          '#rows' => 3,
+          '#default_value' => $session->getExtraInfo(),
+        ];
+      }
+
       $networkIds = $session->getNetworksId();
       $form['session']['sessioninnetwork'] = array(
         '#title' => iish_t('Network'),
@@ -265,6 +274,10 @@ class SessionPage extends PreRegistrationPage {
       // Save session information
       $session->setName($form_state->getValue('sessionname'));
       $session->setAbstr($form_state->getValue('sessionabstract'));
+
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_EXTRA_INFO, 'bool')) {
+        $session->setExtraInfo($form_state->getValue('extra_info'));
+      }
 
       if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_TYPES, 'bool')) {
         $session->setType($form_state->getValue('sessiontype'));

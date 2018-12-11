@@ -365,6 +365,14 @@ class ConfirmPage extends PreRegistrationPage {
         'newLine' => TRUE
       );
 
+      if (SettingsApi::getSetting(SettingsApi::SHOW_SESSION_EXTRA_INFO, 'bool')) {
+        $sessionContent[] = array(
+          'label' => 'Extra information',
+          'value' => $session->getExtraInfo(),
+          'newLine' => TRUE
+        );
+      }
+
       if (PreRegistrationUtils::showNetworks()) {
         $sessionContent[] = array(
           'label' => 'Network',

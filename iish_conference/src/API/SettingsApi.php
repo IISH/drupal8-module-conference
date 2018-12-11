@@ -73,6 +73,7 @@ class SettingsApi {
   const SHOW_PROGRAMME_ONLINE = 'show_programme_online';
   const SHOW_SESSION_CODES = 'show_session_codes';
   const SHOW_SESSION_ENDTIME_IN_PP = 'show_session_endtime_in_pp';
+  const SHOW_SESSION_EXTRA_INFO = 'show_session_extra_info';
   const SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration';
   const SHOW_SESSION_PROPOSAL = 'show_session_proposal';
   const SHOW_SESSION_TYPES = 'show_session_types';
