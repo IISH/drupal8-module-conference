@@ -148,7 +148,7 @@ class PersonalInfoPage extends PreRegistrationPage {
 	if (SettingsApi::getSetting(SettingsApi::SHOW_OPT_IN, 'bool')) {
 	  $form['personal_info']['opt_in'] = array(
 		  '#type' => 'checkbox',
-		  '#title' => iish_t('Check if you would like to receiving communications (newsletters and calls for papers)'),
+		  '#title' => iish_t('Check if you would like to receive communications (newsletters and calls for papers)'),
 		  '#default_value' => ( $user->getId() === null ? true : $user->getOptIn() ),
 	  );
 	}

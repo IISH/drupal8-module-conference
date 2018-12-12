@@ -116,6 +116,7 @@ class SessionPage extends PreRegistrationPage {
         $form['session']['extra_info'] = [
           '#type' => 'textarea',
           '#title' => iish_t('Extra information'),
+          '#description' => '<em>(' . iish_t('max. 1.000 words.') . ')</em>',
           '#rows' => 3,
           '#default_value' => $session->getExtraInfo(),
         ];
