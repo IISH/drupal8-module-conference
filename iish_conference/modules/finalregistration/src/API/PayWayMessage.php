@@ -102,13 +102,14 @@ class PayWayMessage {
 
         if ($response->getStatusCode() === 200) {
           $message = new PayWayMessage(Json::decode($response->getBody()));
+
           if ($message->isSignValid()) {
             return $message;
           }
         }
       }
       catch (\Exception $exception) {
-	    #drupal_set_message( $exception->getMessage() );
+		//drupal_set_message( $exception->getMessage() );
         return FALSE;
       }
     }
@@ -203,5 +204,9 @@ class PayWayMessage {
     header('Location: ' . SettingsApi::getSetting(SettingsApi::PAYWAY_ADDRESS) . 'payment?' .
       http_build_query($this->message, NULL, '&'));
     die();
+  }
+
+  public function __toString() {
+	 return json_encode($this->message);
   }
 }

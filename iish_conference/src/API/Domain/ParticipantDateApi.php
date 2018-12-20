@@ -447,12 +447,12 @@ class ParticipantDateApi extends CRUDApiClient {
     $date = ($date === NULL) ? strtotime('today') : $date;
 
     $feeStateId = $this->getFeeStateId();
+
     if ($feeState !== NULL) {
       $feeStateId = ($feeState instanceof FeeStateApi) ? $feeState->getId() : $feeState;
     }
 
-    $feeAmounts = FeeAmountApi::getFeeAmounts($feeStateId, $date, count($this->getUser()
-      ->getDaysPresentDayId()));
+    $feeAmounts = FeeAmountApi::getFeeAmounts($feeStateId, $date, count($this->getUser()->getDaysPresentDayId()));
 
     return (isset($feeAmounts[0])) ? $feeAmounts[0] : NULL;
   }

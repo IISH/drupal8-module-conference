@@ -54,8 +54,7 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
     $user = LoggedInUserDetails::getUser();
     $participant = LoggedInUserDetails::getParticipant();
 
-    $variables['feeAmountDescription'] = $participant->getFeeAmount()
-      ->getDescriptionWithoutDays();
+    $variables['feeAmountDescription'] = $participant->getFeeAmount()->getDescriptionWithoutDays();
     $variables['extras'] = $participant->getExtrasOfFinalRegistration();
     $variables['totalAmount'] = $participant->getTotalAmount();
     $variables['totalAmountPayOnSite'] = $participant->getTotalAmountPaymentOnSite();
