@@ -581,7 +581,8 @@ class ParticipantDateApi extends CRUDApiClient {
     $feeAmount = $this->getFeeAmount($orderCreationDate);
     $finalDate = $feeAmount->getEndDate();
 
-    if (!SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_LASTDATE, 'lastdate')) {
+    $lastDate = SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_LASTDATE, 'lastdate');
+    if (!$lastDate) {
       $finalDate = $lastDate;
     }
 
