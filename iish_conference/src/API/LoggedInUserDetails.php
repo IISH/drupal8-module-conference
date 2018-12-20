@@ -17,6 +17,9 @@ class LoggedInUserDetails {
   const USER_STATUS_PARTICIPANT_CANCELLED = 5;
   const USER_STATUS_PARTICIPANT_DOUBLE_ENTRY = 6;
 
+  private static $user = NULL;
+  private static $participant = NULL;
+
   /**
    * Is the user currently logged in?
    *
@@ -85,6 +88,10 @@ class LoggedInUserDetails {
    * @return UserApi|null The user details
    */
   public static function getUser() {
+    if (self::$user !== NULL) {
+      return self::$user;
+    }
+
     $userId = self::getId();
     $user = self::getFromSession('user');
 
@@ -97,6 +104,7 @@ class LoggedInUserDetails {
         self::setUser($user);
       }
     }
+    self::$user = $user;
 
     return $user;
   }
@@ -107,6 +115,10 @@ class LoggedInUserDetails {
    * @return ParticipantDateApi|null The participant details
    */
   public static function getParticipant() {
+    if (self::$participant !== NULL) {
+      return self::$participant;
+    }
+
     $userId = self::getId();
     $participant = self::getFromSession('participant');
 
@@ -119,6 +131,7 @@ class LoggedInUserDetails {
         self::setParticipant($participant);
       }
     }
+    self::$participant = $participant;
 
     return $participant;
   }
