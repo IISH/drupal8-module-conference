@@ -56,7 +56,8 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
 
     $variables['feeAmountDescription'] = $participant->getFeeAmount()->getDescriptionWithoutDays();
     $variables['extras'] = $participant->getExtrasOfFinalRegistration();
-    $variables['totalAmount'] = $participant->getTotalAmount();
+    //$variables['totalAmount'] = $participant->getTotalAmount();
+    $variables['totalAmount'] = ConferenceMisc::getReadableAmount( $participant->getTotalAmount(), FALSE);
     $variables['totalAmountPayOnSite'] = $participant->getTotalAmountPaymentOnSite();
 
     if (SettingsApi::getSetting(SettingsApi::SHOW_ACCOMPANYING_PERSONS)) {
