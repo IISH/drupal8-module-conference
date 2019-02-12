@@ -47,7 +47,7 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
       $variables['feeAmountDescription'] = $feeAmount->getDescriptionWithoutDays();
     }
 
-    $variables['infoBlock'] = new ConferenceHTML(ConferenceMisc::getInfoBlock(), TRUE);
+    $variables['infoBlock'] = new ConferenceHTML(ConferenceMisc::getInfoBlockFinalRegistration(), TRUE);
   }
 
   if ($hook === 'iish_conference_finalregistration_overview') {
@@ -71,6 +71,6 @@ function iish_conference_finalregistration_preprocess(array &$variables, $hook) 
     $variables['address'] = $user->getAddress();
     $variables['bankTransferOpen'] = SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_LASTDATE, 'lastdate');
     $variables['paymentOnSiteOpen'] = SettingsApi::getSetting(SettingsApi::PAYMENT_ON_SITE_STARTDATE, 'startdate');
-    $variables['infoBlock'] = new ConferenceHTML(ConferenceMisc::getInfoBlock(), TRUE);
+    $variables['infoBlock'] = new ConferenceHTML(ConferenceMisc::getInfoBlockFinalRegistration(), TRUE);
   }
 }

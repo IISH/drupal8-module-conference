@@ -172,6 +172,20 @@ class ConferenceMisc {
       . '</div>';
   }
 
+	/**
+	 * Returns the block that informs the user how and who to contact for information
+	 *
+	 * @return string The HTML generating an info block
+	 */
+	public static function getInfoBlockFinalRegistration() {
+		$email = SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL);
+		return
+			'<div class="eca_warning topmargin">'
+			. iish_t('For any remarks or questions about final registration, please contact: ')
+			. self::emailLink($email)->toString()
+			. '</div>';
+	}
+
   /**
    * Creates an email link
    *
