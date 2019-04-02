@@ -36,12 +36,13 @@ class ParticipantsInNetworkSessionsPaperAcceptedApi {
 			'lastName'      => iish_t('Last name')->render(),
 			'firstName'     => iish_t('First name')->render(),
 			'email'         => iish_t('E-mail')->render(),
+      'organisation'  => iish_t('Organisation')->render(),
 			'session'       => iish_t('Session')->render(),
 			'sessionState'  => iish_t('Session state')->render(),
 			'roles'         => iish_t('Roles')->render(),
 			'paperTitle'    => iish_t('Paper title')->render(),
-			'paperST'       => iish_t('Paper state')->render(),
-			'paperAbstract' => iish_t('Abstract')->render()
+			'paperAbstract' => iish_t('Abstract')->render(),
+      'paperST'       => iish_t('Paper state')->render(),
 		));
 
 		return (($response !== null) && $response['success']) ? $this->processResponse($response, $excel) : false;

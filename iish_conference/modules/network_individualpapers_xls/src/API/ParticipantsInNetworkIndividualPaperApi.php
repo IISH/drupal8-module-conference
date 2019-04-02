@@ -36,7 +36,11 @@ class ParticipantsInNetworkIndividualPaperApi {
       'lastName' => iish_t('Last name')->render(),
       'firstName' => iish_t('First name')->render(),
       'email' => iish_t('E-mail')->render(),
+      'organisation'  => iish_t('Organisation')->render(),
+      'paperId'       => iish_t('Paper id')->render(),
       'paperTitle' => iish_t('Paper title')->render(),
+      'coAuthors'     => iish_t('Co-authors')->render(),
+      'paperType'     => iish_t('Paper type')->render(),
       'paperST' => iish_t('Paper state')->render(),
       'paperAbstract' => iish_t('Abstract')->render()
     ));
