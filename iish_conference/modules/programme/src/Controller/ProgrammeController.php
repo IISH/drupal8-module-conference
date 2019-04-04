@@ -62,7 +62,7 @@ class ProgrammeController extends ControllerBase {
     $params = \Drupal::request()->query;
 
     // Obtain all necessary query parameters
-    $dayId = $params->get('day') ? EasyProtection::easyIntegerProtection($params->get('day')) : NULL;
+    $dayId = ($params->get('day') || $params->get('day') == 0) ? EasyProtection::easyIntegerProtection($params->get('day')) : NULL;
     $timeId = $params->get('time') ? EasyProtection::easyIntegerProtection($params->get('time')) : NULL;
     $roomId = $params->get('room') ? EasyProtection::easyIntegerProtection($params->get('room')) : NULL;
     $networkId = $params->get('network') ? EasyProtection::easyIntegerProtection($params->get('network')) : NULL;
