@@ -127,7 +127,7 @@
                                   data-session="{{ session.sessionId }}">&#9733;</span>
                         {% endif %}
 
-                        <a href="?room={{ session.roomId }}">{{ session.roomNumber }}</a>-{{ session.indexNumber }}
+                        <a href="?room={{ session.roomId }}">{{ session.roomNumber }}</a>{% if setting('SHOW_SESSION_NUMBER_IN_ONLINE_PROGRAMME', 'bool') %}-{{ session.indexNumber }}{% endif %}
 
                         {% if setting('SHOW_SESSION_CODES', 'bool') %}
                             {{ session.sessionCode }}
@@ -153,14 +153,21 @@
                             </a>
                         {% endif %}
                     </strong>
-
                     <br/>
 
+					{% if setting('SHOW_ROOM_NAME_IN_ONLINE_PROGRAMME', 'bool') %}
                     <strong>
                         {{ session.roomName }}
                     </strong>
-
                     <br/>
+                    {% endif %}
+
+					{% if sessionId %}
+						{% if setting('SHOW_SESSION_ABSTRACT_IN_ONLINE_PROGRAMME', 'bool') %}
+								aaaa{{ session.sessionAbstractHl|markup }}bbbb
+							<br/>
+						{% endif %}
+					{% endif %}
 
                     <table class="programme">
                         <tbody>
@@ -239,11 +246,13 @@
                         <br/>
 
                         {% if sessionId %}
-                            <div class="programme_paper_abstract">
-                                {{ participant.paperAbstract|long }}
-                            </div>
-                            <br/>
-                        {% endif %}
+							{% if setting('SHOW_PAPER_ABSTRACT_IN_ONLINE_PROGRAMME', 'bool') %}
+								<div class="programme_paper_abstract">
+									{{ participant.paperAbstract|long }}
+								</div>
+								<br/>
+							{% endif %}
+						{% endif %}
                     {% endfor %}
 
                     <br/><br/>

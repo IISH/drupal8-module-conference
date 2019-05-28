@@ -61,6 +61,23 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     $state = new PreRegistrationState($form_state);
     $data = array();
 
+
+	if (
+		(
+			!SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION, 'bool')
+			|| ( SettingsApi::getSetting(SettingsApi::SHOW_AUTHOR_REGISTRATION, 'bool') && !PreRegistrationUtils::isAuthorRegistrationOpen() )
+		)
+		&&
+		(
+			!SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION, 'bool')
+			|| ( SettingsApi::getSetting(SettingsApi::SHOW_ORGANIZER_REGISTRATION, 'bool') && !PreRegistrationUtils::isOrganizerRegistrationOpen() )
+		)
+	) {
+		// don't show author and organizer part
+		//
+	} else {
+		// show author and/or organizer part
+
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // AUTHOR
 
@@ -148,6 +165,8 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
         );
       }
     }
+
+	}
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
     // SESSION PARTICIPANT TYPES

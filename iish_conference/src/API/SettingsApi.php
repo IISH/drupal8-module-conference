@@ -14,6 +14,7 @@ class SettingsApi {
   const BANK_TRANSFER_LASTDATE = 'bank_transfer_lastdate';
   const BANK_TRANSFER_INFO = 'bank_transfer_info';
   const BANK_TRANSFER_ALLOWED = 'bank_transfer_allowed';
+  const CONFERENCE_CODE = 'conference_code';
   const COUNTRY_ID = 'country_id';
   const DEFAULT_NETWORK_ID = 'default_network_id';
   const DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email';
@@ -43,6 +44,7 @@ class SettingsApi {
   const PREREGISTRATION_SESSIONS = 'preregistration_sessions';
   const SESSION_NAME_PLURAL = 'session_name_plural';
   const SESSION_NAME_SINGULAR = 'session_name_singular';
+  const URL_PRIVACY_STATEMENT = 'url_privacy_statement';
 
   // Show / hide
   const ALLOW_NETWORK_CHAIRS_TO_SEE_ALL_NETWORKS = 'allow_network_chairs_to_see_all_networks';
@@ -79,6 +81,12 @@ class SettingsApi {
   const SHOW_SESSION_TYPES = 'show_session_types';
   const SHOW_OPTIONAL_SESSION_TYPE = 'show_optional_session_type';
   const SHOW_STUDENT = 'show_student';
+  const SHOW_PAPER_ABSTRACT_IN_ONLINE_PROGRAMME = 'show_paper_abstract_in_online_programme';
+  const SHOW_SESSION_ABSTRACT_IN_ONLINE_PROGRAMME = 'show_session_abstract_in_online_programme';
+  const SHOW_SESSION_NUMBER_IN_ONLINE_PROGRAMME = 'show_session_number_in_online_programme';
+  const SHOW_ROOM_NAME_IN_ONLINE_PROGRAMME = 'show_room_name_in_online_programme';
+  const SHOW_PRIVACY_STATEMENT_ON_PERSONAL_PAGE = 'show_privacy_statement_on_personal_page';
+  const SHOW_PRIVACY_STATEMENT_ON_REGISTRATION_PAGE = 'show_privacy_statement_on_registration_page';
 
   // Required fields
   const REQUIRED_CV = 'required_cv';

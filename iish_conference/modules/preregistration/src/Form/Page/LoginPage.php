@@ -1,7 +1,10 @@
 <?php
 namespace Drupal\iish_conference_preregistration\Form\Page;
 
+use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\iish_conference\API\SettingsApi;
 use Drupal\iish_conference\ConferenceMisc;
 use Drupal\iish_conference\API\CRUDApiMisc;
 use Drupal\iish_conference\API\Domain\UserApi;
@@ -73,6 +76,19 @@ class LoginPage extends PreRegistrationPage {
 			</ol>
 		</div>',
     );
+
+    $privacyStatementUrl = trim(SettingsApi::getSetting(SettingsApi::URL_PRIVACY_STATEMENT));
+    if ( SettingsApi::getSetting(SettingsApi::SHOW_PRIVACY_STATEMENT_ON_REGISTRATION_PAGE, 'bool') && $privacyStatementUrl != '' ) {
+      $form['privacy_statement_block'] = array(
+        '#markup' => '<div class="eca_warning">
+        <br />'
+         . Link::fromTextAndUrl(
+            SettingsApi::getSetting(SettingsApi::CONFERENCE_CODE) . ' ' . iish_t('Privacy Statement')
+            , Url::fromUri($privacyStatementUrl)
+          )->toString()
+         . '</div>',
+      );
+    }
 
     return $form;
   }

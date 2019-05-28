@@ -33,22 +33,22 @@ class PreRegistrationController extends ControllerBase {
         . '</div>', TRUE),
 
       new ConferenceHTML(
-        '<div class="eca_warning heavy bottommargin">'
+        '<div class="eca_remark heavy bottommargin">'
         . iish_t('It is not possible to modify your pre-registration anymore.')
         . '<br />' . iish_t('If you would like to modify your registration please send an email to @email.',
           array('@email' => ConferenceMisc::emailLink(SettingsApi::getSetting(SettingsApi::DEFAULT_ORGANISATION_EMAIL))->toString()))
         . '</div>', TRUE)
     );
 
-    if ($this->moduleHandler()->moduleExists('iish_conference_personalpage')) {
-      $personalPageLink = Link::fromTextAndUrl(iish_t('personal page'),
-        Url::fromRoute('iish_conference_personalpage.index'));
-
-      $fields[] = new ConferenceHTML(
-        '<div class="eca_remark heavy bottommargin">'
-        . iish_t('Go to your @link.', array('@link' => $personalPageLink->toString()))
-        . '</div>', TRUE);
-    }
+//    if ($this->moduleHandler()->moduleExists('iish_conference_personalpage')) {
+//      $personalPageLink = Link::fromTextAndUrl(iish_t('personal page'),
+//        Url::fromRoute('iish_conference_personalpage.index'));
+//
+//      $fields[] = new ConferenceHTML(
+//        '<div class="eca_remark heavy bottommargin">'
+//        . iish_t('Go to your @link.', array('@link' => $personalPageLink->toString()))
+//        . '</div>', TRUE);
+//    }
 
     $isFinalRegistrationOpen = SettingsApi::getSetting(SettingsApi::FINAL_REGISTRATION_LASTDATE, 'lastdate');
     if ($isFinalRegistrationOpen && $this->moduleHandler()

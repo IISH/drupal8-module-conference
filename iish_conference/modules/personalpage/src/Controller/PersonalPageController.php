@@ -72,7 +72,8 @@ class PersonalPageController extends ControllerBase
 		$this->setChairDiscussantInfo($renderArray, $participantDateDetails);
 		$this->setLanguageInfo($renderArray, $participantDateDetails);
 		$this->setLinks($renderArray, $participantDateDetails);
-		$this->setLinksNetwork($renderArray, $participantDateDetails);
+    $this->setLinksNetwork($renderArray, $participantDateDetails);
+    $this->setPrivacyStatement($renderArray);
 
 		return $renderArray;
 	}
@@ -1155,4 +1156,33 @@ class PersonalPageController extends ControllerBase
 			}
 		}
 	}
+
+  /**
+   * Creates the privacy statement part of the personal page
+   *
+   * @param array $renderArray The render array
+   */
+  private function setPrivacyStatement(array &$renderArray) {
+    $privacyStatementUrl = trim(SettingsApi::getSetting(SettingsApi::URL_PRIVACY_STATEMENT));
+    if ( SettingsApi::getSetting(SettingsApi::SHOW_PRIVACY_STATEMENT_ON_PERSONAL_PAGE, 'bool') && $privacyStatementUrl != '' ) {
+      $fields = array(
+        array('#markup' => '<a name="privacystatement"></a>'),
+        array('header' => iish_t('Privacy Statement')),
+      );
+
+      $fields[] = array(
+        '#markup' => '<div class="eca_warning">'
+            . Link::fromTextAndUrl(
+            SettingsApi::getSetting(SettingsApi::CONFERENCE_CODE) . ' ' . iish_t('Privacy Statement')
+            , Url::fromUri($privacyStatementUrl)
+          )->toString()
+          . '</div>'
+      );
+
+      $renderArray[] = array(
+        '#theme' => 'iish_conference_container',
+        '#fields' => $fields
+      );
+    }
+  }
 }

@@ -350,8 +350,10 @@ class ProgrammeController extends ControllerBase {
     $token = $accessTokenApi->accessToken(LoggedInUserDetails::getId());
 
     foreach ($programme as &$session) {
-      $sessionName = $session['sessionName'];
-      $session['sessionNameHl'] = $highlight->highlight($sessionName);
+	  $sessionName = $session['sessionName'];
+	  $sessionAbstract = $session['sessionAbstract'];
+	  $session['sessionNameHl'] = $highlight->highlight($sessionName);
+	  $session['sessionAbstractHl'] = $highlight->highlight($sessionAbstract);
 
       $participantsWithPaper = array();
       $participantsPerType = array();
