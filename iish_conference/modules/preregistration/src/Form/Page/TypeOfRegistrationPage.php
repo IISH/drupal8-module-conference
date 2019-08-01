@@ -222,7 +222,7 @@ class TypeOfRegistrationPage extends PreRegistrationPage {
     );
 
     $form['spectator']['help_text'] = array(
-      '#markup' => iish_t('Then you may skip this page and go right away to the confirmation page.'),
+      '#markup' => iish_t('Then you may skip this page and go right away to the comments and confirmation page.'),
     );
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
