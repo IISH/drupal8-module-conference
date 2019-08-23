@@ -40,6 +40,7 @@ class SettingsApi {
   const PATH_FOR_MENU = 'path_for_menu';
   const PAYMENT_ON_SITE_STARTDATE = 'payment_on_site_startdate';
   const PREREGISTRATION_LASTDATE = 'preregistration_lastdate';
+  const PREREGISTRATION_LASTDATE_MESSAGE = 'preregistration_lastdate_message';
   const PREREGISTRATION_STARTDATE = 'preregistration_startdate';
   const PREREGISTRATION_SESSIONS = 'preregistration_sessions';
   const SESSION_NAME_PLURAL = 'session_name_plural';
