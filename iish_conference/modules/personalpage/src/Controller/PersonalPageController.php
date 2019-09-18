@@ -1050,7 +1050,7 @@ class PersonalPageController extends ControllerBase
 		// Check if live or crew or network chair or chair or organizer
 		if ($this->moduleHandler()->moduleExists('iish_conference_programme') && ConferenceMisc::mayLoggedInUserSeeProgramme()) {
 			$fields[] = array(
-				'#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t('Preliminary Programme'),
+				'#markup' => '&bull; ' . Link::fromTextAndUrl(iish_t(SettingsApi::getSetting(SettingsApi::ONLINE_PROGRAM_HEADER)),
 						Url::fromRoute('iish_conference_programme.index'))->toString()
 					. '<br />'
 			);
