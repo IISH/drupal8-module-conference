@@ -303,7 +303,12 @@ class ProgrammeController extends ControllerBase {
    */
   public function getProgrammeTitle() {
     try {
-      return SettingsApi::getSetting(SettingsApi::ONLINE_PROGRAM_HEADER);
+      $yearCode = \Drupal::request()->query->get('yearCode');
+      if ( trim($yearCode) != '' ) {
+        return SettingsApi::getSetting(SettingsApi::ONLINE_PROGRAM_HEADER_PAST_CONFERENCE);
+      } else {
+        return SettingsApi::getSetting(SettingsApi::ONLINE_PROGRAM_HEADER);
+      }
     }
     catch (\Exception $exception) {
       return t('Online programme');
