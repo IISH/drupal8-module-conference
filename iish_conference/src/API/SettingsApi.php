@@ -32,6 +32,7 @@ class SettingsApi {
   const NUM_PAPER_KEYWORDS_FREE = 'num_paper_keywords_free';
   const NUM_PAPER_KEYWORDS_FROM_LIST = 'num_paper_keywords_from_list';
   const ONLINE_PROGRAM_HEADER = 'online_program_header';
+  const ONLINE_PROGRAM_HEADER_PAST_CONFERENCE = 'online_program_header_past_conference';
   const ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction';
   const ON_SITE_PAYMENT_INFO = 'on_site_payment_info';
   const ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate';
