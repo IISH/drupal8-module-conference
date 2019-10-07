@@ -220,7 +220,9 @@ class ConferenceMisc {
       if ($i > 0) {
         $line .= ($i < (count($items) - 1)) ? $seperator : $seperatorEnd;
       }
-      $line .= $item;
+
+//        $line .= $item;
+        $line .= $item->toString();
     }
 
     return $line;

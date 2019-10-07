@@ -929,8 +929,7 @@ class PersonalPageController extends ControllerBase
 					$emailList = array();
 					if (is_array($networksAndUsers[$network->getId()])) {
 						foreach ($networksAndUsers[$network->getId()] as $user) {
-							$emailList[] = Link::fromTextAndUrl($user->getFullName(),
-								Url::fromUri('mailto:' . $user->getEmail()));
+							$emailList[] = Link::fromTextAndUrl($user->getFullName(), Url::fromUri('mailto:' . $user->getEmail()));
 						}
 					}
 
@@ -958,11 +957,20 @@ class PersonalPageController extends ControllerBase
 					$languageCoachLabel = iish_t('I need some help from one of the following English Language Coaches');
 				}
 
+        // convert listitems to html list
+        $ttt = "<ul>";
+        foreach ( $list as $i ) {
+          $ttt .= "  <li>" . $i . "</li>";
+        }
+        $ttt .= "</ul>";
+
+        //
+//        'value' => array('#theme' => 'item_list', '#items' => $list), // problem with html tags
 				$fields[] = array(
 					'label' => $languageCoachLabel,
-					'value' => array('#theme' => 'item_list', '#items' => $list),
-					'html' => TRUE,
-					'newLine' => TRUE
+					'value' => $ttt,
+					'newLine' => TRUE,
+					'html' => TRUE
 				);
 			}
 
