@@ -36,9 +36,10 @@ class ProgrammeController extends ControllerBase {
   /**
    * Returns the programme.
    */
-  public function programme() {
-    $yearCode = \Drupal::request()->query->get('yearCode');
-    $eventDate = $this->getEventDate($yearCode);
+  public function programme($year = NULL) {
+//    $year = \Drupal::request()->query->get('yearCode');
+    $eventDate = $this->getEventDate($year);
+
     if ($eventDate === NULL) {
       drupal_set_message(iish_t('No programme available for the given year!'), 'error');
       return $this->redirect('iish_conference_programme.index');
@@ -327,7 +328,7 @@ class ProgrammeController extends ControllerBase {
 
     if (!empty($yearCode)) {
       foreach (CachedConferenceApi::getEventDates() as $date) {
-        if (strtolower($date->getYearCodeURL()) == strtolower(trim($yearCode))) {
+        if (strtolower($date->getYearCodeURL()) == strtolower(trim($yearCode->getYearCodeURL()))) {
           $eventDate = $date;
         }
       }

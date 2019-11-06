@@ -24,6 +24,8 @@ function iish_conference_programme_theme() {
         'favoriteSessions' => array(),
         'isLoggedIn' => FALSE,
         'isParticipant' => FALSE,
+        'yearCode' => NULL,
+        'year' => NULL,
       ),
     ),
   );

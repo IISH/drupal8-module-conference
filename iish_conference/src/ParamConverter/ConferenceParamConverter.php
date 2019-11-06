@@ -49,6 +49,8 @@ class ConferenceParamConverter implements ParamConverterInterface {
         return $this->loadEventDate($value);
       case 'user':
         return $this->loadUser($value);
+      case 'year':
+        return $this->loadEventDate($value);
       default:
         return NULL;
     }
