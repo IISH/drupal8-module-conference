@@ -17,7 +17,6 @@ iish_conference_networks.network:
     parameters:
       network:
         type: 'iish_conference_param_converter'
+    no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
-  options:
-    no_cache: 'TRUE'

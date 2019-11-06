@@ -17,10 +17,9 @@ iish_conference_network_forchairs.network:
     parameters:
       network:
         type: 'iish_conference_param_converter'
+    no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
-  options:
-    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.network_search:
   path: '/conference/network/for_chairs/-1'
@@ -43,10 +42,9 @@ iish_conference_network_forchairs.session:
         type: 'iish_conference_param_converter'
       session:
         type: 'iish_conference_param_converter'
+    no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
-  options:
-    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.session_search:
   path: '/conference/network/for_chairs/-1/{session}'
@@ -57,10 +55,9 @@ iish_conference_network_forchairs.session_search:
     parameters:
       session:
         type: 'iish_conference_param_converter'
+    no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
-  options:
-    no_cache: 'TRUE'
 
 iish_conference_network_forchairs.session_individual:
   path: '/conference/network/for_chairs/{network}/-1'
@@ -71,7 +68,6 @@ iish_conference_network_forchairs.session_individual:
     parameters:
       network:
         type: 'iish_conference_param_converter'
+    no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
-  options:
-    no_cache: 'TRUE'

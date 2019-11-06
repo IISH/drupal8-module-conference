@@ -26,10 +26,9 @@ iish_conference_personalpage.upload_paper:
     parameters:
       paper:
         type: 'iish_conference_param_converter'
+    no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
-  options:
-    no_cache: 'TRUE'
 
 iish_conference_personalpage.dietary_wishes_form:
   path: '/conference/user/personalpage/dietary-wishes'
