@@ -22,13 +22,13 @@ iish_conference_personalpage.upload_paper:
   defaults:
     _controller: '\Drupal\iish_conference_personalpage\Controller\PersonalPageController::uploadPaper'
     _title: 'Upload paper'
+  requirements:
+    _access: 'TRUE'
   options:
+    no_cache: 'TRUE'
     parameters:
       paper:
         type: 'iish_conference_param_converter'
-    no_cache: 'TRUE'
-  requirements:
-    _access: 'TRUE'
 
 iish_conference_personalpage.dietary_wishes_form:
   path: '/conference/user/personalpage/dietary-wishes'
