@@ -154,8 +154,8 @@ class PersonalPageController extends ControllerBase
 		$form_state->set('paper', $paper);
 		$deleteForm = \Drupal::formBuilder()->buildForm(DeletePaperForm::class, $form_state);
 
-		if ($error = \Drupal::request()->query->get('e') !== NULL) {
-			switch ($error) {
+		if (($error = \Drupal::request()->query->get('e')) !== NULL) {
+			switch ((int)$error) {
 				case self::UPLOAD_PAPER_ERROR_NONE:
 					drupal_set_message(iish_t('Your paper has been successfully uploaded!'), 'status');
 					break;
@@ -190,7 +190,7 @@ class PersonalPageController extends ControllerBase
 			'#maxSize' => ConferenceMisc::getReadableFileSize($maxSize),
 			'#extensions' => $allowedExtensions,
 			'#deleteForm' => $deleteForm,
-			'#backUrl' => $_SERVER['REQUEST_URI'],
+			'#backUrl' => $_SERVER['SCRIPT_URI'],
 			'#backLink' => $backLink,
 		);
 	}
