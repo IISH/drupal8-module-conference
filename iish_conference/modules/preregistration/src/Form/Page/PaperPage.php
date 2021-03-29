@@ -243,7 +243,7 @@ class PaperPage extends PreRegistrationPage {
           CRUDApiClient::getForMethod($allPredefinedKeywords, 'getKeyword');
         $keywordsFromList = [];
         $keywordsFree = [];
-        foreach ($allKeywords->getResults() as $keyword) {
+        foreach ($allKeywords as $keyword) {
           if (array_search($keyword->getKeyword(), $allPredefinedKeywordsPlain) !== FALSE) {
             $keywordsFromList[] = $keyword->getKeyword();
           }
