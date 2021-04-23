@@ -51,7 +51,7 @@ class ConferenceMisc {
    */
   public static function getGenders() {
     return array(
-      '' => iish_t('Other'),
+      '' => iish_t(''),
       'M' => iish_t('Male'),
       'F' => iish_t('Female'),
     );
@@ -215,14 +215,14 @@ class ConferenceMisc {
     }
 
     $line = '';
+
     $items = array_values($items);
     foreach ($items as $i => $item) {
       if ($i > 0) {
         $line .= ($i < (count($items) - 1)) ? $seperator : $seperatorEnd;
       }
 
-//        $line .= $item;
-        $line .= $item->toString();
+        $line .= $item->__toString();
     }
 
     return $line;

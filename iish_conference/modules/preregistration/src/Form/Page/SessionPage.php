@@ -199,7 +199,7 @@ class SessionPage extends PreRegistrationPage {
 
       $this->buildNextButton($form['session_participants'], 'session_participant_' . $user->getId(), iish_t('Edit'));
       $form['session_participants']['session_participant_' . $user->getId()]['suffix']['#markup'] = ' ' . $user->getFullName() . ' &nbsp;&nbsp; <em>(' .
-        ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />';
+          ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />'; // TODO GCU TODOGCU
     }
 
     // + + + + + + + + + + + + + + + + + + + + + + + +

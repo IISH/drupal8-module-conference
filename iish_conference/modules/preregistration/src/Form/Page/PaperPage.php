@@ -203,14 +203,18 @@ class PaperPage extends PreRegistrationPage {
     }
 
     if ((SettingsApi::getSetting(SettingsApi::SHOW_AWARD, 'bool')) && $participant->getStudent()) {
-      $awardLink = Link::fromTextAndUrl(iish_t('more about the award'),
-        Url::fromUri('award', array('attributes' => array('target' => '_blank'))));
+
+//        \Drupal::logger('iish_conference')->error( Url::fromUri('award', array('attributes' => array('target' => '_blank'))) );
+
+        // 'award' mag niet, moet volledige url zijn, of beginnen met internal: ???
+//      $awardLink = Link::fromTextAndUrl(iish_t('more about the award'), Url::fromUri('award', array('attributes' => array('target' => '_blank'))));
 
       $form['paper']['award'] = array(
         '#type' => 'checkbox',
         '#title' => iish_t('Would you like to participate in the "@awardName"?',
-            array('@awardName' => SettingsApi::getSetting(SettingsApi::AWARD_NAME))) .
-          '&nbsp; <em>(' . $awardLink->toString() . ')</em>',
+            array('@awardName' => SettingsApi::getSetting(SettingsApi::AWARD_NAME)))
+//            . '&nbsp; <em>(' . $awardLink->toString() . ')</em>'
+      ,
         '#default_value' => $participant->getAward(),
       );
     }
