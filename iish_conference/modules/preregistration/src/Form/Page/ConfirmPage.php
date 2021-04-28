@@ -71,6 +71,7 @@ class ConfirmPage extends PreRegistrationPage {
       'label' => 'Last name',
       'value' => $user->getLastName()
     );
+    // TODOGCU
     $personalInfoContent[] = array(
       'label' => 'Gender',
       'value' => ConferenceMisc::getGender($user->getGender())

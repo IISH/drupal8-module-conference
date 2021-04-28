@@ -253,13 +253,12 @@ class SessionApi extends CRUDApiClient {
     foreach ($networks as $network) {
       if ($network instanceof NetworkApi) {
         $this->networks_id[] = $network->getId();
-      }
-      else {
-        if (is_int($network)) {
-          $this->networks_id[] = $network;
-        }
+      } elseif ( is_int($network) || ( gettype($network) === 'string' && ctype_digit($network) ) ) {
+        $this->networks_id[] = $network;
       }
     }
+
+//   \Drupal::logger('iish_conference')->error( 'Networks in session: ' . implode(';', $this->networks_id) );
 
     $this->toSave['networks.id'] = implode(';', $this->networks_id);
   }

@@ -126,10 +126,11 @@ class SessionPage extends PreRegistrationPage {
       $form['session']['sessioninnetwork'] = array(
         '#title' => iish_t('Network'),
         '#type' => 'select',
+        '#multiple' => TRUE,
         '#options' => CRUDApiClient::getAsKeyValueArray(CachedConferenceApi::getNetworks()),
         '#required' => TRUE,
         '#size' => 4,
-        '#default_value' => isset($networkIds[0]) ? $networkIds[0] : NULL,
+        '#default_value' => isset($networkIds) ? $networkIds : NULL,
       );
 
       PreRegistrationUtils::hideAndSetDefaultNetwork($form['session']['sessioninnetwork']);
@@ -199,7 +200,7 @@ class SessionPage extends PreRegistrationPage {
 
       $this->buildNextButton($form['session_participants'], 'session_participant_' . $user->getId(), iish_t('Edit'));
       $form['session_participants']['session_participant_' . $user->getId()]['suffix']['#markup'] = ' ' . $user->getFullName() . ' &nbsp;&nbsp; <em>(' .
-          ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />'; // TODO GCU TODOGCU
+          ConferenceMisc::getEnumSingleLine($roles) . ')</em><br /><br />';
     }
 
     // + + + + + + + + + + + + + + + + + + + + + + + +
@@ -290,8 +291,10 @@ class SessionPage extends PreRegistrationPage {
         }
       }
 
-      $networkId = EasyProtection::easyIntegerProtection($form_state->getValue('sessioninnetwork'));
-      $session->setNetworks(array($networkId));
+//        $networkId = EasyProtection::easyIntegerProtection($form_state->getValue('sessioninnetwork')); // ORIGINAL
+        $networkId = $form_state->getValue('sessioninnetwork');
+//        $session->setNetworks(array($networkId)); // ORIGINAL
+        $session->setNetworks($networkId);
 
       // Before we persist this data, is this a new session?
       $newSession = !$session->isUpdate();
