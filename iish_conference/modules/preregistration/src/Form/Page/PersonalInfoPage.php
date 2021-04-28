@@ -83,13 +83,14 @@ class PersonalInfoPage extends PreRegistrationPage {
       '#default_value' => $user->getLastName(),
     );
 
-    // TODOGCU
-    $form['personal_info']['gender'] = array(
-      '#type' => 'select',
-      '#title' => iish_t('Gender'),
-      '#options' => ConferenceMisc::getGenders(),
-      '#default_value' => $user->getGender(),
-    );
+    if (SettingsApi::getSetting(SettingsApi::SHOW_GENDER, 'bool')) {
+        $form['personal_info']['gender'] = array(
+            '#type' => 'select',
+            '#title' => iish_t('Gender'),
+            '#options' => ConferenceMisc::getGenders(),
+            '#default_value' => $user->getGender(),
+        );
+    }
 
     $form['personal_info']['organisation'] = array(
       '#type' => 'textfield',
@@ -429,7 +430,9 @@ class PersonalInfoPage extends PreRegistrationPage {
     $user->setEmail($form_state->getValue('email'));
     $user->setFirstName($form_state->getValue('firstname'));
     $user->setLastName($form_state->getValue('lastname'));
-    $user->setGender($form_state->getValue('gender'));
+    if (SettingsApi::getSetting(SettingsApi::SHOW_GENDER, 'bool')) {
+        $user->setGender($form_state->getValue('gender'));
+    }
     $user->setOrganisation($form_state->getValue('organisation'));
     $user->setCity($form_state->getValue('city'));
     $user->setCountry($form_state->getValue('country'));

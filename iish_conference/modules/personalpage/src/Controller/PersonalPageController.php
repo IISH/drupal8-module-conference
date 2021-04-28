@@ -217,11 +217,14 @@ class PersonalPageController extends ControllerBase
 			'label' => 'Last name',
 			'value' => $userDetails->getLastName()
 		);
-		// TODOGCU
-		$fields[] = array(
-			'label' => 'Gender',
-			'value' => ConferenceMisc::getGender($userDetails->getGender())
-		);
+
+        if (SettingsApi::getSetting(SettingsApi::SHOW_GENDER, 'bool')) {
+            $fields[] = array(
+                'label' => 'Gender',
+                'value' => ConferenceMisc::getGender($userDetails->getGender())
+            );
+        }
+
 		$fields[] = array(
 			'label' => 'Organisation',
 			'value' => $userDetails->getOrganisation()
