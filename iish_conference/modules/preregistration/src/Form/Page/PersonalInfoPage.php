@@ -201,7 +201,7 @@ class PersonalInfoPage extends PreRegistrationPage {
       '#type' => 'textfield',
       '#title' => iish_t('City'),
       '#size' => 40,
-      '#maxlength' => 255,
+      '#maxlength' => 40,
       '#required' => TRUE,
       '#default_value' => $user->getCity(),
     );

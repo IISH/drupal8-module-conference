@@ -4,6 +4,7 @@ namespace Drupal\iish_conference\API;
 use Drupal\iish_conference\API\Domain\UserApi;
 use Drupal\iish_conference\API\Domain\ParticipantDateApi;
 use Drupal\iish_conference\API\Domain\ParticipantStateApi;
+use Drupal\iish_conference\API\AutoLoginApi;
 
 /**
  * Holds information about the currently logged in user
