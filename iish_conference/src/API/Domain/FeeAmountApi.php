@@ -217,7 +217,7 @@ class FeeAmountApi extends CRUDApiClient {
     }
 
     if (SettingsApi::getSetting(SettingsApi::PAYMENT_ON_SITE_STARTDATE, 'startdate')) {
-      $description .= ' (' . iish_t('If payed on site') . ': ' . $this->getFeeAmountOnSiteInFormat() . ')';
+      $description .= ' (' . iish_t('If paid on site') . ': ' . $this->getFeeAmountOnSiteInFormat() . ')';
     }
 
     return $description;
@@ -244,7 +244,7 @@ class FeeAmountApi extends CRUDApiClient {
     }
 
     if (SettingsApi::getSetting(SettingsApi::PAYMENT_ON_SITE_STARTDATE, 'startdate')) {
-      $description .= ' (' . iish_t('If payed on site') . ': ' . $this->getFeeAmountOnSiteInFormat() . ')';
+      $description .= ' (' . iish_t('If paid on site') . ': ' . $this->getFeeAmountOnSiteInFormat() . ')';
     }
 
     return $description;

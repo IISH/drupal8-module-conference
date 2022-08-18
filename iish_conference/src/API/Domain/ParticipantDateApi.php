@@ -414,12 +414,12 @@ class ParticipantDateApi extends CRUDApiClient {
   }
 
   /**
-   * Compute the total amount the given participant has to pay for, IF payed on site
+   * Compute the total amount the given participant has to pay for, If paid on site
    * - The days
    * - The extras
    * - The accompanying persons
    *
-   * @return float The total amount to pay, IF payed on site
+   * @return float The total amount to pay, If paid on site
    */
   public function getTotalAmountPaymentOnSite() {
     $totalAmount = $this->getFeeAmount()->getFeeAmountOnSite();

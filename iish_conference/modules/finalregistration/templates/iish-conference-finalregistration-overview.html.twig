@@ -25,7 +25,7 @@
         {{ 'Total amount'|iish_t ~ ': ' ~ totalAmount }}
 
         {% if paymentOnSiteOpen %}
-          {{ '(' ~ 'If payed on site'|iish_t ~ ': ' ~ totalAmountPayOnSite ~ ')' }}
+          {{ '(' ~ 'If paid on site'|iish_t ~ ': ' ~ totalAmountPayOnSite ~ ')' }}
         {% endif %}
       </span>
     </li>
@@ -45,7 +45,7 @@
   
   {% if invitationLetter %}
     <span class="final-registration-overview-header">
-			'In addition, you also indicated that an invitation letter should be send to:'|iish_t
+			{{ 'In addition, you also indicated that an invitation letter should be send to:'|iish_t }}
 		</span>
     
     <ul>
