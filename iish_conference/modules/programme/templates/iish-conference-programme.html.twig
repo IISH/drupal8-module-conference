@@ -226,34 +226,55 @@
                         </tbody>
                     </table>
 
+
+
+
+
+					{% set prevParticipantName = '' %}
+					{% set prevParticipantPaper = '' %}
+
                     {% for participant in session.participantsWithPaper %}
-                        <span class="programme_key">
-                            {{ participant.participantNameHl|markup }}{% if participant.coAuthors and (participant.coAuthors|length > 0) %}, {{ participant.coAuthorsHl|markup }}{% endif %}
-                            :
-                        </span>
 
-                        {{ participant.paperNameHl|markup }}
+						{% if ( prevParticipantName != participant.participantNameHl ) and ( prevParticipantPaper != participant.paperNameHl ) %}
 
-                        {% if eventDate.isLastDate and isLoggedIn and downloadPaperIsOpen %}
-                            {% if participant.hasDownload %}
-                                &nbsp;
-                                <a href="{{ participant.paperDownloadLink }}" title="{{ 'Download paper'|iish_t }}">
-                                    <span class="download-icon"></span>
-                                </a>
-                            {% endif %}
-                        {% endif %}
+							<span class="programme_key">
+								{{ participant.participantNameHl|markup }}{% if participant.coAuthors and (participant.coAuthors|length > 0) %}, {{ participant.coAuthorsHl|markup }}{% endif %}
+								:
+							</span>
 
-                        <br/>
+							{{ participant.paperNameHl|markup }}
 
-                        {% if sessionId %}
-							{% if setting('SHOW_PAPER_ABSTRACT_IN_ONLINE_PROGRAMME', 'bool') %}
-								<div class="programme_paper_abstract">
-									{{ participant.paperAbstract|long }}
-								</div>
-								<br/>
+							{% if eventDate.isLastDate and isLoggedIn and downloadPaperIsOpen %}
+								{% if participant.hasDownload %}
+									&nbsp;
+									<a href="{{ participant.paperDownloadLink }}" title="{{ 'Download paper'|iish_t }}">
+										<span class="download-icon"></span>
+									</a>
+								{% endif %}
 							{% endif %}
+
+							<br/>
+
+							{% if sessionId %}
+								{% if setting('SHOW_PAPER_ABSTRACT_IN_ONLINE_PROGRAMME', 'bool') %}
+									<div class="programme_paper_abstract">
+										{{ participant.paperAbstract|long }}
+									</div>
+									<br/>
+								{% endif %}
+							{% endif %}
+
+							{% set prevParticipantName = participant.participantNameHl %}
+							{% set prevParticipantPaper = participant.paperNameHl %}
+
 						{% endif %}
+
                     {% endfor %}
+
+
+
+
+
 
                     <br/><br/>
 
