@@ -57,7 +57,7 @@ class OverviewPage extends FormBase {
       '#type' => 'submit',
       '#name' => 'payway',
       '#value' => iish_t('Make online payment'),
-      '#markup' => '&nbsp;&nbsp;&nbsp;&nbsp;' . iish_t('Online payment with bank card, iDEAL, credit card (Visa, MasterCard, ...)') . '<p>&nbsp;'
+      '#markup' => '&nbsp;&nbsp;&nbsp;&nbsp;' . iish_t('Online payment with bank card, iDEAL, credit card (VISA, American Express, MasterCard, Bancontact, Maestro, ...)') . '<p>&nbsp;'
     );
 
     if (SettingsApi::getSetting(SettingsApi::BANK_TRANSFER_ALLOWED, 'bool')) {
@@ -83,7 +83,7 @@ class OverviewPage extends FormBase {
       '#type' => 'submit',
       '#name' => 'on_site',
       '#value' => iish_t('Pay on site'),
-      '#markup' => '&nbsp;&nbsp;&nbsp;&nbsp;' . iish_t('Bank & credit card with PIN only, no cash.')
+      '#markup' => '&nbsp;&nbsp;&nbsp;&nbsp;' . iish_t('You will pay on site. Bank & credit card with PIN only, no cash.')
     );
 
     if (strlen(trim(SettingsApi::getSetting(SettingsApi::GENERAL_TERMS_CONDITIONS_LINK))) > 0) {

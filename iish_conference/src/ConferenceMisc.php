@@ -222,7 +222,13 @@ class ConferenceMisc {
         $line .= ($i < (count($items) - 1)) ? $seperator : $seperatorEnd;
       }
 
+      //$line .= $item->__toString();
+	  // there is no __toString function in Drupal\Core\Link class
+	  if($item instanceof Link) {
+        $line .= "<a href=\"" . $item->getUrl()->getUri() . "\">" . $item->getText() . "</a>";
+	  } else {
         $line .= $item->__toString();
+	  }
     }
 
     return $line;
