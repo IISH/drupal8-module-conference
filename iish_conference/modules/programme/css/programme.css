@@ -24,11 +24,12 @@ td.programme {
 }
 
 .programme_hr {
-    margin-top: 20px;
-    margin-bottom: 40px;
+	border: none;
+	height: 1px;
     background-color: #E61A3C;
-    border-color: #E61A3C;
-    height: 1px;
+    color: #E61A3C;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .programme_key {
