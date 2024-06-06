@@ -372,7 +372,8 @@ class ProgrammeController extends ControllerBase {
       $participantsPerType = array();
       foreach ($session['participants'] as &$participant) {
         $participantName = $participant['participantName'];
-        $participant['participantNameHl'] = $highlight->highlight($participantName);
+          $participant['participantNameHl'] = $highlight->highlight($participantName);
+//          $participant['participantNameHl'] = $highlight->highlight($participantName);
 
         if (array_key_exists('coAuthors', $participant)) {
           $coAuthors = $participant['coAuthors'];
